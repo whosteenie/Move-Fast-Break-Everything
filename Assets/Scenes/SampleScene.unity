@@ -382,9 +382,9 @@ MonoBehaviour:
   maxX: 8
   minY: -4
   maxY: 4
-  obstacleSpacing: 1.5
   playerSpawnPoint: {x: 0, y: 0}
-  playerClearRadius: 2
+  obstacleSpacing: 1.5
+  playerSpacing: 2
   maxPlacementAttempts: 25
 --- !u!4 &1576386623
 Transform:
