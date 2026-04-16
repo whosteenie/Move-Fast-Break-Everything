@@ -68,11 +68,16 @@ public class TestMovement : MonoBehaviour
             rb.MovePosition(rb.position + facing * dashSpeed * Time.fixedDeltaTime);
         if (movementStateMachine.HasState(MovementStateMachine.State.slide))
         {
+            transform.localScale = new Vector3(.75f,.75f,.75f);
             Slide();
         }
         if (movementStateMachine.HasState(MovementStateMachine.State.slideDecay))
         {
             SlideDecay();
+        }
+        if (!movementStateMachine.HasState(MovementStateMachine.State.slideDecay))
+        {
+            transform.localScale = new Vector3(.5f,.5f,.5f);
         }
     }
 
@@ -80,7 +85,7 @@ public class TestMovement : MonoBehaviour
     {
         //Shrink the Player
         Debug.Log("In Slide");
-        rb.MovePosition(rb.position + facing*slideMovementSO.movePower*Time.fixedDeltaTime);
+        rb.MovePosition(rb.position + facing*slideMovementSO.movePower/2*Time.fixedDeltaTime);
     }
 
     private void SlideDecay()
@@ -88,6 +93,21 @@ public class TestMovement : MonoBehaviour
         //Unshrink the player
         transform.localScale = new Vector3(.5f,.5f,.5f);
         Debug.Log("In Slide Decay");
-        rb.MovePosition(rb.position + facing*(slideMovementSO.movePower/2)*Time.fixedDeltaTime);
+        rb.MovePosition(rb.position + facing*(slideMovementSO.movePower)*Time.fixedDeltaTime);
+    }
+
+    private void Charge()
+    {
+        //Bulk the Player
+        transform.localScale = new Vector3(.75f,.75f,.75f);
+        rb.MovePosition(rb.position + facing*slideMovementSO.movePower/2*Time.fixedDeltaTime);
+    }
+
+    private void ChargeDecay()
+    {
+        //Shrink the player
+        transform.localScale = new Vector3(.25f,.25f,.25f);
+        Debug.Log("In Slide Decay");
+        rb.MovePosition(rb.position + facing*(slideMovementSO.movePower)*Time.fixedDeltaTime);
     }
 }
