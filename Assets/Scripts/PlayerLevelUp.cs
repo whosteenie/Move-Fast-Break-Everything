@@ -1,45 +1,55 @@
 using System;
+using UnityEngine;
 
-public static class PlayerLevelUp
+public class PlayerLevelUp : MonoBehaviour
 {
-    private static int _playerLevel = 1;
-    private static float _playerXp;
-    private static float _playerMaxXp = BaseXp + GrowthPerLevel * (_playerLevel - 1);
     private const float BaseXp = 50f;
     private const float GrowthPerLevel = 25f;
 
-    public static event EventHandler OnLevelUp;
+    private int _currentLevel;
+    private float _currentXp;
+    private float _XpLevelTarget;
 
-    public static void AddXp(float xp)
+    // subscribe to this event to be notified of level ups
+    public event EventHandler OnLevelUp;
+
+    private void Awake()
+    {
+        _currentLevel = 1;
+        _currentXp = 0f;
+        _XpLevelTarget = BaseXp + GrowthPerLevel * (_currentLevel - 1);
+    }
+
+    public void AddXp(float xpAmount)
     {
         // add xp
-        _playerXp += xp;
+        _currentXp += xpAmount;
 
         // check for level up
-        if (_playerXp >= _playerMaxXp)
+        if (_currentXp >= _XpLevelTarget)
         {
             // send overshot xp through
-            LevelUp(_playerXp - _playerMaxXp);
+            LevelUp(_currentXp - _XpLevelTarget);
         }
     }
 
-    private static void LevelUp(float remainingXp)
+    private void LevelUp(float overflowXp)
     {
         while (true)
         {
             // level up and set remainder xp
-            _playerLevel++;
-            _playerXp = remainingXp;
+            _currentLevel++;
+            _currentXp = overflowXp;
 
             // change xp target, currently linear
-            _playerMaxXp = BaseXp + GrowthPerLevel * (_playerLevel - 1);
-            OnLevelUp?.Invoke(null, EventArgs.Empty);
+            _XpLevelTarget = BaseXp + GrowthPerLevel * (_currentLevel - 1);
+            OnLevelUp?.Invoke(this, EventArgs.Empty);
 
             // check for multiple level ups
-            if (_playerXp >= _playerMaxXp)
+            if (_currentXp >= _XpLevelTarget)
             {
                 // level up again if we're still above requirement
-                remainingXp = _playerXp - _playerMaxXp;
+                overflowXp = _currentXp - _XpLevelTarget;
                 continue;
             }
 
