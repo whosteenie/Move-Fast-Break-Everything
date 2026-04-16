@@ -2,9 +2,9 @@ using System;
 
 public static class PlayerLevelUp
 {
-    private static int _playerLevel;
+    private static int _playerLevel = 1;
     private static float _playerXp;
-    private static float _playerMaxXp;
+    private static float _playerMaxXp = LevelScale * _playerLevel;
     private const float LevelScale = 50f;
 
     public static event EventHandler OnLevelUp;
@@ -27,12 +27,12 @@ public static class PlayerLevelUp
         while (true)
         {
             // level up and set remainder xp
-            OnLevelUp?.Invoke(null, EventArgs.Empty);
             _playerLevel++;
             _playerXp = remainingXp;
 
             // change xp target, currently linear
             _playerMaxXp = _playerLevel * LevelScale;
+            OnLevelUp?.Invoke(null, EventArgs.Empty);
 
             // check for multiple level ups
             if (_playerXp >= _playerMaxXp)
