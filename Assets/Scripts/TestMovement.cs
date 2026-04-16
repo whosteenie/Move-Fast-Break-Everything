@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class TestMovement : MonoBehaviour
@@ -18,6 +19,12 @@ public class TestMovement : MonoBehaviour
 
     // Get rid of this once we implement GameInput or whatever
     public KeyCode dashKey = KeyCode.Space;
+    public KeyCode slideKey = KeyCode.LeftShift;
+
+    // [SerializeField] private MovementSO[] movementArray;
+    public MovementSO slideMovementSO;
+
+    public MovementStateMachine movementStateMachine;
 
     void Update()
     {
@@ -32,6 +39,11 @@ public class TestMovement : MonoBehaviour
         {
             isDashing = true;
             dashDurationTimer = dashDuration;
+        }
+        if(Input.GetKeyDown(slideKey) && !(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay)))
+        {
+            transform.localScale = new Vector3(.25f,.25f,.25f);
+            movementStateMachine.AddState(slideMovementSO);
         }
 
         if (isDashing)
@@ -51,9 +63,31 @@ public class TestMovement : MonoBehaviour
 
     void FixedUpdate()
     {
+        rb.MovePosition(rb.position + (movement * moveSpeed) * Time.fixedDeltaTime);
         if (isDashing)
             rb.MovePosition(rb.position + facing * dashSpeed * Time.fixedDeltaTime);
-        else
-            rb.MovePosition(rb.position + (movement * moveSpeed) * Time.fixedDeltaTime);
+        if (movementStateMachine.HasState(MovementStateMachine.State.slide))
+        {
+            Slide();
+        }
+        if (movementStateMachine.HasState(MovementStateMachine.State.slideDecay))
+        {
+            SlideDecay();
+        }
+    }
+
+    private void Slide()
+    {
+        //Shrink the Player
+        Debug.Log("In Slide");
+        rb.MovePosition(rb.position + facing*slideMovementSO.movePower*Time.fixedDeltaTime);
+    }
+
+    private void SlideDecay()
+    {
+        //Unshrink the player
+        transform.localScale = new Vector3(.5f,.5f,.5f);
+        Debug.Log("In Slide Decay");
+        rb.MovePosition(rb.position + facing*(slideMovementSO.movePower/2)*Time.fixedDeltaTime);
     }
 }

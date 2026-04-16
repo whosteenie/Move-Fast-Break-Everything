@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 39e2d36409380424b8572c62deb4d037, type: 3}
-  m_Name: New Movement SO
+  m_Name: Slide
   m_EditorClassIdentifier: Assembly-CSharp::MovementSO
-  moveName: 
+  moveName: Slide
   moveState: 0
   moveTimeLength: 0
   movePower: 0
