@@ -4,8 +4,9 @@ public static class PlayerLevelUp
 {
     private static int _playerLevel = 1;
     private static float _playerXp;
-    private static float _playerMaxXp = LevelScale * _playerLevel;
-    private const float LevelScale = 50f;
+    private static float _playerMaxXp = BaseXp + GrowthPerLevel * (_playerLevel - 1);
+    private const float BaseXp = 50f;
+    private const float GrowthPerLevel = 25f;
 
     public static event EventHandler OnLevelUp;
 
@@ -31,7 +32,7 @@ public static class PlayerLevelUp
             _playerXp = remainingXp;
 
             // change xp target, currently linear
-            _playerMaxXp = _playerLevel * LevelScale;
+            _playerMaxXp = BaseXp + GrowthPerLevel * (_playerLevel - 1);
             OnLevelUp?.Invoke(null, EventArgs.Empty);
 
             // check for multiple level ups
