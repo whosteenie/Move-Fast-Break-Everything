@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Slide
   m_EditorClassIdentifier: Assembly-CSharp::MovementSO
   moveName: Slide
-  moveState: 0
-  moveTimeLength: 0
-  movePower: 0
-  hasDecay: 0
-  decayState: 0
-  decayTimeLength: 0
+  moveState: 2
+  moveTimeLength: 0.25
+  movePower: 15
+  hasDecay: 1
+  decayState: 3
+  decayTimeLength: 0.25

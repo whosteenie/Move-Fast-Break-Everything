@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Jump
   m_EditorClassIdentifier: Assembly-CSharp::MovementSO
   moveName: Jump
-  moveState: 2
+  moveState: 4
   moveTimeLength: 0.5
   movePower: 5
   hasDecay: 0
-  decayState: 3
+  decayState: 5
   decayTimeLength: 0

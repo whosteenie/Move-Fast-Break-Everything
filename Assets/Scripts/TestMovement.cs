@@ -27,6 +27,7 @@ public class TestMovement : MonoBehaviour
     // [SerializeField] private MovementSO[] movementArray;
     public MovementSO slideMovementSO;
     public MovementSO chargeMovementSO;
+    public MovementSO slideDashMovementSO;
 
     public MovementStateMachine movementStateMachine;
 
@@ -38,13 +39,19 @@ public class TestMovement : MonoBehaviour
         if (movement != UnityEngine.Vector2.zero) {
             facing = movement.normalized;
         }
-
-        if (Input.GetKeyDown(dashKey) && !isDashing && dashCooldownTimer <= 0f)
+        if(Input.GetKeyDown(dashKey) && movementStateMachine.HasState(MovementStateMachine.State.slide))
+        {
+            movementStateMachine.AddComboState(slideDashMovementSO, MovementStateMachine.State.slide, MovementStateMachine.State.dash);
+        }
+        if (Input.GetKeyDown(dashKey) && !isDashing && dashCooldownTimer <= 0f
+        && movementStateMachine.HasState(MovementStateMachine.State.slideDash) && movementStateMachine.HasState(MovementStateMachine.State.slideDashDecay))
         {
             isDashing = true;
             dashDurationTimer = dashDuration;
         }
-        if(Input.GetKeyDown(slideKey) && !(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay)))
+        if(Input.GetKeyDown(slideKey) && 
+        !(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay)) 
+        || movementStateMachine.HasState(MovementStateMachine.State.slideDash) || movementStateMachine.HasState(MovementStateMachine.State.slideDashDecay))
         {
             // print("In Slide Key Press");
             movementStateMachine.AddState(slideMovementSO);
@@ -76,12 +83,15 @@ public class TestMovement : MonoBehaviour
         endPos += rb.position;
         // rb.MovePosition(rb.position + (movement * moveSpeed) * Time.fixedDeltaTime);
         endPos += (movement * moveSpeed) * Time.fixedDeltaTime;
-        if (isDashing)
+        if (isDashing && !movementStateMachine.HasState(MovementStateMachine.State.slideDash))
         {
             // rb.MovePosition(rb.position + facing * dashSpeed * Time.fixedDeltaTime);
             endPos += facing * dashSpeed * Time.fixedDeltaTime;
         }
-            
+        if (movementStateMachine.HasState(MovementStateMachine.State.slideDash))
+        {
+            endPos += SlideDash();
+        }  
         if (movementStateMachine.HasState(MovementStateMachine.State.slide))
         {
             transform.localScale = new Vector3(.25f,.25f,.25f);
@@ -134,8 +144,13 @@ public class TestMovement : MonoBehaviour
     {
         //Shrink the player
         transform.localScale = new UnityEngine.Vector3(.5f,.5f,.5f);
-        // Debug.Log("In Slide Decay");
         // rb.MovePosition(rb.position + facing*(slideMovementSO.movePower)*Time.fixedDeltaTime);
         return facing*(slideMovementSO.movePower)*Time.fixedDeltaTime;
+    }
+
+    private Vector2 SlideDash()
+    {
+        Debug.Log("In Slide Dash");
+        return (facing*slideDashMovementSO.movePower*Time.fixedDeltaTime).normalized;
     }
 }

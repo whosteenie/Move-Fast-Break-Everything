@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 39e2d36409380424b8572c62deb4d037, type: 3}
-  m_Name: Charge
+  m_Name: SlideJump
   m_EditorClassIdentifier: Assembly-CSharp::MovementSO
-  moveName: Charge
-  moveState: 7
-  moveTimeLength: 0.2
-  movePower: 15
+  moveName: SlideJump
+  moveState: 9
+  moveTimeLength: 0.25
+  movePower: 20
   hasDecay: 1
-  decayState: 8
-  decayTimeLength: 0.3
+  decayState: 10
+  decayTimeLength: 2
