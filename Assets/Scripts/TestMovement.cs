@@ -5,9 +5,9 @@ public class TestMovement : MonoBehaviour
 {
     public float moveSpeed = 5f;
     public Rigidbody2D rb;
-    Vector2 movement;
+    UnityEngine.Vector2 movement;
 
-    Vector2 facing = Vector2.right;
+    UnityEngine.Vector2 facing = UnityEngine.Vector2.right;
 
     public float dashSpeed = 25f;
     public float dashDuration = 0.2f;
@@ -17,12 +17,16 @@ public class TestMovement : MonoBehaviour
     float dashCooldownTimer;
     bool isDashing;
 
+    private UnityEngine.Vector2 endPos;
+
     // Get rid of this once we implement GameInput or whatever
     public KeyCode dashKey = KeyCode.Space;
     public KeyCode slideKey = KeyCode.LeftShift;
+    public KeyCode chargeKey = KeyCode.Z;
 
     // [SerializeField] private MovementSO[] movementArray;
     public MovementSO slideMovementSO;
+    public MovementSO chargeMovementSO;
 
     public MovementStateMachine movementStateMachine;
 
@@ -31,7 +35,7 @@ public class TestMovement : MonoBehaviour
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
 
-        if (movement != Vector2.zero) {
+        if (movement != UnityEngine.Vector2.zero) {
             facing = movement.normalized;
         }
 
@@ -42,8 +46,13 @@ public class TestMovement : MonoBehaviour
         }
         if(Input.GetKeyDown(slideKey) && !(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay)))
         {
-            transform.localScale = new Vector3(.25f,.25f,.25f);
+            // print("In Slide Key Press");
             movementStateMachine.AddState(slideMovementSO);
+        }
+        if(Input.GetKeyDown(chargeKey) && !(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay) || movementStateMachine.HasState(MovementStateMachine.State.charge) || movementStateMachine.HasState(MovementStateMachine.State.chargeDecay)))
+        {
+            // print("In Slide Key Press");
+            movementStateMachine.AddState(chargeMovementSO);
         }
 
         if (isDashing)
@@ -63,51 +72,70 @@ public class TestMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        rb.MovePosition(rb.position + (movement * moveSpeed) * Time.fixedDeltaTime);
+        UnityEngine.Vector2 endPos = new UnityEngine.Vector2(0,0);
+        endPos += rb.position;
+        // rb.MovePosition(rb.position + (movement * moveSpeed) * Time.fixedDeltaTime);
+        endPos += (movement * moveSpeed) * Time.fixedDeltaTime;
         if (isDashing)
-            rb.MovePosition(rb.position + facing * dashSpeed * Time.fixedDeltaTime);
+        {
+            // rb.MovePosition(rb.position + facing * dashSpeed * Time.fixedDeltaTime);
+            endPos += facing * dashSpeed * Time.fixedDeltaTime;
+        }
+            
         if (movementStateMachine.HasState(MovementStateMachine.State.slide))
         {
-            transform.localScale = new Vector3(.75f,.75f,.75f);
-            Slide();
+            transform.localScale = new Vector3(.25f,.25f,.25f);
+            endPos += Slide();
         }
         if (movementStateMachine.HasState(MovementStateMachine.State.slideDecay))
         {
-            SlideDecay();
+            endPos += SlideDecay();
         }
-        if (!movementStateMachine.HasState(MovementStateMachine.State.slideDecay))
+        if(movementStateMachine.HasState(MovementStateMachine.State.charge)&&!(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay)))
         {
-            transform.localScale = new Vector3(.5f,.5f,.5f);
+            endPos += Charge();
         }
+        if(movementStateMachine.HasState(MovementStateMachine.State.chargeDecay)&&!(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay)))
+        {
+            endPos += ChargeDecay();
+        }
+        // print(endPos);
+        rb.MovePosition(endPos);
     }
 
-    private void Slide()
+    private Vector2 Slide()
     {
         //Shrink the Player
-        Debug.Log("In Slide");
-        rb.MovePosition(rb.position + facing*slideMovementSO.movePower/2*Time.fixedDeltaTime);
+        // Debug.Log("In Slide");
+        transform.localScale = new Vector3(.25f,.25f,.25f);
+        // rb.MovePosition(rb.position + facing*slideMovementSO.movePower*Time.fixedDeltaTime);
+        return facing*slideMovementSO.movePower*Time.fixedDeltaTime;
     }
 
-    private void SlideDecay()
+    private Vector2 SlideDecay()
     {
         //Unshrink the player
+        // Debug.Log("In Slide Decay");
         transform.localScale = new Vector3(.5f,.5f,.5f);
-        Debug.Log("In Slide Decay");
-        rb.MovePosition(rb.position + facing*(slideMovementSO.movePower)*Time.fixedDeltaTime);
+        rb.MovePosition(rb.position + facing*(slideMovementSO.movePower/2)*Time.fixedDeltaTime);
+        return facing*(-slideMovementSO.movePower/4)*Time.fixedDeltaTime;
     }
 
-    private void Charge()
+    private Vector2 Charge()
     {
         //Bulk the Player
-        transform.localScale = new Vector3(.75f,.75f,.75f);
+        transform.localScale = new UnityEngine.Vector3(.75f,.75f,.75f);
         rb.MovePosition(rb.position + facing*slideMovementSO.movePower/2*Time.fixedDeltaTime);
+        //Moves you backwards a bit which can be used to do chargeswitch tech! EEEE!
+        return facing*(-slideMovementSO.movePower/1.5f)*Time.fixedDeltaTime;
     }
 
-    private void ChargeDecay()
+    private Vector2 ChargeDecay()
     {
         //Shrink the player
-        transform.localScale = new Vector3(.25f,.25f,.25f);
-        Debug.Log("In Slide Decay");
-        rb.MovePosition(rb.position + facing*(slideMovementSO.movePower)*Time.fixedDeltaTime);
+        transform.localScale = new UnityEngine.Vector3(.5f,.5f,.5f);
+        // Debug.Log("In Slide Decay");
+        // rb.MovePosition(rb.position + facing*(slideMovementSO.movePower)*Time.fixedDeltaTime);
+        return facing*(slideMovementSO.movePower)*Time.fixedDeltaTime;
     }
 }

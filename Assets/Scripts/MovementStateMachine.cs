@@ -14,6 +14,8 @@ public class MovementStateMachine : MonoBehaviour
         jump,
         none,
         idle,
+        charge,
+        chargeDecay
     }
 
     private List<State> stateList;
@@ -21,6 +23,11 @@ public class MovementStateMachine : MonoBehaviour
     private void Start()
     {
         stateList = new List<State>();
+    }
+
+    private void Update()
+    {
+        // Debug.Log(stateList[0]);
     }
 
     //loops through everything to find if there's something in the statelist
@@ -39,20 +46,23 @@ public class MovementStateMachine : MonoBehaviour
     //addState
     public void AddState(MovementSO movementSO)
     {
+        // print("In add State");
         //First add the state to the list
         stateList.Add(movementSO.moveState);
         
         //Remove it after moveTimeLength
+        
         StartCoroutine(RemoveState(movementSO.moveState, movementSO.moveTimeLength));
-
+        // Debug.Log(stateList[0]);
         //If it has a decay state
         if (movementSO.hasDecay)
         {
             // add it to the state list
             StartCoroutine(AddStateDumb(movementSO.decayState, movementSO.moveTimeLength));
-
+            // Debug.Log(stateList[0]);
             //remove it after decayTimeLength
             StartCoroutine(RemoveState(movementSO.decayState, movementSO.decayTimeLength+movementSO.moveTimeLength));
+            // Debug.Log(stateList[0]);
         } 
     }
 
