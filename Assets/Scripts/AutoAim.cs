@@ -16,10 +16,18 @@ public class AutoAim : MonoBehaviour
 
     private GameObject currentTarget;
 
+    private Stats stats;
+    public int baseDamege = 1;
+
     void Start()
     {
         StartCoroutine(UpdateTargetRoutine());
         StartCoroutine(ShootRoutine());
+    }
+
+    void Awake()
+    {
+        stats = GetComponentInParent<Stats>();
     }
 
     IEnumerator UpdateTargetRoutine()
@@ -77,7 +85,13 @@ public class AutoAim : MonoBehaviour
         Bullet bulletScript = bullet.GetComponent<Bullet>();
         if (bulletScript != null)
         {
-            bulletScript.SetDirection(direction, bulletSpeed);
+            int finalDamage = bulletScript.damage;
+            if (stats != null)
+            {
+                finalDamage *= stats.damageMultiplier;
+                Debug.Log(stats);
+            }
+            bulletScript.SetDirection(direction, bulletSpeed, finalDamage);
         }
     }
 

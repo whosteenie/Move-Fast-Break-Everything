@@ -6,6 +6,30 @@ public class Enemy : MonoBehaviour
 
     private Transform playerLocation;
 
+    public int maxHealth = 10;
+    private int currentHealth;
+    private int damageTaken;
+
+    private void Start()
+    {
+        currentHealth = maxHealth;
+    }
+
+    public void TakeDamage(int damageTaken)
+    {
+        currentHealth -= damageTaken;
+        Debug.Log("Enemy HP: " + currentHealth);
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        Destroy(gameObject);
+    }
+
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -14,13 +38,13 @@ public class Enemy : MonoBehaviour
         //Doesn't exactly seem likely to stick around for long
         //So might want to replace with a method that finds the player in a more abstract way.
         TestMovement player = FindAnyObjectByType<TestMovement>();
-        
-        if(player != null)
+
+        if (player != null)
         {
             //Small note, for some reason the enemy is in front of the trees because it teleports to z 0
             playerLocation = FindAnyObjectByType<TestMovement>().transform;
             Vector3 newPosition = Vector3.MoveTowards(transform.localPosition, playerLocation.localPosition, moveSpeed);
-        
+
             //Replaced with rigidbody to stay more consistent
             //Maybe delete the collider if the physics is too annoying, and maybe constrain rotation
             //transform.localPosition = newPosition;
@@ -36,7 +60,7 @@ public class Enemy : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject != null && collision.gameObject.tag == "Player")
+        if (collision.gameObject != null && collision.gameObject.tag == "Player")
         {
             //Replace this with a damage player call
             Destroy(playerLocation.gameObject);

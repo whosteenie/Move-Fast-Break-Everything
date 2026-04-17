@@ -2,7 +2,9 @@ using UnityEngine;
 
 public class TestMovement : MonoBehaviour
 {
-    public float moveSpeed = 5f;
+    private Stats stats;
+
+
     public Rigidbody2D rb;
     Vector2 movement;
 
@@ -24,7 +26,8 @@ public class TestMovement : MonoBehaviour
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
 
-        if (movement != Vector2.zero) {
+        if (movement != Vector2.zero)
+        {
             facing = movement.normalized;
         }
 
@@ -49,11 +52,18 @@ public class TestMovement : MonoBehaviour
         }
     }
 
+    private void Awake()
+    {
+        stats = GetComponent<Stats>();
+    }
+    //__________________________________________________________________________________________________
     void FixedUpdate()
     {
+        float speed = stats.speedMultiplier;
         if (isDashing)
             rb.MovePosition(rb.position + facing * dashSpeed * Time.fixedDeltaTime);
         else
-            rb.MovePosition(rb.position + (movement * moveSpeed) * Time.fixedDeltaTime);
+            rb.MovePosition(rb.position + movement * speed * Time.fixedDeltaTime);
     }
+    //__________________________________________________________________________________________________
 }
