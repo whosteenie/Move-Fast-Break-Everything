@@ -14,6 +14,8 @@ public class TestMovement : MonoBehaviour
     public float dashDuration = 0.2f;
     public float dashCooldown = 1f;
 
+
+
     float dashDurationTimer;
     float dashCooldownTimer;
     bool isDashing;
@@ -23,6 +25,8 @@ public class TestMovement : MonoBehaviour
 
     void Update()
     {
+
+
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
 
@@ -59,7 +63,7 @@ public class TestMovement : MonoBehaviour
     //__________________________________________________________________________________________________
     void FixedUpdate()
     {
-        float speed = stats.speedMultiplier;
+        float speed = (stats != null) ? stats.speedMultiplier : 5f;
         if (isDashing)
             rb.MovePosition(rb.position + facing * dashSpeed * Time.fixedDeltaTime);
         else

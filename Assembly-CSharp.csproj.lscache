@@ -57,6 +57,7 @@ Assets/Scripts/
  Bullet.cs
  Enemy.cs
  ObstacleSpawner.cs
+ Player.cs
  PlayerLevelUp.cs
  Stats.cs
  TestMovement.cs

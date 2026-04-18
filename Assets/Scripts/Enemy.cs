@@ -6,19 +6,27 @@ public class Enemy : MonoBehaviour
 
     private Transform playerLocation;
 
+
     public int maxHealth = 10;
     private int currentHealth;
-    private int damageTaken;
+    private float damageCooldown = 1f;
+    private float damageTimer = 0f;
+
+    // public int damageMultiplier;
+    //damage mult will be increased when enemy levls up using similar level up system to player, but for now just a base damage
+    public int baseDamage = 1;
 
     private void Start()
     {
         currentHealth = maxHealth;
     }
 
+
+
     public void TakeDamage(int damageTaken)
     {
         currentHealth -= damageTaken;
-        Debug.Log("Enemy HP: " + currentHealth);
+        //Debug.Log("Enemy HP: " + currentHealth);
         if (currentHealth <= 0)
         {
             Die();
@@ -58,12 +66,24 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject != null && collision.gameObject.tag == "Player")
         {
             //Replace this with a damage player call
-            Destroy(playerLocation.gameObject);
+            if (collision.gameObject.CompareTag("Player"))
+            {
+                damageTimer -= Time.deltaTime;
+                if (damageTimer <= 0f)
+                {
+                    Player player = collision.gameObject.GetComponent<Player>();
+                    if (player != null)
+                    {
+                        player.TakeDamage(baseDamage);
+                        damageTimer = damageCooldown;
+                    }
+                }
+            }
             //Leads to fun lose screen by accident, all the enemies just fall down.
         }
     }
