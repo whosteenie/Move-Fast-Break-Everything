@@ -12,6 +12,9 @@ public class XPOrb : MonoBehaviour {
     [SerializeField] private Color tier1Color = new(0.09f, 0.52f, 0.85f, 1f);
     [SerializeField] private Color tier2Color = new(0.22f, 0.82f, 0.33f, 1f);
     [SerializeField] private Color tier3Color = new(0.88f, 0.24f, 0.24f, 1f);
+    [SerializeField] private int tier1Reward = 20;
+    [SerializeField] private int tier2Reward = 35;
+    [SerializeField] private int tier3Reward = 50;
 
     private int RewardAmount => GetRewardAmount(tier);
 
@@ -53,11 +56,11 @@ public class XPOrb : MonoBehaviour {
         spriteRenderer.color = GetTierColor(tier);
     }
 
-    private static int GetRewardAmount(XPOrbTier orbTier) {
+    private int GetRewardAmount(XPOrbTier orbTier) {
         return orbTier switch {
-            XPOrbTier.Tier2 => 3,
-            XPOrbTier.Tier3 => 6,
-            _ => 1
+            XPOrbTier.Tier2 => tier2Reward,
+            XPOrbTier.Tier3 => tier3Reward,
+            _ => tier1Reward
         };
     }
 
