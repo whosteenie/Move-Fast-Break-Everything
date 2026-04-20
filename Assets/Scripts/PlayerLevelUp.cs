@@ -28,6 +28,7 @@ public class PlayerLevelUp : MonoBehaviour
     {
         if (!Input.GetKeyDown(KeyCode.X))
         {
+
             return;
         }
 

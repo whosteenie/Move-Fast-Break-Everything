@@ -56,6 +56,8 @@ Assets/Scripts/
  AutoAim.cs
  Bullet.cs
  Enemy.cs
+ EnemyLevelUp.cs
+ EnemyStats.cs
  ObstacleSpawner.cs
  Player.cs
  PlayerLevelUp.cs

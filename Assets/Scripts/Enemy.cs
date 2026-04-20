@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    private EnemyStats stats;
     private float moveSpeed = 0.05f;
 
     private Transform playerLocation;
