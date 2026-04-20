@@ -38,8 +38,9 @@ public class Enemy : MonoBehaviour
     {
         if(collision.gameObject != null && collision.gameObject.tag == "Player")
         {
+            GameManager.Instance.ShowGameOver();
             //Replace this with a damage player call
-            Destroy(playerLocation.gameObject);
+            Destroy(collision.gameObject);
             //Leads to fun lose screen by accident, all the enemies just fall down.
         }
     }
