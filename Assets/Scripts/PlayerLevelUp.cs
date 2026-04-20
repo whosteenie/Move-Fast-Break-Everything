@@ -7,24 +7,25 @@ public class PlayerLevelUp : MonoBehaviour
     [SerializeField] private float growthPerLevel = 25f;
     [SerializeField] private float debugXpAmount = 25f;
 
-    private int _currentLevel;
-    private float _currentXp;
-    private float _xpLevelTarget;
+    private float _bufferedXp;
+    private bool _isAwaitingLevelUpChoice;
 
-    public int CurrentLevel => _currentLevel;
-    public float CurrentXp => _currentXp;
-    public float XpLevelTarget => _xpLevelTarget;
+    private int CurrentLevel { get; set; }
+
+    public float CurrentXp { get; private set; }
+
+    public float XpLevelTarget { get; private set; }
 
     public event EventHandler OnLevelUp;
     public event EventHandler OnXpChanged;
 
     private void Awake()
     {
-        _currentLevel = 1;
-        _currentXp = 0f;
-        _xpLevelTarget = GetXpTargetForLevel(_currentLevel);
+        CurrentLevel = 1;
+        CurrentXp = 0f;
+        XpLevelTarget = GetXpTargetForLevel(CurrentLevel);
 
-        Debug.Log($"Starting at level {_currentLevel} with {_currentXp} XP. Next level at {_xpLevelTarget} XP.");
+        Debug.Log($"Starting at level {CurrentLevel} with {CurrentXp} XP. Next level at {XpLevelTarget} XP.");
     }
 
     private void Update()
@@ -35,7 +36,7 @@ public class PlayerLevelUp : MonoBehaviour
         }
 
         AddXp(debugXpAmount);
-        Debug.Log($"Debug XP added: {debugXpAmount}. Level {_currentLevel}, XP {_currentXp}/{_xpLevelTarget}", this);
+        Debug.Log($"Debug XP added: {debugXpAmount}. Level {CurrentLevel}, XP {CurrentXp}/{XpLevelTarget}", this);
     }
 
     public void AddXp(float xpAmount)
@@ -45,15 +46,34 @@ public class PlayerLevelUp : MonoBehaviour
             return;
         }
 
-        _currentXp += xpAmount;
+        _bufferedXp += xpAmount;
+        ProcessBufferedXp();
+    }
 
-        while (_currentXp >= _xpLevelTarget)
+    public void ResolveLevelUpChoice()
+    {
+        _isAwaitingLevelUpChoice = false;
+        ProcessBufferedXp();
+    }
+
+    private void ProcessBufferedXp()
+    {
+        while (!_isAwaitingLevelUpChoice && _bufferedXp > 0f)
         {
-            var overflowXp = _currentXp - _xpLevelTarget;
-            _currentLevel++;
-            _currentXp = overflowXp;
-            _xpLevelTarget = GetXpTargetForLevel(_currentLevel);
+            var xpNeededToLevel = XpLevelTarget - CurrentXp;
+            var xpToApply = Mathf.Min(_bufferedXp, xpNeededToLevel);
+
+            CurrentXp += xpToApply;
+            _bufferedXp -= xpToApply;
+
+            if(!(CurrentXp >= XpLevelTarget)) continue;
+            CurrentLevel++;
+            CurrentXp = 0f;
+            XpLevelTarget = GetXpTargetForLevel(CurrentLevel);
+            _isAwaitingLevelUpChoice = true;
             OnLevelUp?.Invoke(this, EventArgs.Empty);
+            OnXpChanged?.Invoke(this, EventArgs.Empty);
+            return;
         }
 
         OnXpChanged?.Invoke(this, EventArgs.Empty);
