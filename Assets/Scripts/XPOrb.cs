@@ -36,7 +36,12 @@ public class XPOrb : MonoBehaviour {
             return;
         }
 
-        GameManager.Instance.AddExperience(RewardAmount);
+        var playerLevelUp = collision.gameObject.GetComponent<PlayerLevelUp>();
+        if(playerLevelUp == null) {
+            return;
+        }
+
+        playerLevelUp.AddXp(RewardAmount);
         Destroy(gameObject);
     }
 
