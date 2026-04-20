@@ -289,6 +289,84 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   CustomBlends: {fileID: 0}
+--- !u!1 &636936948
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 636936951}
+  - component: {fileID: 636936950}
+  - component: {fileID: 636936949}
+  m_Layer: 0
+  m_Name: WorldGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &636936949
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 636936948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc5c47b9bb315a2448ee67f76813e953, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChunkManager
+  player: {fileID: 1092388853012045805}
+  floorDeathPrefab: {fileID: 4734800804745988880, guid: 6f16b23c6311f1c499a03356fbd8cfa9, type: 3}
+  floorHazardPrefab: {fileID: 4734800804745988880, guid: e7d644cfa29e81b47bfb141d0235e5df, type: 3}
+  floorEarthPrefab: {fileID: 4734800804745988880, guid: d40b59c064b87234fb8dd765c35a0efa, type: 3}
+  floorTechPrefab: {fileID: 4734800804745988880, guid: 6519efa9cf4b9e340886699f3375ef7e, type: 3}
+  obstacleSpawner: {fileID: 636936950}
+  chunkSize: 20
+  cellSize: 1
+  loadRadius: 1
+  unloadRadius: 10
+  noiseScale: 15
+  deathMax: 0.13
+  hazardMax: 0.25
+  earthMax: 0.5
+--- !u!114 &636936950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 636936948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de600f7a19147614fb6c3f8185c5bed7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObstacleSpawner
+  obstaclePrefab: {fileID: 6860932909762194913, guid: d283d2dd53854ec47870cd55f29d6d3b, type: 3}
+  chunkManager: {fileID: 636936949}
+  obstacleCount: 3
+  playerSpawnPoint: {x: 0, y: 0}
+  obstacleSpacing: 1.5
+  playerSpacing: 2
+  maxPlacementAttempts: 10
+--- !u!4 &636936951
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 636936948}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -7.2423, y: -3.45476, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1269148358
 GameObject:
   m_ObjectHideFlags: 0
@@ -453,3 +531,4 @@ SceneRoots:
   - {fileID: 146734374}
   - {fileID: 1092388853012045804}
   - {fileID: 1269148361}
+  - {fileID: 636936951}
