@@ -189,3 +189,6 @@ MonoBehaviour:
   tier1Color: {r: 0.09, g: 0.52, b: 0.85, a: 1}
   tier2Color: {r: 0.22, g: 0.82, b: 0.33, a: 1}
   tier3Color: {r: 0.88, g: 0.24, b: 0.24, a: 1}
+  tier1Reward: 20
+  tier2Reward: 35
+  tier3Reward: 50
