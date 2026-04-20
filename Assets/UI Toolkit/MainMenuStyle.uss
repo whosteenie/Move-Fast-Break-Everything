@@ -1,2 +1,105 @@
 :root {
+    --menu-background: rgb(12, 16, 24);
+    --menu-panel: rgb(25, 32, 44);
+    --menu-panel-border: rgb(60, 74, 96);
+    --menu-copy: rgb(235, 239, 244);
+    --menu-copy-muted: rgb(153, 165, 184);
+    --menu-button: rgb(48, 58, 77);
+    --menu-button-hover: rgb(63, 75, 96);
+    --menu-button-press: rgb(80, 93, 117);
+    --menu-accent: rgb(239, 191, 99);
+    --menu-accent-hover: rgb(248, 203, 120);
+    --menu-accent-press: rgb(224, 172, 73);
+}
+
+.main-menu {
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background-color: var(--menu-background);
+}
+
+.main-menu__panel {
+    width: 340px;
+    padding: 26px 24px 22px;
+    background-color: var(--menu-panel);
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-top-color: var(--menu-panel-border);
+    border-right-color: var(--menu-panel-border);
+    border-bottom-color: var(--menu-panel-border);
+    border-left-color: var(--menu-panel-border);
+    border-radius: 16px;
+}
+
+.main-menu__eyebrow {
+    color: var(--menu-accent);
+    font-size: 14px;
+    -unity-font-style: bold;
+}
+
+.main-menu__title {
+    margin-top: 6px;
+    color: var(--menu-copy);
+    font-size: 28px;
+    -unity-font-style: bold;
+}
+
+.main-menu__subtitle {
+    margin-top: 8px;
+    margin-bottom: 20px;
+    color: var(--menu-copy-muted);
+    font-size: 14px;
+}
+
+.main-menu__button-list {
+    width: 100%;
+}
+
+.main-menu__button {
+    width: 100%;
+    height: 52px;
+    margin-top: 10px;
+    color: var(--menu-copy);
+    background-color: var(--menu-button);
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-top-color: var(--menu-panel-border);
+    border-right-color: var(--menu-panel-border);
+    border-bottom-color: var(--menu-panel-border);
+    border-left-color: var(--menu-panel-border);
+    border-radius: 12px;
+    font-size: 18px;
+    -unity-font-style: bold;
+}
+
+.main-menu__button:hover {
+    background-color: var(--menu-button-hover);
+}
+
+.main-menu__button:active {
+    background-color: var(--menu-button-press);
+}
+
+.main-menu__button--primary {
+    margin-top: 0;
+    color: rgb(20, 20, 20);
+    background-color: var(--menu-accent);
+    border-top-color: var(--menu-accent);
+    border-right-color: var(--menu-accent);
+    border-bottom-color: var(--menu-accent);
+    border-left-color: var(--menu-accent);
+}
+
+.main-menu__button--primary:hover {
+    background-color: var(--menu-accent-hover);
+}
+
+.main-menu__button--primary:active {
+    background-color: var(--menu-accent-press);
 }
