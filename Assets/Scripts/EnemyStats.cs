@@ -34,7 +34,7 @@ public class EnemyStats : MonoBehaviour
 
     private void statChange(object sender, EventArgs e)
     {
-        IncreaseSpeedStat(1);
+        IncreaseSpeedStat(5);
         IncreaseDamageStat(10);
         IncreaseHealthStat(10);
 
