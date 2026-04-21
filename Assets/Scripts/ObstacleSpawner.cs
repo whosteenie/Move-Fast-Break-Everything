@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ObstacleSpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject obstaclePrefab;
+    [SerializeField] private GameObject[] obstaclePrefabs;
     [SerializeField] private ChunkManager chunkManager;
     [SerializeField] private int obstacleCount = 3;
     [SerializeField] private Vector2 playerSpawnPoint = Vector2.zero;
@@ -47,6 +47,7 @@ public class ObstacleSpawner : MonoBehaviour
                     continue;
                 }
 
+                GameObject obstaclePrefab = obstaclePrefabs[Random.Range(0, obstaclePrefabs.Length)];
                 Instantiate(obstaclePrefab, spawnPosition, Quaternion.identity, parent);
                 placedPositions[placedCount] = spawnPosition;
                 placedCount++;

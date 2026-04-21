@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7254310988291782036}
   - component: {fileID: 4861496404516698642}
-  - component: {fileID: 6308809030575940806}
+  - component: {fileID: 3798750084866292324}
   m_Layer: 0
-  m_Name: Obstacle
+  m_Name: BrokenTree4_Mirrored
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 1}
+  m_LocalScale: {x: -4.5, y: 4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -82,7 +82,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -2382895600942706149, guid: 5e38e50a7ee76d7439e901bec988d64d, type: 3}
+  m_Sprite: {fileID: -2755646233369475339, guid: 0efab9be7cabacb4baa182262b34aea8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -92,8 +92,8 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!58 &6308809030575940806
-CircleCollider2D:
+--- !u!60 &3798750084866292324
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -126,5 +126,45 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.035, y: -0.2}
-  m_Radius: 0.14
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.36, y: 0.22}
+    newSize: {x: 1, y: 0.8828125}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 0.076063216, y: 0.10879704}
+      - {x: 0.040157683, y: 0.110448286}
+      - {x: -0.0048610084, y: 0.074356176}
+      - {x: -0.05182776, y: 0.073766805}
+      - {x: -0.103164725, y: 0.09932262}
+      - {x: -0.1571716, y: 0.10186251}
+      - {x: -0.15710941, y: 0.09167873}
+      - {x: -0.17999998, y: 0.08927935}
+      - {x: -0.17821586, y: 0.0623924}
+      - {x: -0.1412802, y: 0.03995344}
+      - {x: -0.15525033, y: -0.021295045}
+      - {x: -0.15593302, y: -0.06795353}
+      - {x: -0.140662, y: -0.07277605}
+      - {x: -0.13985492, y: -0.10740992}
+      - {x: -0.10949999, y: -0.10647051}
+      - {x: -0.083288185, y: -0.07874701}
+      - {x: -0.0537872, y: -0.079733804}
+      - {x: -0.02359851, y: -0.078271486}
+      - {x: 0.040261794, y: -0.07901173}
+      - {x: 0.04018428, y: -0.060864132}
+      - {x: 0.12345344, y: -0.056328945}
+      - {x: 0.15870383, y: -0.02165536}
+      - {x: 0.15866753, y: 0.0075608753}
+      - {x: 0.17782891, y: 0.015235623}
+      - {x: 0.17868221, y: 0.04212006}
+      - {x: 0.14759086, y: 0.051809527}
+      - {x: 0.13003664, y: 0.06574687}
+      - {x: 0.12546113, y: 0.069379635}
+      - {x: 0.079850085, y: 0.06985375}
+  m_UseDelaunayMesh: 1
