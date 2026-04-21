@@ -89,7 +89,6 @@ public class AutoAim : MonoBehaviour
             if (stats != null)
             {
                 finalDamage *= stats.damageMultiplier;
-                Debug.Log(stats);
             }
             bulletScript.SetDirection(direction, bulletSpeed, finalDamage);
         }
