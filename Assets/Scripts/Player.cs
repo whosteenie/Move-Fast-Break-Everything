@@ -33,10 +33,6 @@ public class Player : MonoBehaviour
 
         Heal(debugHealAmount);
 
-        if (!Input.GetKeyDown(KeyCode.E))
-        {
-            speedTower.Interact();
-        }
     }
 
 
