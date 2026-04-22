@@ -226,7 +226,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 6.3
+  orthographic size: 5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -563,6 +563,7 @@ GameObject:
   - component: {fileID: 1828502757}
   - component: {fileID: 1828502758}
   - component: {fileID: 1828502759}
+  - component: {fileID: 1828502760}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -621,6 +622,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   uiDocument: {fileID: 1828502758}
+--- !u!114 &1828502760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1828502756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74f496a7f1b336949b937485d11face1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MovementStateMachine
 --- !u!1001 &512755429912449731
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -694,6 +707,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1826873285969335579, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
+      propertyPath: movementStateMachine
+      value: 
+      objectReference: {fileID: 1828502760}
     - target: {fileID: 5711766594770397432, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
       propertyPath: m_Name
       value: Player
@@ -741,16 +758,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5711766594770397432, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1513721601}
-    - targetCorrespondingSourceObject: {fileID: 5711766594770397432, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1513721602}
-    - targetCorrespondingSourceObject: {fileID: 5711766594770397432, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1513721608}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
 --- !u!4 &1092388853012045805 stripped
 Transform:
@@ -763,10 +771,8 @@ SceneRoots:
   m_Roots:
   - {fileID: 146734374}
   - {fileID: 1092388853012045804}
-  - {fileID: 885212544}
   - {fileID: 512755429912449731}
-  - {fileID: 1576386623}
   - {fileID: 1807780546}
-  - {fileID: 946814731}
-  - {fileID: 728358610}
   - {fileID: 1828502757}
+  - {fileID: 636936951}
+  - {fileID: 1269148361}
