@@ -3,73 +3,84 @@ using UnityEngine;
 
 public class PlayerLevelUp : MonoBehaviour
 {
-    private const float BaseXp = 50f;
-    private const float GrowthPerLevel = 25f;
-    private const float DebugXpAmount = 25f;
+    [SerializeField] private float baseXp = 50f;
+    [SerializeField] private float growthPerLevel = 25f;
+    [SerializeField] private float debugXpAmount = 25f;
 
-    private int _currentLevel;
-    private float _currentXp;
-    private float _xpLevelTarget;
+    private float _bufferedXp;
+    private bool _isAwaitingLevelUpChoice;
 
-    // subscribe to this event to be notified of level ups
+    private int CurrentLevel { get; set; }
+
+    public float CurrentXp { get; private set; }
+
+    public float XpLevelTarget { get; private set; }
+
     public event EventHandler OnLevelUp;
+    public event EventHandler OnXpChanged;
 
     private void Awake()
     {
-        _currentLevel = 1;
-        _currentXp = 0f;
-        _xpLevelTarget = BaseXp + GrowthPerLevel * (_currentLevel - 1);
+        CurrentLevel = 1;
+        CurrentXp = 0f;
+        XpLevelTarget = GetXpTargetForLevel(CurrentLevel);
 
-        Debug.Log($"Starting at level {_currentLevel} with {_currentXp} XP. Next level at {_xpLevelTarget} XP.");
+        Debug.Log($"Starting at level {CurrentLevel} with {CurrentXp} XP. Next level at {XpLevelTarget} XP.");
     }
 
-    // debug input to add xp, replace with actual xp gain from gameplay
     private void Update()
     {
         if (!Input.GetKeyDown(KeyCode.X))
         {
-
             return;
         }
 
-        AddXp(DebugXpAmount);
-        Debug.Log($"Debug XP added: {DebugXpAmount}. Level {_currentLevel}, XP {_currentXp}/{_xpLevelTarget}", this);
+        AddXp(debugXpAmount);
+        Debug.Log($"Debug XP added: {debugXpAmount}. Level {CurrentLevel}, XP {CurrentXp}/{XpLevelTarget}", this);
     }
 
     public void AddXp(float xpAmount)
     {
-        // add xp
-        _currentXp += xpAmount;
-
-        // check for level up
-        if (_currentXp >= _xpLevelTarget)
+        if (xpAmount <= 0f)
         {
-            // send overshot xp through
-            LevelUp(_currentXp - _xpLevelTarget);
+            return;
         }
+
+        _bufferedXp += xpAmount;
+        ProcessBufferedXp();
     }
 
-    private void LevelUp(float overflowXp)
+    public void ResolveLevelUpChoice()
     {
-        while (true)
+        _isAwaitingLevelUpChoice = false;
+        ProcessBufferedXp();
+    }
+
+    private void ProcessBufferedXp()
+    {
+        while (!_isAwaitingLevelUpChoice && _bufferedXp > 0f)
         {
-            // level up and set remainder xp
-            _currentLevel++;
-            _currentXp = overflowXp;
+            var xpNeededToLevel = XpLevelTarget - CurrentXp;
+            var xpToApply = Mathf.Min(_bufferedXp, xpNeededToLevel);
 
-            // change xp target, currently linear
-            _xpLevelTarget = BaseXp + GrowthPerLevel * (_currentLevel - 1);
+            CurrentXp += xpToApply;
+            _bufferedXp -= xpToApply;
+
+            if(!(CurrentXp >= XpLevelTarget)) continue;
+            CurrentLevel++;
+            CurrentXp = 0f;
+            XpLevelTarget = GetXpTargetForLevel(CurrentLevel);
+            _isAwaitingLevelUpChoice = true;
             OnLevelUp?.Invoke(this, EventArgs.Empty);
-
-            // check for multiple level ups
-            if (_currentXp >= _xpLevelTarget)
-            {
-                // level up again if we're still above requirement
-                overflowXp = _currentXp - _xpLevelTarget;
-                continue;
-            }
-
-            break;
+            OnXpChanged?.Invoke(this, EventArgs.Empty);
+            return;
         }
+
+        OnXpChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    private float GetXpTargetForLevel(int level)
+    {
+        return baseXp + growthPerLevel * (level - 1);
     }
 }

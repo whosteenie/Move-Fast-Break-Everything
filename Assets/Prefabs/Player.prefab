@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 325345116678476301}
   - component: {fileID: 1826873285969335579}
   - component: {fileID: 1269611933969825367}
+  - component: {fileID: 8550780378805119090}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -232,3 +233,15 @@ MonoBehaviour:
   targetRefreshRate: 0.3
   baseDamege: 1
   dis: 10
+--- !u!114 &8550780378805119090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5711766594770397432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed3aab666364b514fb20ee667fc27801, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerLevelUp
