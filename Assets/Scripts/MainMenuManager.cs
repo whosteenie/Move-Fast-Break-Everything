@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 [RequireComponent(typeof(UIDocument))]
 public class MainMenuManager : MonoBehaviour
 {
-    [SerializeField] private string playSceneName = "GameScene";
+    [SerializeField] private string playSceneName = "SampleScene";
 
     public event Action<string> ButtonPressed;
 
