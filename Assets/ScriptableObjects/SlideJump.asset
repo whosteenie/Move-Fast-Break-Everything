@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MovementSO
   moveName: SlideJump
   moveState: 9
-  moveTimeLength: 0.25
-  movePower: 20
+  moveTimeLength: 0.1
+  movePower: 15
   hasDecay: 1
   decayState: 10
-  decayTimeLength: 2
+  decayTimeLength: 0.5

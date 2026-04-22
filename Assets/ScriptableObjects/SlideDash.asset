@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39e2d36409380424b8572c62deb4d037, type: 3}
   m_Name: SlideDash
   m_EditorClassIdentifier: Assembly-CSharp::MovementSO
-  moveName: SlideJump
-  moveState: 9
-  moveTimeLength: 0.25
-  movePower: 20
+  moveName: SlideDash
+  moveState: 11
+  moveTimeLength: 0.5
+  movePower: 25
   hasDecay: 1
-  decayState: 10
+  decayState: 12
   decayTimeLength: 2
