@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: a98cc6b4209d5dd43b607a14272a8445
+guid: 0efab9be7cabacb4baa182262b34aea8
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5985158595695688419
-    second: TreeSprite_0
+      213: -2755646233369475339
+    second: Broken_tree4_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: TreeSprite_0
+      name: Broken_tree4_0
       rect:
         serializedVersion: 2
-        x: 45
-        y: 77
-        width: 386
-        height: 409
+        x: 16
+        y: 21
+        width: 36
+        height: 22
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d15ce2bc7f170fca0800000000000000
-      internalID: -5985158595695688419
+      spriteID: 5f68e5dc95af1c9d0800000000000000
+      internalID: -2755646233369475339
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      TreeSprite_0: -5985158595695688419
+      Broken_tree4_0: -2755646233369475339
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
