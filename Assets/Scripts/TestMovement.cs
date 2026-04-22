@@ -20,6 +20,7 @@ public class TestMovement : MonoBehaviour
     float dashDurationTimer;
     float dashCooldownTimer;
     bool isDashing;
+    public float moveSpeed = 5f;
 
     private UnityEngine.Vector2 endPos;
 
