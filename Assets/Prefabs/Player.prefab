@@ -153,7 +153,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!58 &325345116678476301
 CircleCollider2D:
@@ -203,7 +203,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb9a614f21eb5b14aaf5a1688510d1d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  moveSpeed: 5
   rb: {fileID: 9007521428449226668}
   dashSpeed: 25
   dashDuration: 0.2
@@ -227,6 +226,7 @@ MonoBehaviour:
   bulletSpeed: 10
   detectionRange: 10
   targetRefreshRate: 0.3
+  baseDamege: 1
   dis: 10
 --- !u!114 &8550780378805119090
 MonoBehaviour:

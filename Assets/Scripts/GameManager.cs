@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour {
@@ -11,12 +12,17 @@ public class GameManager : MonoBehaviour {
     private const string StrengthButtonName = "strength-button";
     private const string DexterityButtonName = "dexterity-button";
     private const string IntelligenceButtonName = "intelligence-button";
+    private const string GameOverRootName = "game-over-root";
+    private const string RetryButtonName = "retry-button";
+    private const string QuitButtonName = "quit-button";
 
     private Label _runTimerLabel;
     private VisualElement _levelProgressFill;
     private VisualElement _levelUpRoot;
     private PlayerLevelUp _playerLevelUp;
+    private VisualElement _gameOverRoot;
     private float _currentRunTime;
+    private bool _isGameOver;
 
     public static GameManager Instance { get; private set; }
     public static float CurrentRunTimeSeconds => Instance != null ? Instance._currentRunTime : 0f;
@@ -45,29 +51,18 @@ public class GameManager : MonoBehaviour {
 
     private void Start() {
         if(uiDocument == null) return;
-
-        var root = uiDocument.rootVisualElement;
-        _runTimerLabel = root.Q<Label>(RunTimerLabelName);
-        _levelProgressFill = root.Q<VisualElement>(LevelProgressFillName);
-        _levelUpRoot = root.Q<VisualElement>(LevelUpRootName);
-
-        root.Q<Button>(StrengthButtonName).clicked += () => ResolveLevelUpChoice("strength");
-        root.Q<Button>(DexterityButtonName).clicked += () => ResolveLevelUpChoice("dexterity");
-        root.Q<Button>(IntelligenceButtonName).clicked += () => ResolveLevelUpChoice("intelligence");
-
-        _playerLevelUp = FindAnyObjectByType<PlayerLevelUp>();
-        if (_playerLevelUp != null)
-        {
-            _playerLevelUp.OnXpChanged += HandleXpChanged;
-            _playerLevelUp.OnLevelUp += HandleLevelUp;
-        }
-
+        _runTimerLabel = uiDocument.rootVisualElement.Q<Label>(RunTimerLabelName);
         _runTimerLabel.text = FormatRunTime(_currentRunTime);
         _levelUpRoot.style.display = DisplayStyle.None;
         RefreshLevelProgressBar();
+        _gameOverRoot.style.display = DisplayStyle.None;
     }
 
     private void Update() {
+        if(_isGameOver) {
+            return;
+        }
+
         _currentRunTime += Time.deltaTime;
 
         if(_runTimerLabel != null) {
@@ -114,6 +109,21 @@ public class GameManager : MonoBehaviour {
 
         var progress = _playerLevelUp.CurrentXp / _playerLevelUp.XpLevelTarget;
         _levelProgressFill.style.width = Length.Percent(progress * 100f);
+    }
+
+    public void ShowGameOver() {
+        if(_isGameOver) return;
+
+        _isGameOver = true;
+        _gameOverRoot.style.display = DisplayStyle.Flex;
+    }
+
+    private static void RetryRun() {
+        SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    private static void QuitToMenu() {
+        Debug.LogWarning("Not yet implemented");
     }
 
     private static string FormatRunTime(float runTimeSeconds) {
