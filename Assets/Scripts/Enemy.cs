@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class Enemy : MonoBehaviour
 {
@@ -102,6 +103,7 @@ public class Enemy : MonoBehaviour
                     Player player = collision.gameObject.GetComponent<Player>();
                     if (player != null)
                     {
+                        Debug.Log("TAKE DAMAGE");
                         player.TakeDamage((int)(baseDamage * damageMultiplier));
                         damageTimer = damageCooldown;
                     }
