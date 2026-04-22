@@ -3,7 +3,9 @@ using UnityEngine;
 
 public class TestMovement : MonoBehaviour
 {
-    public float moveSpeed = 5f;
+    private Stats stats;
+
+
     public Rigidbody2D rb;
     UnityEngine.Vector2 movement;
 
@@ -12,6 +14,8 @@ public class TestMovement : MonoBehaviour
     public float dashSpeed = 25f;
     public float dashDuration = 0.2f;
     public float dashCooldown = 1f;
+
+
 
     float dashDurationTimer;
     float dashCooldownTimer;
@@ -32,6 +36,8 @@ public class TestMovement : MonoBehaviour
 
     void Update()
     {
+
+
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
 
@@ -70,6 +76,11 @@ public class TestMovement : MonoBehaviour
         }
     }
 
+    private void Awake()
+    {
+        stats = GetComponent<Stats>();
+    }
+    //__________________________________________________________________________________________________
     void FixedUpdate()
     {
         UnityEngine.Vector2 endPos = new UnityEngine.Vector2(0,0);
@@ -138,4 +149,5 @@ public class TestMovement : MonoBehaviour
         // rb.MovePosition(rb.position + facing*(slideMovementSO.movePower)*Time.fixedDeltaTime);
         return facing*(slideMovementSO.movePower)*Time.fixedDeltaTime;
     }
+    //__________________________________________________________________________________________________
 }
