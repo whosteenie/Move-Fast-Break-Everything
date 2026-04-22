@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39e2d36409380424b8572c62deb4d037, type: 3}
   m_Name: Dash
   m_EditorClassIdentifier: Assembly-CSharp::MovementSO
-  moveName: 
+  moveName: Dash
   moveState: 0
-  moveLength: 0
-  movePower: 0
-  hasDecay: 0
-  decayState: 0
-  decayTimeLength: 0
+  moveTimeLength: 0.2
+  movePower: 25
+  hasDecay: 1
+  decayState: 1
+  decayTimeLength: 1
