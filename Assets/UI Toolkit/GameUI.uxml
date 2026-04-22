@@ -16,6 +16,7 @@
             <ui:VisualElement name="level-progress-track" class="level-progress-track">
                 <ui:VisualElement name="level-progress-fill" class="level-progress-fill" />
             </ui:VisualElement>
+        </ui:VisualElement>
         <ui:VisualElement name="game-over-root" class="game-over-root">
             <ui:Label text="YOU DIED" class="game-over-title" />
             <ui:Button name="retry-button" text="Retry" class="game-over-button game-over-button--primary" />
