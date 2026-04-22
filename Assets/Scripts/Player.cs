@@ -73,6 +73,7 @@ public class Player : MonoBehaviour
 
     private void Die()
     {
+        GameManager.Instance.ShowGameOver();
         Destroy(gameObject);
     }
 

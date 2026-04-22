@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 1826873285969335579}
   - component: {fileID: 1269611933969825367}
   - component: {fileID: 8550780378805119090}
+  - component: {fileID: 2436123147083778664}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -207,6 +208,7 @@ MonoBehaviour:
   dashSpeed: 25
   dashDuration: 0.2
   dashCooldown: 1
+  moveSpeed: 5
   dashKey: 32
   slideKey: 304
   chargeKey: 122
@@ -245,3 +247,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed3aab666364b514fb20ee667fc27801, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerLevelUp
+  baseXp: 50
+  growthPerLevel: 25
+  debugXpAmount: 25
+--- !u!114 &2436123147083778664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5711766594770397432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48fe1787d8d132f41a39a96d2b48c165, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Stats
+  speedMultiplier: 5
+  damageMultiplier: 2
+  maxHealthStat: 10

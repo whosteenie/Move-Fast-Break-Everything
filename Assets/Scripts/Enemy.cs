@@ -93,7 +93,6 @@ public class Enemy : MonoBehaviour
         float damageMultiplier = (stats != null) ? stats.damageMultiplier : 2f;
         if (collision.gameObject != null && collision.gameObject.tag == "Player")
         {
-            GameManager.Instance.ShowGameOver();
             //Replace this with a damage player call
             if (collision.gameObject.CompareTag("Player"))
             {
