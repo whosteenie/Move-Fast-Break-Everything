@@ -17,6 +17,7 @@ public class ChunkManager : MonoBehaviour
     [SerializeField] private GameObject floorEarthPrefab;
     [SerializeField] private GameObject floorTechPrefab;
     [SerializeField] private ObstacleSpawner obstacleSpawner;
+    [SerializeField] private TowerSpawner towerSpawner;
     [SerializeField] private float chunkSize = 20f;
     [SerializeField] private float cellSize = 1f;
     [SerializeField] private int loadRadius = 1; // How many chunks away from player are loaded
@@ -126,6 +127,7 @@ public class ChunkManager : MonoBehaviour
         CreateChunkCells(chunkObject.transform, chunkCenter);
         
         obstacleSpawner.GenerateChunk(chunkObject.transform, chunkCenter, chunkSize);
+        towerSpawner.GenerateChunk(chunkObject.transform, chunkCenter, chunkSize);
     }
     
     private void UnloadChunk(Vector2Int chunkCoordinate)

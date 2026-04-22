@@ -358,6 +358,7 @@ GameObject:
   - component: {fileID: 636936950}
   - component: {fileID: 636936949}
   - component: {fileID: 636936952}
+  - component: {fileID: 636936953}
   m_Layer: 0
   m_Name: WorldGenerator
   m_TagString: Untagged
@@ -383,6 +384,7 @@ MonoBehaviour:
   floorEarthPrefab: {fileID: 4734800804745988880, guid: d40b59c064b87234fb8dd765c35a0efa, type: 3}
   floorTechPrefab: {fileID: 4734800804745988880, guid: 6519efa9cf4b9e340886699f3375ef7e, type: 3}
   obstacleSpawner: {fileID: 636936950}
+  towerSpawner: {fileID: 636936953}
   chunkSize: 20
   cellSize: 1
   loadRadius: 1
@@ -449,6 +451,30 @@ MonoBehaviour:
   maxEnemies: 10
   spawnDistance: 12
   respawnDistance: 40
+--- !u!114 &636936953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 636936948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a7c6e33448340e0af0f4e3267ee16a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TowerSpawner
+  towerPrefabs:
+  - {fileID: 2311890830828110298, guid: 65a95123cf7eeed49840fac229109a95, type: 3}
+  - {fileID: 7777900955581189186, guid: 9550ea7b69289a64a89fa8930adcc4ff, type: 3}
+  - {fileID: 4775551448602699699, guid: 26d97c43d0b9b2245a041fce69b6de4b, type: 3}
+  - {fileID: 5539367028798991948, guid: 9e230f857f49d0041812c49ef7ef9bf2, type: 3}
+  chunkManager: {fileID: 636936949}
+  towerCount: 5
+  towerSpawnChance: 0.25
+  playerSpawnPoint: {x: 0, y: 0}
+  towerSpacing: 4
+  playerSpacing: 20
+  maxPlacementAttempts: 10
 --- !u!1001 &884647736
 PrefabInstance:
   m_ObjectHideFlags: 0
