@@ -447,7 +447,7 @@ MonoBehaviour:
   player: {fileID: 1092388853012045805}
   spawnInterval: 3
   maxEnemies: 10
-  spawnDistance: 10
+  spawnDistance: 12
   respawnDistance: 40
 --- !u!1001 &884647736
 PrefabInstance:

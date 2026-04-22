@@ -55,7 +55,7 @@ public class EnemySpawner : MonoBehaviour
         return spawnPosition;
     }
     
-    // Removes dead enemies and respawns enemies that get farther than the respawnDistance
+    // Removes destroyed enemy references and moves distant enemies back near the player
     private void UpdateActiveEnemies()
     {
         for (int i = activeEnemies.Count - 1; i >= 0; i--)
