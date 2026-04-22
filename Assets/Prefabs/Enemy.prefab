@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 8607304971326464833}
   - component: {fileID: 2955802740638934769}
   - component: {fileID: 5906236051856791112}
+  - component: {fileID: 2105547825413297556}
+  - component: {fileID: 7009612526986155507}
   - component: {fileID: -8236634439346163064}
   - component: {fileID: 7777031547732658782}
   m_Layer: 0
@@ -106,6 +108,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51a3186fad65a504cad2b28dcbdeec6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  maxHealth: 10
+  baseDamage: 1
+--- !u!114 &2105547825413297556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1874990315484048395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dea8a65839d2f894ab137b8cf137a64b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyStats
+  speedMultiplier: 5
+  damageMultiplier: 2
+  maxHealthStat: 10
+--- !u!114 &7009612526986155507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1874990315484048395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c911ebcce8631844b0a3e6649d8969c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyLevelUp
 --- !u!50 &-8236634439346163064
 Rigidbody2D:
   serializedVersion: 5
