@@ -51,11 +51,48 @@ public class GameManager : MonoBehaviour {
 
     private void Start() {
         if(uiDocument == null) return;
-        _runTimerLabel = uiDocument.rootVisualElement.Q<Label>(RunTimerLabelName);
-        _runTimerLabel.text = FormatRunTime(_currentRunTime);
-        _levelUpRoot.style.display = DisplayStyle.None;
+
+        var root = uiDocument.rootVisualElement;
+        _runTimerLabel = root.Q<Label>(RunTimerLabelName);
+        _levelProgressFill = root.Q<VisualElement>(LevelProgressFillName);
+        _levelUpRoot = root.Q<VisualElement>(LevelUpRootName);
+        _gameOverRoot = root.Q<VisualElement>(GameOverRootName);
+
+        var strengthButton = root.Q<Button>(StrengthButtonName);
+        var dexterityButton = root.Q<Button>(DexterityButtonName);
+        var intelligenceButton = root.Q<Button>(IntelligenceButtonName);
+        var retryButton = root.Q<Button>(RetryButtonName);
+        var quitButton = root.Q<Button>(QuitButtonName);
+
+        if (strengthButton != null) strengthButton.clicked += () => ResolveLevelUpChoice("strength");
+        if (dexterityButton != null) dexterityButton.clicked += () => ResolveLevelUpChoice("dexterity");
+        if (intelligenceButton != null) intelligenceButton.clicked += () => ResolveLevelUpChoice("intelligence");
+        if (retryButton != null) retryButton.clicked += RetryRun;
+        if (quitButton != null) quitButton.clicked += QuitToMenu;
+
+        _playerLevelUp = FindObjectOfType<PlayerLevelUp>();
+        if (_playerLevelUp != null)
+        {
+            _playerLevelUp.OnXpChanged += HandleXpChanged;
+            _playerLevelUp.OnLevelUp += HandleLevelUp;
+        }
+
+        if (_runTimerLabel != null)
+        {
+            _runTimerLabel.text = FormatRunTime(_currentRunTime);
+        }
+
+        if (_levelUpRoot != null)
+        {
+            _levelUpRoot.style.display = DisplayStyle.None;
+        }
+
+        if (_gameOverRoot != null)
+        {
+            _gameOverRoot.style.display = DisplayStyle.None;
+        }
+
         RefreshLevelProgressBar();
-        _gameOverRoot.style.display = DisplayStyle.None;
     }
 
     private void Update() {
@@ -78,7 +115,10 @@ public class GameManager : MonoBehaviour {
     private void HandleLevelUp(object sender, EventArgs e)
     {
         Time.timeScale = 0f;
-        _levelUpRoot.style.display = DisplayStyle.Flex;
+        if (_levelUpRoot != null)
+        {
+            _levelUpRoot.style.display = DisplayStyle.Flex;
+        }
     }
 
     private void ResolveLevelUpChoice(string choiceId)
@@ -89,7 +129,10 @@ public class GameManager : MonoBehaviour {
         }
 
         Debug.Log($"Level up choice selected: {choiceId}", this);
-        _levelUpRoot.style.display = DisplayStyle.None;
+        if (_levelUpRoot != null)
+        {
+            _levelUpRoot.style.display = DisplayStyle.None;
+        }
         Time.timeScale = 1f;
         _playerLevelUp.ResolveLevelUpChoice();
     }
@@ -115,7 +158,10 @@ public class GameManager : MonoBehaviour {
         if(_isGameOver) return;
 
         _isGameOver = true;
-        _gameOverRoot.style.display = DisplayStyle.Flex;
+        if (_gameOverRoot != null)
+        {
+            _gameOverRoot.style.display = DisplayStyle.Flex;
+        }
     }
 
     private static void RetryRun() {
