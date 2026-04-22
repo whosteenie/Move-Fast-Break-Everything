@@ -208,6 +208,11 @@ MonoBehaviour:
   dashDuration: 0.2
   dashCooldown: 1
   dashKey: 32
+  slideKey: 304
+  chargeKey: 122
+  slideMovementSO: {fileID: 11400000, guid: 663f6dc32ecaa9e4e88ecf6145993f89, type: 2}
+  chargeMovementSO: {fileID: 11400000, guid: a70904dca67ea5c4c99c12c2679eb9af, type: 2}
+  movementStateMachine: {fileID: 0}
 --- !u!114 &1269611933969825367
 MonoBehaviour:
   m_ObjectHideFlags: 0
