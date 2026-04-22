@@ -55,7 +55,7 @@ public class EnemySpawner : MonoBehaviour
     {
         foreach (GameObject enemyObject in activeEnemies)
         {
-            if (Vector2.Distance(enemyObject.transform.position, player.position) > respawnDistance)
+            if (enemyObject != null && Vector2.Distance(enemyObject.transform.position, player.position) > respawnDistance)
             {
                 enemyObject.transform.position = GetSpawn();
             }
