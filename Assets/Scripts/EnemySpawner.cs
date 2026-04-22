@@ -7,7 +7,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private Transform player;
     [SerializeField] private float spawnInterval = 3f;
     [SerializeField] private int maxEnemies = 10; 
-    [SerializeField] private float spawnDistance = 10f; // With current setup, 10f is just outside camera view
+    [SerializeField] private float spawnDistance = 12f; // With current setup, 12f is just outside camera view
     [SerializeField] private float respawnDistance = 40f;
     
     private readonly List<GameObject> activeEnemies = new();
@@ -15,6 +15,11 @@ public class EnemySpawner : MonoBehaviour
     
     private void Update()
     {
+        if (player == null)
+        {
+            return;
+        }
+
         UpdateActiveEnemies();
         
         // TODO: This should gradually increase as the game progresses instead of staying a flat amount
@@ -50,12 +55,20 @@ public class EnemySpawner : MonoBehaviour
         return spawnPosition;
     }
     
-    // Respawns enemies that get farther than the respawnDistance
+    // Removes dead enemies and respawns enemies that get farther than the respawnDistance
     private void UpdateActiveEnemies()
     {
-        foreach (GameObject enemyObject in activeEnemies)
+        for (int i = activeEnemies.Count - 1; i >= 0; i--)
         {
-            if (enemyObject != null && Vector2.Distance(enemyObject.transform.position, player.position) > respawnDistance)
+            GameObject enemyObject = activeEnemies[i];
+
+            if (enemyObject == null)
+            {
+                activeEnemies.RemoveAt(i);
+                continue;
+            }
+
+            if (Vector2.Distance(enemyObject.transform.position, player.position) > respawnDistance)
             {
                 enemyObject.transform.position = GetSpawn();
             }
