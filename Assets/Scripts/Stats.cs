@@ -7,6 +7,8 @@ public class Stats : MonoBehaviour
     public float speedMultiplier = 1f;
     public float damageMultiplier = 1f;
     public float maxHealthStat = 1f;
+
+    public float dexterityMultiplier = 1f;
     private PlayerLevelUp levelSytem;
     private Player player;
 
@@ -37,12 +39,18 @@ public class Stats : MonoBehaviour
         IncreaseSpeed(0.1f);
         IncreaseDamage(0.1f);
         IncreaseHealth(0.1f);
+        IncreaseDexterity(0.1f);
 
         if (player != null)
         {
             player.UpdateMaxHealth(GetMaxHealth());
         }
 
+    }
+
+    private void IncreaseDexterity(float percent)
+    {
+        dexterityMultiplier += percent;
     }
 
     public void IncreaseSpeed(float percent)
@@ -75,5 +83,11 @@ public class Stats : MonoBehaviour
         int baseHealth = 10;
         return Mathf.RoundToInt(baseHealth * maxHealthStat);
     }
+
+    public float GetFireRate(float baseFireRate)
+    {
+        return baseFireRate * dexterityMultiplier;
+    }
+
 
 }

@@ -50,6 +50,7 @@ public class AutoAim : MonoBehaviour
                 RotateTowards(direction);
                 Shoot(direction);
             }
+            float finalFireRate = (stats != null) ? stats.GetFireRate(fireRate) : fireRate;
 
             yield return new WaitForSeconds(1f / fireRate);
         }
