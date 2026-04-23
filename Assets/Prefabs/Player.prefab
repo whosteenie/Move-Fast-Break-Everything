@@ -235,7 +235,7 @@ MonoBehaviour:
   bulletSpeed: 10
   detectionRange: 10
   targetRefreshRate: 0.3
-  baseDamege: 4
+  baseDamage: 4
   dis: 10
 --- !u!114 &8550780378805119090
 MonoBehaviour:
@@ -266,7 +266,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Stats
   speedMultiplier: 1
   damageMultiplier: 1
-  maxHealthStat: 1
+  baseHealth: 10
+  flatHealthBonus: 0
+  healthMultiplier: 1
   dexterityMultiplier: 1
 --- !u!114 &-6438699549702643509
 MonoBehaviour:
