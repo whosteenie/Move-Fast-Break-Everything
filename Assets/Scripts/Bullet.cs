@@ -15,7 +15,7 @@ public class Bullet : MonoBehaviour
     void Update()
     {
 
-        transform.position += (Vector3)(moveDirection * speed * Time.deltaTime);
+        transform.position += (Vector3)(moveDirection * (speed * Time.deltaTime));
     }
     public void SetDirection(Vector2 direction, float bulletSpeed, int damageAmount)
     {

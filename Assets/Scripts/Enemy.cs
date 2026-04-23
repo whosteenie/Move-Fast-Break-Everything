@@ -152,7 +152,7 @@ public class Enemy : MonoBehaviour
     void OnCollisionStay2D(Collision2D collision)
     {
         float damageMultiplier = (stats != null) ? stats.damageMultiplier : 2f;
-        if (collision.gameObject != null && collision.gameObject.tag == "Player")
+        if (collision.gameObject != null && collision.gameObject.CompareTag("Player"))
         {
             //Replace this with a damage player call
             if (collision.gameObject.CompareTag("Player"))
