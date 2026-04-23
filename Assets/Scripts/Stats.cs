@@ -18,6 +18,8 @@ public class Stats : MonoBehaviour
 
     private Player player;
 
+    private PlayerLevelUp levelSytem;
+
     private void Awake()
     {
         player = GetComponent<Player>();
@@ -39,7 +41,7 @@ public class Stats : MonoBehaviour
         }
     }
 
-    private void OnStatChange(object sender, EventArgs e)
+    private void OnStatChange(object sender, System.EventArgs e)
     {
         IncreaseSpeed(0.1f);
         IncreaseDamage(0.1f);
@@ -56,10 +58,7 @@ public class Stats : MonoBehaviour
 
     }
     //health stats____________________________________________________________________________
-    private void IncreaseFlatHealth(int amount)
-
-    private void IncreaseDexterity(float percent)
-    {
+    private void IncreaseFlatHealth(int amount){
         flatHealthBonus += amount;
     }
     public void IncreaseHealthPercent(float percent)
@@ -111,7 +110,7 @@ public class Stats : MonoBehaviour
         switch (choiceId)
         {
             case "strength":
-                IncreaseHealth(StrengthHealthIncrease);
+                IncreaseHealthPercent(StrengthHealthIncrease);
                 if (player != null)
                 {
                     player.UpdateMaxHealth(GetMaxHealth());
