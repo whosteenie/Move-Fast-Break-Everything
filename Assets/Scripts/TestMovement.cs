@@ -14,7 +14,7 @@ public class TestMovement : MonoBehaviour
     public float dashDuration = 0.2f;
     public float dashCooldown = 1f;
 
-
+    public float moveSpeed = 5f;
 
     float dashDurationTimer;
     float dashCooldownTimer;
