@@ -169,7 +169,7 @@ public class GameManager : MonoBehaviour {
     }
 
     private static void QuitToMenu() {
-        Debug.LogWarning("Not yet implemented");
+        SceneManager.LoadSceneAsync("MainMenu");
     }
 
     private static string FormatRunTime(float runTimeSeconds) {
