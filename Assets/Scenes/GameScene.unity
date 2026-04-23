@@ -639,6 +639,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1269611933969825367, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
+      propertyPath: weaponSO
+      value: 
+      objectReference: {fileID: 11400000, guid: bb479f169d2f82c4f807423405bedf60, type: 2}
+    - target: {fileID: 1269611933969825367, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
@@ -646,6 +650,10 @@ PrefabInstance:
       propertyPath: movementStateMachine
       value: 
       objectReference: {fileID: 1828502760}
+    - target: {fileID: 5327108225811942733, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
+      propertyPath: bulletPrefab
+      value: 
+      objectReference: {fileID: 3862674274435588204, guid: 6382b9e311e4a89458b11f5df22a9610, type: 3}
     - target: {fileID: 5711766594770397432, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
       propertyPath: m_Name
       value: Player
