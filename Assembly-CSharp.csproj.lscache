@@ -53,18 +53,25 @@ TemporaryDependencyNodeTargetIdentifier=netstandard2.1
 Assets/Scripts/
  AutoAim.cs
  Bullet.cs
+ ChunkManager.cs
  DamageTower.cs
  Enemy.cs
  EnemyLevelUp.cs
+ EnemySpawner.cs
  EnemyStats.cs
+ GameManager.cs
  HealthTower.cs
  LevelTower.cs
+ MainMenuManager.cs
+ MovementStateMachine.cs
  ObstacleSpawner.cs
  Player.cs
  PlayerLevelUp.cs
+ ScriptableObjects/MovementSO.cs
  SpeedTower.cs
  Stats.cs
  TestMovement.cs
+ XPOrb.cs
 Temp/obj/Assembly-CSharp/.NETStandard,Version=v2.1.AssemblyAttributes.cs
 
 [metadataReferences]

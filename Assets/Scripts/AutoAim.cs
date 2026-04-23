@@ -50,8 +50,9 @@ public class AutoAim : MonoBehaviour
                 RotateTowards(direction);
                 Shoot(direction);
             }
+            float finalFireRate = (stats != null) ? stats.GetFireRate(fireRate) : fireRate;
 
-            yield return new WaitForSeconds(1f / fireRate);
+            yield return new WaitForSeconds(1f / finalFireRate);
         }
     }
     [SerializeField]
@@ -83,13 +84,11 @@ public class AutoAim : MonoBehaviour
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
 
         Bullet bulletScript = bullet.GetComponent<Bullet>();
+
+        int finalDamage = (stats != null) ? stats.GetDamage(baseDamege) : baseDamege;
+
         if (bulletScript != null)
         {
-            int finalDamage = bulletScript.damage;
-            if (stats != null)
-            {
-                finalDamage *= stats.damageMultiplier;
-            }
             bulletScript.SetDirection(direction, bulletSpeed, finalDamage);
         }
     }
