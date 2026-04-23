@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviour {
         if (retryButton != null) retryButton.clicked += RetryRun;
         if (quitButton != null) quitButton.clicked += QuitToMenu;
 
-        _playerLevelUp = FindObjectOfType<PlayerLevelUp>();
+        _playerLevelUp = FindAnyObjectByType<PlayerLevelUp>();
         if (_playerLevelUp != null)
         {
             _playerLevelUp.OnXpChanged += HandleXpChanged;
@@ -169,7 +169,7 @@ public class GameManager : MonoBehaviour {
     }
 
     private static void QuitToMenu() {
-        Debug.LogWarning("Not yet implemented");
+        SceneManager.LoadSceneAsync("MainMenu");
     }
 
     private static string FormatRunTime(float runTimeSeconds) {
