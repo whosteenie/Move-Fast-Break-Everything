@@ -17,7 +17,7 @@ public class AutoAim : MonoBehaviour
     private GameObject currentTarget;
 
     private Stats stats;
-    public int baseDamege = 1;
+    public int baseDamage = 1;
 
     void Start()
     {
@@ -85,7 +85,10 @@ public class AutoAim : MonoBehaviour
 
         Bullet bulletScript = bullet.GetComponent<Bullet>();
 
-        int finalDamage = (stats != null) ? stats.GetDamage(baseDamege) : baseDamege;
+        Stats stats = GetComponentInParent<Stats>();
+        int finalDamage = Mathf.RoundToInt(baseDamage * stats.damageMultiplier);
+
+        Debug.Log("Multiplier: " + stats.damageMultiplier + " Final Damage: " + finalDamage);
 
         if (bulletScript != null)
         {

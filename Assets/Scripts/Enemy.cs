@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class Enemy : MonoBehaviour
 {
@@ -15,7 +14,7 @@ public class Enemy : MonoBehaviour
 
 
     public int maxHealth = 10;
-  
+
     private int currentHealth;
 
     // public int damageMultiplier;

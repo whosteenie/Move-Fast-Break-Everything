@@ -129,7 +129,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStats
   speedMultiplier: 5
   damageMultiplier: 2
-  maxHealthStat: 10
+  maxHealthStat: 50
 --- !u!114 &7009612526986155507
 MonoBehaviour:
   m_ObjectHideFlags: 0
