@@ -83,13 +83,12 @@ public class AutoAim : MonoBehaviour
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
 
         Bullet bulletScript = bullet.GetComponent<Bullet>();
+
+        Stats stats = GetComponentInParent<Stats>();
+        int finalDamage = Mathf.RoundToInt(baseDamege * stats.damageMultiplier);
+
         if (bulletScript != null)
         {
-            int finalDamage = bulletScript.damage;
-            if (stats != null)
-            {
-                finalDamage *= stats.damageMultiplier;
-            }
             bulletScript.SetDirection(direction, bulletSpeed, finalDamage);
         }
     }
