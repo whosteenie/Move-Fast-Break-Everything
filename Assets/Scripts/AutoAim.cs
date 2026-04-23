@@ -16,10 +16,18 @@ public class AutoAim : MonoBehaviour
 
     private GameObject currentTarget;
 
+    private Stats stats;
+    public int baseDamage = 1;
+
     void Start()
     {
         StartCoroutine(UpdateTargetRoutine());
         StartCoroutine(ShootRoutine());
+    }
+
+    void Awake()
+    {
+        stats = GetComponentInParent<Stats>();
     }
 
     IEnumerator UpdateTargetRoutine()
@@ -42,8 +50,9 @@ public class AutoAim : MonoBehaviour
                 RotateTowards(direction);
                 Shoot(direction);
             }
+            float finalFireRate = (stats != null) ? stats.GetFireRate(fireRate) : fireRate;
 
-            yield return new WaitForSeconds(1f / fireRate);
+            yield return new WaitForSeconds(1f / finalFireRate);
         }
     }
     [SerializeField]
@@ -75,9 +84,15 @@ public class AutoAim : MonoBehaviour
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
 
         Bullet bulletScript = bullet.GetComponent<Bullet>();
+
+        Stats stats = GetComponentInParent<Stats>();
+        int finalDamage = Mathf.RoundToInt(baseDamage * stats.damageMultiplier);
+
+        Debug.Log("Multiplier: " + stats.damageMultiplier + " Final Damage: " + finalDamage);
+
         if (bulletScript != null)
         {
-            bulletScript.SetDirection(direction, bulletSpeed);
+            bulletScript.SetDirection(direction, bulletSpeed, finalDamage);
         }
     }
 

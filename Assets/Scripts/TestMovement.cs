@@ -1,9 +1,9 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class TestMovement : MonoBehaviour
 {
-    public float moveSpeed = 5f;
+    private Stats stats;
+
     public Rigidbody2D rb;
     UnityEngine.Vector2 movement;
 
@@ -13,9 +13,12 @@ public class TestMovement : MonoBehaviour
     public float dashDuration = 0.2f;
     public float dashCooldown = 1f;
 
+    public float moveSpeed = 5f;
+
     float dashDurationTimer;
     float dashCooldownTimer;
     bool isDashing;
+    public float baseMoveSpeed = 5f;
 
     private UnityEngine.Vector2 endPos;
 
@@ -41,7 +44,8 @@ public class TestMovement : MonoBehaviour
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
 
-        if (movement != UnityEngine.Vector2.zero) {
+        if (movement != UnityEngine.Vector2.zero)
+        {
             facing = movement.normalized;
         }
         if(Input.GetKeyDown(dashKey) && movementStateMachine.HasState(MovementStateMachine.State.slide) && !movementStateMachine.HasState(MovementStateMachine.State.slideDash) && !movementStateMachine.HasState(MovementStateMachine.State.slideDashDecay))
@@ -62,7 +66,7 @@ public class TestMovement : MonoBehaviour
             // print("In Slide Key Press");
             movementStateMachine.AddState(slideMovementSO);
         }
-        if(Input.GetKeyDown(chargeKey) && !(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay) || movementStateMachine.HasState(MovementStateMachine.State.charge) || movementStateMachine.HasState(MovementStateMachine.State.chargeDecay)))
+        if (Input.GetKeyDown(chargeKey) && !(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay) || movementStateMachine.HasState(MovementStateMachine.State.charge) || movementStateMachine.HasState(MovementStateMachine.State.chargeDecay)))
         {
             // print("In Slide Key Press");
             movementStateMachine.AddState(chargeMovementSO);
@@ -83,16 +87,22 @@ public class TestMovement : MonoBehaviour
         }
     }
 
+    private void Awake()
+    {
+        stats = GetComponent<Stats>();
+    }
+    //__________________________________________________________________________________________________
     void FixedUpdate()
     {
-        endPos = new UnityEngine.Vector2(0,0);
+        UnityEngine.Vector2 endPos = new UnityEngine.Vector2(0,0);
+        float currentMoveSpeed = (stats != null) ? stats.GetSpeed(baseMoveSpeed) : moveSpeed;
         endPos += rb.position;
         // rb.MovePosition(rb.position + (movement * moveSpeed) * Time.fixedDeltaTime);
-        endPos += (movement * moveSpeed) * Time.fixedDeltaTime;
+        endPos += movement * (currentMoveSpeed * Time.fixedDeltaTime);
         if (isDashing && !movementStateMachine.HasState(MovementStateMachine.State.slideDash))
         {
             // rb.MovePosition(rb.position + facing * dashSpeed * Time.fixedDeltaTime);
-            endPos += facing * dashSpeed * Time.fixedDeltaTime;
+            endPos += facing * (dashSpeed * Time.fixedDeltaTime);
         }
         if (movementStateMachine.HasState(MovementStateMachine.State.slideDash))
         {
@@ -100,18 +110,18 @@ public class TestMovement : MonoBehaviour
         }  
         if (movementStateMachine.HasState(MovementStateMachine.State.slide))
         {
-            transform.localScale = new Vector3(.25f,.25f,.25f);
+            transform.localScale = new Vector3(.25f, .25f, .25f);
             endPos += Slide();
         }
         if (movementStateMachine.HasState(MovementStateMachine.State.slideDecay))
         {
             endPos += SlideDecay();
         }
-        if(movementStateMachine.HasState(MovementStateMachine.State.charge)&&!(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay)))
+        if (movementStateMachine.HasState(MovementStateMachine.State.charge) && !(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay)))
         {
             endPos += Charge();
         }
-        if(movementStateMachine.HasState(MovementStateMachine.State.chargeDecay)&&!(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay)))
+        if (movementStateMachine.HasState(MovementStateMachine.State.chargeDecay) && !(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay)))
         {
             endPos += ChargeDecay();
         }
@@ -123,7 +133,7 @@ public class TestMovement : MonoBehaviour
     {
         //Shrink the Player
         // Debug.Log("In Slide");
-        transform.localScale = new Vector3(.25f,.25f,.25f);
+        transform.localScale = new Vector3(.25f, .25f, .25f);
         // rb.MovePosition(rb.position + facing*slideMovementSO.movePower*Time.fixedDeltaTime);
         return facing.normalized*slideMovementSO.movePower*Time.fixedDeltaTime;
     }
@@ -140,8 +150,8 @@ public class TestMovement : MonoBehaviour
     private Vector2 Charge()
     {
         //Bulk the Player
-        transform.localScale = new UnityEngine.Vector3(.75f,.75f,.75f);
-        rb.MovePosition(rb.position + facing*slideMovementSO.movePower/2*Time.fixedDeltaTime);
+        transform.localScale = new UnityEngine.Vector3(.75f, .75f, .75f);
+        rb.MovePosition(rb.position + facing * slideMovementSO.movePower / 2 * Time.fixedDeltaTime);
         //Moves you backwards a bit which can be used to do chargeswitch tech! EEEE!
         return facing.normalized*(-slideMovementSO.movePower/1.5f)*Time.fixedDeltaTime;
     }
@@ -159,4 +169,5 @@ public class TestMovement : MonoBehaviour
         Debug.Log("In Slide Dash");
         return facing.normalized*slideDashMovementSO.movePower*Time.fixedDeltaTime;
     }
+    //__________________________________________________________________________________________________
 }
