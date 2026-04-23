@@ -15,5 +15,5 @@ MonoBehaviour:
   fireRate: 2
   reloadTime: 1
   bulletSpeed: 10
-  baseDamage: 2
+  baseDamage: 10
   bulletPrefab: {fileID: 3862674274435588204, guid: ca8cd73260e47a24388e27816b46ffe7, type: 3}
