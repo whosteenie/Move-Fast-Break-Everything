@@ -54,31 +54,32 @@ public class Enemy : MonoBehaviour
 
     private int currentHealth;
     private float damageCooldownTimer;
-    private float repathTimer;
-    private float stuckTimer;
-    private float recoveryTimer;
-    private float orbitSign;
-    private float wanderSeed;
-    private float separationRadiusMultiplier;
-    private float separationStrengthMultiplier;
-    private float desiredDistanceMultiplier;
-    private Vector2 desiredVelocity;
-    private Vector2 currentVelocity;
-    private Vector2 appliedVelocity;
-    private Vector2 lastStuckPosition;
-    private Vector2 cachedPathDirection;
-    private Vector2 recoveryDirection;
+    
+    private float _repathTimer;
+    private float _stuckTimer;
+    private float _recoveryTimer;
+    private float _orbitSign;
+    private float _wanderSeed;
+    private float _separationRadiusMultiplier;
+    private float _separationStrengthMultiplier;
+    private float _desiredDistanceMultiplier;
+    private Vector2 _desiredVelocity;
+    private Vector2 _currentVelocity;
+    private Vector2 _appliedVelocity;
+    private Vector2 _lastStuckPosition;
+    private Vector2 _cachedPathDirection;
+    private Vector2 _recoveryDirection;
 
     private void Awake()
     {
         stats = GetComponent<EnemyStats>();
         rb = GetComponent<Rigidbody2D>();
         enemyCollider = GetComponent<Collider2D>();
-        orbitSign = Random.value < 0.5f ? -1f : 1f;
-        wanderSeed = Random.Range(0f, 1000f);
-        separationRadiusMultiplier = Random.Range(0.82f, 1.18f);
-        separationStrengthMultiplier = Random.Range(0.8f, 1.25f);
-        desiredDistanceMultiplier = Random.Range(0.8f, 1.2f);
+        _orbitSign = Random.value < 0.5f ? -1f : 1f;
+        _wanderSeed = Random.Range(0f, 1000f);
+        _separationRadiusMultiplier = Random.Range(0.82f, 1.18f);
+        _separationStrengthMultiplier = Random.Range(0.8f, 1.25f);
+        _desiredDistanceMultiplier = Random.Range(0.8f, 1.2f);
         currentHealth = maxHealth;
     }
 
@@ -86,7 +87,7 @@ public class Enemy : MonoBehaviour
     {
         RegisterEnemy();
         CachePlayer();
-        lastStuckPosition = rb != null ? rb.position : (Vector2)transform.position;
+        _lastStuckPosition = rb != null ? rb.position : (Vector2)transform.position;
     }
 
     private void Start()
@@ -133,21 +134,21 @@ public class Enemy : MonoBehaviour
         }
 
         damageCooldownTimer -= Time.fixedDeltaTime;
-        repathTimer -= Time.fixedDeltaTime;
-        stuckTimer -= Time.fixedDeltaTime;
+        _repathTimer -= Time.fixedDeltaTime;
+        _stuckTimer -= Time.fixedDeltaTime;
 
         if (!EnsurePlayer())
         {
             rb.linearVelocity = Vector2.zero;
-            currentVelocity = Vector2.zero;
-            appliedVelocity = Vector2.zero;
+            _currentVelocity = Vector2.zero;
+            _appliedVelocity = Vector2.zero;
             return;
         }
 
-        if (stuckTimer <= 0f)
+        if (_stuckTimer <= 0f)
         {
             UpdateStuckState();
-            stuckTimer = StuckCheckInterval;
+            _stuckTimer = StuckCheckInterval;
         }
 
         Vector2 position = rb.position;
@@ -155,14 +156,14 @@ public class Enemy : MonoBehaviour
         float distanceToPlayer = toPlayer.magnitude;
         Vector2 toPlayerDirection = distanceToPlayer > 0.001f ? toPlayer / distanceToPlayer : Vector2.zero;
 
-        if (repathTimer <= 0f)
+        if (_repathTimer <= 0f)
         {
-            cachedPathDirection = CalculatePathDirection(position, toPlayerDirection);
-            repathTimer = RepathInterval;
+            _cachedPathDirection = CalculatePathDirection(position, toPlayerDirection);
+            _repathTimer = RepathInterval;
         }
 
-        Vector2 steeringDirection = cachedPathDirection;
-        steeringDirection += CalculateSeparation(position) * separationStrength * separationStrengthMultiplier;
+        var steeringDirection = _cachedPathDirection;
+        steeringDirection += CalculateSeparation(position) * separationStrength * _separationStrengthMultiplier;
         steeringDirection += CalculateOrbit(position, distanceToPlayer);
         steeringDirection += CalculateWander();
         steeringDirection += CalculateRecoveryDirection();
@@ -177,20 +178,20 @@ public class Enemy : MonoBehaviour
         float speedMultiplier = stats != null ? stats.speedMultiplier : DefaultSpeedMultiplier;
         float targetSpeed = moveSpeed * speedMultiplier;
 
-        float personalDesiredDistance = desiredPlayerDistance * desiredDistanceMultiplier;
+        var personalDesiredDistance = desiredPlayerDistance * _desiredDistanceMultiplier;
         if (distanceToPlayer < personalDesiredDistance)
         {
             targetSpeed *= Mathf.Clamp01(distanceToPlayer / personalDesiredDistance);
         }
 
-        desiredVelocity = steeringDirection * targetSpeed;
-        currentVelocity = Vector2.MoveTowards(
-            currentVelocity,
-            desiredVelocity,
+        _desiredVelocity = steeringDirection * targetSpeed;
+        _currentVelocity = Vector2.MoveTowards(
+            _currentVelocity,
+            _desiredVelocity,
             acceleration * Time.fixedDeltaTime * Mathf.Max(1f, speedMultiplier * 0.15f));
 
-        appliedVelocity = Vector2.Lerp(appliedVelocity, currentVelocity, SteeringSmoothing * Time.fixedDeltaTime);
-        Vector2 smoothedVelocity = appliedVelocity;
+        _appliedVelocity = Vector2.Lerp(_appliedVelocity, _currentVelocity, SteeringSmoothing * Time.fixedDeltaTime);
+        var smoothedVelocity = _appliedVelocity;
         rb.MovePosition(position + smoothedVelocity * Time.fixedDeltaTime);
         rb.linearVelocity = Vector2.zero;
     }
@@ -226,13 +227,13 @@ public class Enemy : MonoBehaviour
             return;
         }
 
-        int dropCount = Random.Range(minXpOrbDrops, maxXpOrbDrops + 1);
-        Vector3 deathPosition = transform.position;
-        Vector3[] placedPositions = new Vector3[dropCount];
+        var dropCount = Random.Range(minXpOrbDrops, maxXpOrbDrops + 1);
+        var deathPosition = transform.position;
+        var placedPositions = new Vector3[dropCount];
 
-        for (int i = 0; i < dropCount; i++)
+        for (var i = 0; i < dropCount; i++)
         {
-            Vector3 spawnPosition = FindXpOrbSpawnPosition(deathPosition, placedPositions, i);
+            var spawnPosition = FindXpOrbSpawnPosition(deathPosition, placedPositions, i);
             placedPositions[i] = spawnPosition;
             Instantiate(xpOrbPrefab, spawnPosition, xpOrbPrefab.transform.rotation);
         }
@@ -240,14 +241,14 @@ public class Enemy : MonoBehaviour
 
     private Vector3 FindXpOrbSpawnPosition(Vector3 center, Vector3[] placedPositions, int placedCount)
     {
-        const int MaxAttempts = 12;
+        const int maxAttempts = 12;
 
-        for (int attempt = 0; attempt < MaxAttempts; attempt++)
+        for (var attempt = 0; attempt < maxAttempts; attempt++)
         {
-            Vector2 offset = placedCount == 0
+            var offset = placedCount == 0
                 ? Random.insideUnitCircle * (xpDropRadius * 0.5f)
                 : Random.insideUnitCircle * xpDropRadius;
-            Vector3 candidate = center + new Vector3(offset.x, offset.y, 0f);
+            var candidate = center + new Vector3(offset.x, offset.y, 0f);
 
             if (IsFarEnoughFromOtherDrops(candidate, placedPositions, placedCount))
             {
@@ -255,14 +256,14 @@ public class Enemy : MonoBehaviour
             }
         }
 
-        float angle = placedCount * Mathf.PI;
+        var angle = placedCount * Mathf.PI;
         Vector2 fallbackOffset = new(Mathf.Cos(angle), Mathf.Sin(angle));
         return center + new Vector3(fallbackOffset.x, fallbackOffset.y, 0f) * minXpOrbSpacing;
     }
 
     private bool IsFarEnoughFromOtherDrops(Vector3 candidate, Vector3[] placedPositions, int placedCount)
     {
-        for (int i = 0; i < placedCount; i++)
+        for (var i = 0; i < placedCount; i++)
         {
             if (Vector2.Distance(candidate, placedPositions[i]) < minXpOrbSpacing)
             {
@@ -275,51 +276,51 @@ public class Enemy : MonoBehaviour
 
     private Vector2 CalculatePathDirection(Vector2 position, Vector2 directDirection)
     {
-        Vector2 bestDirection = directDirection;
-        float bestScore = ScoreDirection(position, directDirection, directDirection, 0f);
+        var bestDirection = directDirection;
+        var bestScore = ScoreDirection(position, directDirection, directDirection, 0f);
 
-        Vector2 left = Rotate(directDirection, ObstacleSideProbeAngle * 0.5f);
-        float leftScore = ScoreDirection(position, left, directDirection, 0.1f);
+        var left = Rotate(directDirection, ObstacleSideProbeAngle * 0.5f);
+        var leftScore = ScoreDirection(position, left, directDirection, 0.1f);
         if (leftScore > bestScore)
         {
             bestScore = leftScore;
             bestDirection = left;
         }
 
-        Vector2 right = Rotate(directDirection, -ObstacleSideProbeAngle * 0.5f);
-        float rightScore = ScoreDirection(position, right, directDirection, 0.1f);
+        var right = Rotate(directDirection, -ObstacleSideProbeAngle * 0.5f);
+        var rightScore = ScoreDirection(position, right, directDirection, 0.1f);
         if (rightScore > bestScore)
         {
             bestScore = rightScore;
             bestDirection = right;
         }
 
-        Vector2 hardLeft = Rotate(directDirection, ObstacleSideProbeAngle);
-        float hardLeftScore = ScoreDirection(position, hardLeft, directDirection, 0.25f);
+        var hardLeft = Rotate(directDirection, ObstacleSideProbeAngle);
+        var hardLeftScore = ScoreDirection(position, hardLeft, directDirection, 0.25f);
         if (hardLeftScore > bestScore)
         {
             bestScore = hardLeftScore;
             bestDirection = hardLeft;
         }
 
-        Vector2 hardRight = Rotate(directDirection, -ObstacleSideProbeAngle);
-        float hardRightScore = ScoreDirection(position, hardRight, directDirection, 0.25f);
+        var hardRight = Rotate(directDirection, -ObstacleSideProbeAngle);
+        var hardRightScore = ScoreDirection(position, hardRight, directDirection, 0.25f);
         if (hardRightScore > bestScore)
         {
             bestScore = hardRightScore;
             bestDirection = hardRight;
         }
 
-        Vector2 reverseLeft = Rotate(directDirection, ObstacleSideProbeAngle * 1.5f);
-        float reverseLeftScore = ScoreDirection(position, reverseLeft, directDirection, 0.45f);
+        var reverseLeft = Rotate(directDirection, ObstacleSideProbeAngle * 1.5f);
+        var reverseLeftScore = ScoreDirection(position, reverseLeft, directDirection, 0.45f);
         if (reverseLeftScore > bestScore)
         {
             bestScore = reverseLeftScore;
             bestDirection = reverseLeft;
         }
 
-        Vector2 reverseRight = Rotate(directDirection, -ObstacleSideProbeAngle * 1.5f);
-        float reverseRightScore = ScoreDirection(position, reverseRight, directDirection, 0.45f);
+        var reverseRight = Rotate(directDirection, -ObstacleSideProbeAngle * 1.5f);
+        var reverseRightScore = ScoreDirection(position, reverseRight, directDirection, 0.45f);
         if (reverseRightScore > bestScore)
         {
             bestDirection = reverseRight;
@@ -336,15 +337,15 @@ public class Enemy : MonoBehaviour
         }
 
         candidateDirection.Normalize();
-        float hitDistance = ProbeObstacleDistance(position, candidateDirection);
-        float clearanceScore = (hitDistance / obstacleProbeDistance) * obstacleAvoidanceStrength;
-        float alignment = Vector2.Dot(candidateDirection, preferredDirection.normalized);
+        var hitDistance = ProbeObstacleDistance(position, candidateDirection);
+        var clearanceScore = (hitDistance / obstacleProbeDistance) * obstacleAvoidanceStrength;
+        var alignment = Vector2.Dot(candidateDirection, preferredDirection.normalized);
         return clearanceScore + alignment - directionPenalty;
     }
 
     private float ProbeObstacleDistance(Vector2 origin, Vector2 direction)
     {
-        int hitCount = Physics2D.CircleCast(
+        var hitCount = Physics2D.CircleCast(
             origin,
             ObstacleClearanceRadius,
             direction,
@@ -352,11 +353,11 @@ public class Enemy : MonoBehaviour
             ObstacleHits,
             obstacleProbeDistance);
 
-        float bestDistance = obstacleProbeDistance;
+        var bestDistance = obstacleProbeDistance;
 
-        for (int i = 0; i < hitCount; i++)
+        for (var i = 0; i < hitCount; i++)
         {
-            Collider2D hitCollider = ObstacleHits[i].collider;
+            var hitCollider = ObstacleHits[i].collider;
             if (!IsObstacle(hitCollider))
             {
                 continue;
@@ -370,26 +371,26 @@ public class Enemy : MonoBehaviour
 
     private Vector2 CalculateSeparation(Vector2 position)
     {
-        Vector2 separation = Vector2.zero;
-        float personalSeparationRadius = separationRadius * separationRadiusMultiplier;
+        var separation = Vector2.zero;
+        var personalSeparationRadius = separationRadius * _separationRadiusMultiplier;
 
-        for (int i = 0; i < ActiveEnemies.Count; i++)
+        for (var i = 0; i < ActiveEnemies.Count; i++)
         {
-            Enemy other = ActiveEnemies[i];
+            var other = ActiveEnemies[i];
             if (other == null || other == this || other.rb == null)
             {
                 continue;
             }
 
-            Vector2 offset = position - other.rb.position;
-            float distance = offset.magnitude;
+            var offset = position - other.rb.position;
+            var distance = offset.magnitude;
             if (distance <= 0.001f || distance > personalSeparationRadius)
             {
                 continue;
             }
 
-            float weight = 1f - (distance / personalSeparationRadius);
-            float randomBias = 1f + Mathf.Sin((Time.time * 2.7f) + wanderSeed + (i * 0.73f)) * SeparationRandomness;
+            var weight = 1f - (distance / personalSeparationRadius);
+            var randomBias = 1f + Mathf.Sin((Time.time * 2.7f) + _wanderSeed + (i * 0.73f)) * SeparationRandomness;
             separation += (offset / distance) * (weight * randomBias);
         }
 
@@ -398,12 +399,12 @@ public class Enemy : MonoBehaviour
 
     private Vector2 CalculateOrbit(Vector2 position, float distanceToPlayer)
     {
-        if (playerTransform == null || distanceToPlayer > (separationRadius * separationRadiusMultiplier) * 2.35f)
+        if (playerTransform == null || distanceToPlayer > (separationRadius * _separationRadiusMultiplier) * 2.35f)
         {
             return Vector2.zero;
         }
 
-        Vector2 toPlayer = (Vector2)playerTransform.position - position;
+        var toPlayer = (Vector2)playerTransform.position - position;
         if (toPlayer.sqrMagnitude < 0.0001f)
         {
             return Vector2.zero;
@@ -412,46 +413,46 @@ public class Enemy : MonoBehaviour
         Vector2 tangent = new(-toPlayer.y, toPlayer.x);
         tangent.Normalize();
 
-        float personalDesiredDistance = desiredPlayerDistance * desiredDistanceMultiplier;
-        float orbitWeight = Mathf.InverseLerp((separationRadius * separationRadiusMultiplier) * 2.35f, personalDesiredDistance, distanceToPlayer);
-        return tangent * (orbitStrength * orbitWeight * orbitSign);
+        var personalDesiredDistance = desiredPlayerDistance * _desiredDistanceMultiplier;
+        var orbitWeight = Mathf.InverseLerp(separationRadius * _separationRadiusMultiplier * 2.35f, personalDesiredDistance, distanceToPlayer);
+        return tangent * (orbitStrength * orbitWeight * _orbitSign);
     }
 
     private Vector2 CalculateWander()
     {
-        float noiseX = Mathf.PerlinNoise(wanderSeed, Time.time * WanderFrequency) - 0.5f;
-        float noiseY = Mathf.PerlinNoise(Time.time * WanderFrequency, wanderSeed) - 0.5f;
+        var noiseX = Mathf.PerlinNoise(_wanderSeed, Time.time * WanderFrequency) - 0.5f;
+        var noiseY = Mathf.PerlinNoise(Time.time * WanderFrequency, _wanderSeed) - 0.5f;
         Vector2 wander = new(noiseX, noiseY);
         return wander * wanderStrength;
     }
 
     private Vector2 CalculateRecoveryDirection()
     {
-        if (recoveryTimer <= 0f)
+        if (_recoveryTimer <= 0f)
         {
             return Vector2.zero;
         }
 
-        recoveryTimer -= Time.fixedDeltaTime;
-        return recoveryDirection * StuckSideBias;
+        _recoveryTimer -= Time.fixedDeltaTime;
+        return _recoveryDirection * StuckSideBias;
     }
 
     private void UpdateStuckState()
     {
-        Vector2 currentPosition = rb.position;
-        float movedDistance = Vector2.Distance(currentPosition, lastStuckPosition);
+        var currentPosition = rb.position;
+        var movedDistance = Vector2.Distance(currentPosition, _lastStuckPosition);
 
         if (movedDistance < StuckDistanceThreshold && EnsurePlayer())
         {
-            Vector2 toPlayer = ((Vector2)playerTransform.position - currentPosition).normalized;
-            float leftClearance = ProbeObstacleDistance(currentPosition, Rotate(toPlayer, ObstacleSideProbeAngle));
-            float rightClearance = ProbeObstacleDistance(currentPosition, Rotate(toPlayer, -ObstacleSideProbeAngle));
-            float chosenSign = leftClearance > rightClearance ? 1f : -1f;
-            recoveryDirection = Rotate(toPlayer, ObstacleSideProbeAngle * chosenSign).normalized;
-            recoveryTimer = StuckRecoveryTime;
+            var toPlayer = ((Vector2)playerTransform.position - currentPosition).normalized;
+            var leftClearance = ProbeObstacleDistance(currentPosition, Rotate(toPlayer, ObstacleSideProbeAngle));
+            var rightClearance = ProbeObstacleDistance(currentPosition, Rotate(toPlayer, -ObstacleSideProbeAngle));
+            var chosenSign = leftClearance > rightClearance ? 1f : -1f;
+            _recoveryDirection = Rotate(toPlayer, ObstacleSideProbeAngle * chosenSign).normalized;
+            _recoveryTimer = StuckRecoveryTime;
         }
 
-        lastStuckPosition = currentPosition;
+        _lastStuckPosition = currentPosition;
     }
 
     private bool EnsurePlayer()
@@ -467,7 +468,7 @@ public class Enemy : MonoBehaviour
 
     private void CachePlayer()
     {
-        TestMovement player = FindAnyObjectByType<TestMovement>();
+        var player = FindAnyObjectByType<TestMovement>();
         if (player != null)
         {
             playerTransform = player.transform;
@@ -481,9 +482,7 @@ public class Enemy : MonoBehaviour
             return;
         }
 
-        for (int i = 0; i < ActiveEnemies.Count; i++)
-        {
-            Enemy other = ActiveEnemies[i];
+        foreach(var other in ActiveEnemies) {
             if (other == null || other.enemyCollider == null || enemyCollider == null)
             {
                 continue;
@@ -507,19 +506,14 @@ public class Enemy : MonoBehaviour
             return false;
         }
 
-        if (colliderToCheck.CompareTag("Enemy") || colliderToCheck.CompareTag("Player"))
-        {
-            return false;
-        }
-
-        return true;
+        return !colliderToCheck.CompareTag("Enemy") && !colliderToCheck.CompareTag("Player");
     }
 
     private static Vector2 Rotate(Vector2 vector, float degrees)
     {
-        float radians = degrees * Mathf.Deg2Rad;
-        float cos = Mathf.Cos(radians);
-        float sin = Mathf.Sin(radians);
+        var radians = degrees * Mathf.Deg2Rad;
+        var cos = Mathf.Cos(radians);
+        var sin = Mathf.Sin(radians);
         return new Vector2(
             vector.x * cos - vector.y * sin,
             vector.x * sin + vector.y * cos);
