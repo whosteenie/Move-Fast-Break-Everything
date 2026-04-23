@@ -13,6 +13,18 @@ public class Enemy : MonoBehaviour
     private const float DefaultMoveSpeed = 0.5f;
     private const float DefaultSpeedMultiplier = 5f;
     private const float DefaultDamageMultiplier = 2f;
+    private const float SteeringSmoothing = 12f;
+    private const float ObstacleClearanceRadius = 0.25f;
+    private const float ObstacleSideProbeAngle = 55f;
+    private const float RepathInterval = 0.2f;
+    private const float StuckCheckInterval = 0.45f;
+    private const float StuckDistanceThreshold = 0.08f;
+    private const float StuckRecoveryTime = 0.6f;
+    private const float StuckSideBias = 1.35f;
+    private const float WanderFrequency = 1.1f;
+    private const float SeparationRandomness = 0.35f;
+    private const float ContactDamageInterval = 0.5f;
+
     [Header("Drops")]
     [SerializeField] private GameObject xpOrbPrefab;
     [SerializeField] private int minXpOrbDrops = 1;
@@ -23,28 +35,17 @@ public class Enemy : MonoBehaviour
     [Header("Combat")]
     [SerializeField] private int maxHealth = 10;
     [SerializeField] private float baseDamage = 1f;
-    [SerializeField] private float contactDamageInterval = 0.5f;
 
     [Header("Swarm Movement")]
     [SerializeField] private float moveSpeed = DefaultMoveSpeed;
     [SerializeField] private float acceleration = 18f;
-    [SerializeField] private float steeringSmoothing = 12f;
     [SerializeField] private float desiredPlayerDistance = 0.85f;
     [SerializeField] private float orbitStrength = 0.75f;
     [SerializeField] private float separationRadius = 1.2f;
     [SerializeField] private float separationStrength = 1.8f;
     [SerializeField] private float obstacleProbeDistance = 1.2f;
     [SerializeField] private float obstacleAvoidanceStrength = 2.5f;
-    [SerializeField] private float obstacleClearanceRadius = 0.25f;
-    [SerializeField] private float obstacleSideProbeAngle = 55f;
-    [SerializeField] private float repathInterval = 0.2f;
-    [SerializeField] private float stuckCheckInterval = 0.45f;
-    [SerializeField] private float stuckDistanceThreshold = 0.08f;
-    [SerializeField] private float stuckRecoveryTime = 0.6f;
-    [SerializeField] private float stuckSideBias = 1.35f;
     [SerializeField] private float wanderStrength = 0.4f;
-    [SerializeField] private float wanderFrequency = 1.1f;
-    [SerializeField] private float separationRandomness = 0.35f;
 
     private EnemyStats stats;
     private Rigidbody2D rb;
@@ -146,7 +147,7 @@ public class Enemy : MonoBehaviour
         if (stuckTimer <= 0f)
         {
             UpdateStuckState();
-            stuckTimer = stuckCheckInterval;
+            stuckTimer = StuckCheckInterval;
         }
 
         Vector2 position = rb.position;
@@ -157,7 +158,7 @@ public class Enemy : MonoBehaviour
         if (repathTimer <= 0f)
         {
             cachedPathDirection = CalculatePathDirection(position, toPlayerDirection);
-            repathTimer = repathInterval;
+            repathTimer = RepathInterval;
         }
 
         Vector2 steeringDirection = cachedPathDirection;
@@ -188,7 +189,7 @@ public class Enemy : MonoBehaviour
             desiredVelocity,
             acceleration * Time.fixedDeltaTime * Mathf.Max(1f, speedMultiplier * 0.15f));
 
-        appliedVelocity = Vector2.Lerp(appliedVelocity, currentVelocity, steeringSmoothing * Time.fixedDeltaTime);
+        appliedVelocity = Vector2.Lerp(appliedVelocity, currentVelocity, SteeringSmoothing * Time.fixedDeltaTime);
         Vector2 smoothedVelocity = appliedVelocity;
         rb.MovePosition(position + smoothedVelocity * Time.fixedDeltaTime);
         rb.linearVelocity = Vector2.zero;
@@ -209,7 +210,7 @@ public class Enemy : MonoBehaviour
 
         float damageMultiplier = stats != null ? stats.damageMultiplier : DefaultDamageMultiplier;
         player.TakeDamage(Mathf.Max(1, Mathf.RoundToInt(baseDamage * damageMultiplier)));
-        damageCooldownTimer = contactDamageInterval;
+        damageCooldownTimer = ContactDamageInterval;
     }
 
     private void Die()
@@ -277,7 +278,7 @@ public class Enemy : MonoBehaviour
         Vector2 bestDirection = directDirection;
         float bestScore = ScoreDirection(position, directDirection, directDirection, 0f);
 
-        Vector2 left = Rotate(directDirection, obstacleSideProbeAngle * 0.5f);
+        Vector2 left = Rotate(directDirection, ObstacleSideProbeAngle * 0.5f);
         float leftScore = ScoreDirection(position, left, directDirection, 0.1f);
         if (leftScore > bestScore)
         {
@@ -285,7 +286,7 @@ public class Enemy : MonoBehaviour
             bestDirection = left;
         }
 
-        Vector2 right = Rotate(directDirection, -obstacleSideProbeAngle * 0.5f);
+        Vector2 right = Rotate(directDirection, -ObstacleSideProbeAngle * 0.5f);
         float rightScore = ScoreDirection(position, right, directDirection, 0.1f);
         if (rightScore > bestScore)
         {
@@ -293,7 +294,7 @@ public class Enemy : MonoBehaviour
             bestDirection = right;
         }
 
-        Vector2 hardLeft = Rotate(directDirection, obstacleSideProbeAngle);
+        Vector2 hardLeft = Rotate(directDirection, ObstacleSideProbeAngle);
         float hardLeftScore = ScoreDirection(position, hardLeft, directDirection, 0.25f);
         if (hardLeftScore > bestScore)
         {
@@ -301,7 +302,7 @@ public class Enemy : MonoBehaviour
             bestDirection = hardLeft;
         }
 
-        Vector2 hardRight = Rotate(directDirection, -obstacleSideProbeAngle);
+        Vector2 hardRight = Rotate(directDirection, -ObstacleSideProbeAngle);
         float hardRightScore = ScoreDirection(position, hardRight, directDirection, 0.25f);
         if (hardRightScore > bestScore)
         {
@@ -309,7 +310,7 @@ public class Enemy : MonoBehaviour
             bestDirection = hardRight;
         }
 
-        Vector2 reverseLeft = Rotate(directDirection, obstacleSideProbeAngle * 1.5f);
+        Vector2 reverseLeft = Rotate(directDirection, ObstacleSideProbeAngle * 1.5f);
         float reverseLeftScore = ScoreDirection(position, reverseLeft, directDirection, 0.45f);
         if (reverseLeftScore > bestScore)
         {
@@ -317,7 +318,7 @@ public class Enemy : MonoBehaviour
             bestDirection = reverseLeft;
         }
 
-        Vector2 reverseRight = Rotate(directDirection, -obstacleSideProbeAngle * 1.5f);
+        Vector2 reverseRight = Rotate(directDirection, -ObstacleSideProbeAngle * 1.5f);
         float reverseRightScore = ScoreDirection(position, reverseRight, directDirection, 0.45f);
         if (reverseRightScore > bestScore)
         {
@@ -345,7 +346,7 @@ public class Enemy : MonoBehaviour
     {
         int hitCount = Physics2D.CircleCast(
             origin,
-            obstacleClearanceRadius,
+            ObstacleClearanceRadius,
             direction,
             ObstacleContactFilter,
             ObstacleHits,
@@ -388,7 +389,7 @@ public class Enemy : MonoBehaviour
             }
 
             float weight = 1f - (distance / personalSeparationRadius);
-            float randomBias = 1f + Mathf.Sin((Time.time * 2.7f) + wanderSeed + (i * 0.73f)) * separationRandomness;
+            float randomBias = 1f + Mathf.Sin((Time.time * 2.7f) + wanderSeed + (i * 0.73f)) * SeparationRandomness;
             separation += (offset / distance) * (weight * randomBias);
         }
 
@@ -418,8 +419,8 @@ public class Enemy : MonoBehaviour
 
     private Vector2 CalculateWander()
     {
-        float noiseX = Mathf.PerlinNoise(wanderSeed, Time.time * wanderFrequency) - 0.5f;
-        float noiseY = Mathf.PerlinNoise(Time.time * wanderFrequency, wanderSeed) - 0.5f;
+        float noiseX = Mathf.PerlinNoise(wanderSeed, Time.time * WanderFrequency) - 0.5f;
+        float noiseY = Mathf.PerlinNoise(Time.time * WanderFrequency, wanderSeed) - 0.5f;
         Vector2 wander = new(noiseX, noiseY);
         return wander * wanderStrength;
     }
@@ -432,7 +433,7 @@ public class Enemy : MonoBehaviour
         }
 
         recoveryTimer -= Time.fixedDeltaTime;
-        return recoveryDirection * stuckSideBias;
+        return recoveryDirection * StuckSideBias;
     }
 
     private void UpdateStuckState()
@@ -440,14 +441,14 @@ public class Enemy : MonoBehaviour
         Vector2 currentPosition = rb.position;
         float movedDistance = Vector2.Distance(currentPosition, lastStuckPosition);
 
-        if (movedDistance < stuckDistanceThreshold && EnsurePlayer())
+        if (movedDistance < StuckDistanceThreshold && EnsurePlayer())
         {
             Vector2 toPlayer = ((Vector2)playerTransform.position - currentPosition).normalized;
-            float leftClearance = ProbeObstacleDistance(currentPosition, Rotate(toPlayer, obstacleSideProbeAngle));
-            float rightClearance = ProbeObstacleDistance(currentPosition, Rotate(toPlayer, -obstacleSideProbeAngle));
+            float leftClearance = ProbeObstacleDistance(currentPosition, Rotate(toPlayer, ObstacleSideProbeAngle));
+            float rightClearance = ProbeObstacleDistance(currentPosition, Rotate(toPlayer, -ObstacleSideProbeAngle));
             float chosenSign = leftClearance > rightClearance ? 1f : -1f;
-            recoveryDirection = Rotate(toPlayer, obstacleSideProbeAngle * chosenSign).normalized;
-            recoveryTimer = stuckRecoveryTime;
+            recoveryDirection = Rotate(toPlayer, ObstacleSideProbeAngle * chosenSign).normalized;
+            recoveryTimer = StuckRecoveryTime;
         }
 
         lastStuckPosition = currentPosition;
