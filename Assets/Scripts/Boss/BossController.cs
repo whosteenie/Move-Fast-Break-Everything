@@ -8,6 +8,9 @@ public class BossController : MonoBehaviour
 
     [Header("Stats")]
     public float maxHealth = 300f;
+    public float contactDamage = 3f;
+    private float damageCooldown = 1f;
+    private float damageTimer = 0f;
     private float _health;
     private BossPhase _phase = BossPhase.Idle;
 
@@ -94,5 +97,26 @@ public class BossController : MonoBehaviour
         if (attacks.Length == 0) yield break;
         int index = Random.Range(0, attacks.Length);
         yield return StartCoroutine(attacks[index].Execute(this, playerTransform));
+    }
+
+    void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject != null && collision.gameObject.CompareTag("Player"))
+        {
+            if (collision.gameObject.CompareTag("Player"))
+            {
+                damageTimer -= Time.deltaTime;
+                if (damageTimer <= 0f)
+                {
+                    Player player = collision.gameObject.GetComponent<Player>();
+                    if (player != null)
+                    {
+                        Debug.Log("TAKE DAMAGE");
+                        player.TakeDamage((int)(contactDamage));
+                        damageTimer = damageCooldown;
+                    }
+                }
+            }
+        }
     }
 }
