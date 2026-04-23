@@ -85,13 +85,14 @@ public class TestMovement : MonoBehaviour
     void FixedUpdate()
     {
         UnityEngine.Vector2 endPos = new UnityEngine.Vector2(0,0);
+        float currentMoveSpeed = (stats != null) ? stats.speedMultiplier : moveSpeed;
         endPos += rb.position;
         // rb.MovePosition(rb.position + (movement * moveSpeed) * Time.fixedDeltaTime);
-        endPos += (movement * moveSpeed) * Time.fixedDeltaTime;
+        endPos += movement * (currentMoveSpeed * Time.fixedDeltaTime);
         if (isDashing)
         {
             // rb.MovePosition(rb.position + facing * dashSpeed * Time.fixedDeltaTime);
-            endPos += facing * dashSpeed * Time.fixedDeltaTime;
+            endPos += facing * (dashSpeed * Time.fixedDeltaTime);
         }
             
         if (movementStateMachine.HasState(MovementStateMachine.State.slide))
@@ -121,7 +122,7 @@ public class TestMovement : MonoBehaviour
         // Debug.Log("In Slide");
         transform.localScale = new Vector3(.25f,.25f,.25f);
         // rb.MovePosition(rb.position + facing*slideMovementSO.movePower*Time.fixedDeltaTime);
-        return facing*slideMovementSO.movePower*Time.fixedDeltaTime;
+        return facing * (slideMovementSO.movePower * Time.fixedDeltaTime);
     }
 
     private Vector2 SlideDecay()
@@ -129,8 +130,8 @@ public class TestMovement : MonoBehaviour
         //Unshrink the player
         // Debug.Log("In Slide Decay");
         transform.localScale = new Vector3(.5f,.5f,.5f);
-        rb.MovePosition(rb.position + facing*(slideMovementSO.movePower/2)*Time.fixedDeltaTime);
-        return facing*(-slideMovementSO.movePower/4)*Time.fixedDeltaTime;
+        rb.MovePosition(rb.position + facing * (slideMovementSO.movePower/2 * Time.fixedDeltaTime));
+        return facing * (-slideMovementSO.movePower/4 * Time.fixedDeltaTime);
     }
 
     private Vector2 Charge()
@@ -139,7 +140,7 @@ public class TestMovement : MonoBehaviour
         transform.localScale = new UnityEngine.Vector3(.75f,.75f,.75f);
         rb.MovePosition(rb.position + facing*slideMovementSO.movePower/2*Time.fixedDeltaTime);
         //Moves you backwards a bit which can be used to do chargeswitch tech! EEEE!
-        return facing*(-slideMovementSO.movePower/1.5f)*Time.fixedDeltaTime;
+        return facing * (-slideMovementSO.movePower/1.5f * Time.fixedDeltaTime);
     }
 
     private Vector2 ChargeDecay()
@@ -148,7 +149,7 @@ public class TestMovement : MonoBehaviour
         transform.localScale = new UnityEngine.Vector3(.5f,.5f,.5f);
         // Debug.Log("In Slide Decay");
         // rb.MovePosition(rb.position + facing*(slideMovementSO.movePower)*Time.fixedDeltaTime);
-        return facing*(slideMovementSO.movePower)*Time.fixedDeltaTime;
+        return facing * (slideMovementSO.movePower * Time.fixedDeltaTime);
     }
     //__________________________________________________________________________________________________
 }
