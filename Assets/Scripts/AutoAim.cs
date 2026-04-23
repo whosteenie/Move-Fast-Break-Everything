@@ -52,7 +52,7 @@ public class AutoAim : MonoBehaviour
             }
             float finalFireRate = (stats != null) ? stats.GetFireRate(fireRate) : fireRate;
 
-            yield return new WaitForSeconds(1f / fireRate);
+            yield return new WaitForSeconds(1f / finalFireRate);
         }
     }
     [SerializeField]
@@ -85,8 +85,7 @@ public class AutoAim : MonoBehaviour
 
         Bullet bulletScript = bullet.GetComponent<Bullet>();
 
-        Stats stats = GetComponentInParent<Stats>();
-        int finalDamage = Mathf.RoundToInt(baseDamege * stats.damageMultiplier);
+        int finalDamage = (stats != null) ? stats.GetDamage(baseDamege) : baseDamege;
 
         if (bulletScript != null)
         {

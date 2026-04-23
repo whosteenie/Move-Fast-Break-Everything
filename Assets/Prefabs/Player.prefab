@@ -263,9 +263,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48fe1787d8d132f41a39a96d2b48c165, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Stats
-  speedMultiplier: 5
-  damageMultiplier: 2
-  maxHealthStat: 10
+  speedMultiplier: 1
+  damageMultiplier: 1
+  maxHealthStat: 1
 --- !u!114 &-6438699549702643509
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -85,7 +85,7 @@ public class TestMovement : MonoBehaviour
     void FixedUpdate()
     {
         UnityEngine.Vector2 endPos = new UnityEngine.Vector2(0,0);
-        float currentMoveSpeed = (stats != null) ? stats.speedMultiplier : moveSpeed;
+        float currentMoveSpeed = (stats != null) ? stats.GetSpeed(baseMoveSpeed) : moveSpeed;
         endPos += rb.position;
         // rb.MovePosition(rb.position + (movement * moveSpeed) * Time.fixedDeltaTime);
         endPos += movement * (currentMoveSpeed * Time.fixedDeltaTime);
