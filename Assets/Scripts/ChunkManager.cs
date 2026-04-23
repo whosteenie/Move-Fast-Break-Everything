@@ -53,6 +53,11 @@ public class ChunkManager : MonoBehaviour
     // Checks if player moved to different chunk 
     private void Update()
     {
+        if (player == null)
+        {
+            return;
+        }
+
         Vector2Int playerChunk = GetChunkCoordinate(player.position);
         
         if (playerChunk == currentPlayerChunk)

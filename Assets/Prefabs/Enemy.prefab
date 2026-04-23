@@ -32,8 +32,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -84,7 +84,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0.63873464, g: 0.41574693, b: 0.9245283, a: 1}
@@ -108,6 +108,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51a3186fad65a504cad2b28dcbdeec6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  xpOrbPrefab: {fileID: 6034623416384411684, guid: ca6fe6d51e7593b4ba6f2eef87017da4, type: 3}
+  minXpOrbDrops: 1
+  maxXpOrbDrops: 2
+  xpDropRadius: 0.6
+  minXpOrbSpacing: 0.35
   maxHealth: 10
   baseDamage: 1
 --- !u!114 &2105547825413297556
