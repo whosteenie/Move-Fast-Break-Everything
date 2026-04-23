@@ -6,7 +6,11 @@ public class Stats : MonoBehaviour
 
     public float speedMultiplier = 1f;
     public float damageMultiplier = 1f;
-    public float maxHealthStat = 1f;
+
+
+    public int baseHealth = 10;
+    public int flatHealthBonus = 0;
+    public float healthMultiplier = 1f;
 
     public float dexterityMultiplier = 1f;
     private PlayerLevelUp levelSytem;
@@ -38,7 +42,10 @@ public class Stats : MonoBehaviour
     {
         IncreaseSpeed(0.1f);
         IncreaseDamage(0.1f);
-        IncreaseHealth(0.1f);
+
+        IncreaseFlatHealth(2);
+        IncreaseHealthPercent(0.1f);
+
         IncreaseDexterity(0.1f);
 
         if (player != null)
@@ -47,30 +54,47 @@ public class Stats : MonoBehaviour
         }
 
     }
+    //health stats____________________________________________________________________________
+    private void IncreaseFlatHealth(int amount)
+    {
+        flatHealthBonus += amount;
+    }
+    public void IncreaseHealthPercent(float percent)
+    {
+        healthMultiplier += percent;
+    }
+    public int GetMaxHealth()
+    {
+        int baseHealth = 10;
+        return Mathf.RoundToInt((baseHealth + flatHealthBonus) * healthMultiplier);
+    }
 
+
+    //Dex stats____________________________________________________________________________
     private void IncreaseDexterity(float percent)
     {
         dexterityMultiplier += percent;
     }
+
+    public float GetFireRate(float baseFireRate)
+    {
+        return baseFireRate * dexterityMultiplier;
+    }
+    //Speed Stats____________________________________________________________________________
 
     public void IncreaseSpeed(float percent)
     {
         speedMultiplier += percent;
     }
 
-    public void IncreaseDamage(float percent)
-    {
-        damageMultiplier += percent;
-    }
-
-    public void IncreaseHealth(float percent)
-    {
-        maxHealthStat += percent;
-    }
-
     public float GetSpeed(float baseSpeed)
     {
         return baseSpeed * speedMultiplier;
+    }
+    //DMG stats____________________________________________________________________________
+    public void IncreaseDamage(float percent)
+    {
+        damageMultiplier += percent;
     }
 
     public int GetDamage(int baseDamage)
@@ -78,16 +102,6 @@ public class Stats : MonoBehaviour
         return Mathf.RoundToInt(baseDamage * damageMultiplier);
     }
 
-    public int GetMaxHealth()
-    {
-        int baseHealth = 10;
-        return Mathf.RoundToInt(baseHealth * maxHealthStat);
-    }
-
-    public float GetFireRate(float baseFireRate)
-    {
-        return baseFireRate * dexterityMultiplier;
-    }
 
 
 }
