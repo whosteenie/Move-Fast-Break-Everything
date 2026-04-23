@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class SpeedTower : MonoBehaviour
 {
-    public int speedIncrease = 1;
+    public float speedBoost = 1f;
 
     private bool playerInRange = false;
     private Stats stats;
@@ -14,7 +14,7 @@ public class SpeedTower : MonoBehaviour
         {
             if (stats != null)
             {
-                stats.speedMultiplier += speedIncrease;
+                stats.speedMultiplier += speedBoost;
                 Debug.Log("Speed updated" + stats.speedMultiplier);
             }
         }

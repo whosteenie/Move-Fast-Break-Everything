@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class AutoAim : MonoBehaviour
 {
-    public WeaponSO weaponSO;
+
     [Header("Shooting")]
     public GameObject bulletPrefab;
     public Transform firePoint;
-    public float bulletSpeed;
-    public float fireRate;
+    public float fireRate = 2f;
+    public float bulletSpeed = 10f;
 
     [Header("Targeting")]
     public float detectionRange = 10f;
@@ -17,18 +17,18 @@ public class AutoAim : MonoBehaviour
     private GameObject currentTarget;
 
     private Stats stats;
-    
+    public int baseDamage = 1;
 
     void Start()
     {
-        bulletSpeed = weaponSO.bulletSpeed;
-        fireRate = weaponSO.fireRate;
-        
         StartCoroutine(UpdateTargetRoutine());
         StartCoroutine(ShootRoutine());
     }
 
-
+    void Awake()
+    {
+        stats = GetComponentInParent<Stats>();
+    }
 
     IEnumerator UpdateTargetRoutine()
     {
@@ -50,16 +50,16 @@ public class AutoAim : MonoBehaviour
                 RotateTowards(direction);
                 Shoot(direction);
             }
+            float finalFireRate = (stats != null) ? stats.GetFireRate(fireRate) : fireRate;
 
-            yield return new WaitForSeconds(1f / fireRate);
+            yield return new WaitForSeconds(1f / finalFireRate);
         }
     }
     [SerializeField]
     float dis = 10f;
-    public string tag = "";
     GameObject FindClosestEnemy()
     {
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag(tag);
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
 
         GameObject closest = null;
 
@@ -82,13 +82,17 @@ public class AutoAim : MonoBehaviour
     void Shoot(Vector2 direction)
     {
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
-        bullet.GetComponent<Bullet>().SetOwner(gameObject);
+
         Bullet bulletScript = bullet.GetComponent<Bullet>();
+
+        Stats stats = GetComponentInParent<Stats>();
+        int finalDamage = Mathf.RoundToInt(baseDamage * stats.damageMultiplier);
+
+        Debug.Log("Multiplier: " + stats.damageMultiplier + " Final Damage: " + finalDamage);
+
         if (bulletScript != null)
         {
-            int finalDamage = bulletScript.damage;
-
-            bulletScript.SetDirection(direction, bulletSpeed);
+            bulletScript.SetDirection(direction, bulletSpeed, finalDamage);
         }
     }
 

@@ -211,6 +211,7 @@ MonoBehaviour:
   dashDuration: 0.2
   dashCooldown: 1
   moveSpeed: 5
+  baseMoveSpeed: 5
   dashKey: 32
   slideKey: 304
   chargeKey: 122
@@ -235,7 +236,7 @@ MonoBehaviour:
   bulletSpeed: 10
   detectionRange: 10
   targetRefreshRate: 0.3
-  baseDamege: 1
+  baseDamege: 4
   dis: 10
   tag: Enemy
 --- !u!114 &5327108225811942733
@@ -281,9 +282,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48fe1787d8d132f41a39a96d2b48c165, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Stats
-  speedMultiplier: 5
-  damageMultiplier: 2
-  maxHealthStat: 10
+  speedMultiplier: 1
+  damageMultiplier: 1
+  maxHealthStat: 1
+  dexterityMultiplier: 1
 --- !u!114 &-6438699549702643509
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -297,3 +299,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
   maxHealth: 10
+  invulnerabilityDuration: 1
+  flashInterval: 0.1
+  flashAlpha: 0.35

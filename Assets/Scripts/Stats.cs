@@ -1,25 +1,35 @@
-using System;
 using UnityEngine;
 
 public class Stats : MonoBehaviour
 {
+    private const float StrengthHealthIncrease = 0.1f;
+    private const float DexterityFireRateIncrease = 0.1f;
+    private const float IntelligenceDamageIncrease = 0.1f;
 
-    public int speedMultiplier = 5;
-    public int damageMultiplier = 2;
-    public int maxHealthStat = 10;
-    private PlayerLevelUp levelSytem;
+    public float speedMultiplier = 1f;
+    public float damageMultiplier = 1f;
+
+
+    public int baseHealth = 10;
+    public int flatHealthBonus = 0;
+    public float healthMultiplier = 1f;
+
+    public float dexterityMultiplier = 1f;
+
     private Player player;
+
+    private PlayerLevelUp levelSytem;
 
     private void Awake()
     {
-        levelSytem = GetComponent<PlayerLevelUp>();
         player = GetComponent<Player>();
+        levelSytem = GetComponent<PlayerLevelUp>();
     }
     private void OnEnable()
     {
         if (levelSytem != null)
         {
-            levelSytem.OnLevelUp += statChange;
+            levelSytem.OnLevelUp += OnStatChange;
         }
 
     }
@@ -28,37 +38,97 @@ public class Stats : MonoBehaviour
     {
         if (levelSytem != null)
         {
-            levelSytem.OnLevelUp -= statChange;
+            levelSytem.OnLevelUp -= OnStatChange;
         }
     }
 
-    private void statChange(object sender, EventArgs e)
+    private void OnStatChange(object sender, System.EventArgs e)
     {
-        IncreaseSpeedStat(1);
-        IncreaseDamageStat(10);
-        IncreaseHealthStat(10);
+        IncreaseSpeed(0.1f);
+        IncreaseDamage(0.1f);
+
+        IncreaseFlatHealth(2);
+        IncreaseHealthPercent(0.1f);
+
+        IncreaseDexterity(0.1f);
 
         if (player != null)
         {
-            player.UpdateMaxHealth(maxHealthStat);
+            player.UpdateMaxHealth(GetMaxHealth());
         }
-        Debug.Log("Speed Multiplier: " + speedMultiplier);
-        Debug.Log("Damage Multiplier: " + damageMultiplier);
-        Debug.Log("Max health stat: " + maxHealthStat);
+
+    }
+    //health stats____________________________________________________________________________
+    private void IncreaseFlatHealth(int amount){
+        flatHealthBonus += amount;
+    }
+    public void IncreaseHealthPercent(float percent)
+    {
+        healthMultiplier += percent;
+    }
+    public int GetMaxHealth()
+    {
+        int baseHealth = 10;
+        return Mathf.RoundToInt((baseHealth + flatHealthBonus) * healthMultiplier);
     }
 
-    private void IncreaseHealthStat(int amount)
+
+    //Dex stats____________________________________________________________________________
+    private void IncreaseDexterity(float percent)
     {
-        maxHealthStat += amount;
+        dexterityMultiplier += percent;
     }
 
-    private void IncreaseSpeedStat(int amount)
+    public float GetFireRate(float baseFireRate)
     {
-        speedMultiplier += amount;
+        return baseFireRate * dexterityMultiplier;
+    }
+    //Speed Stats____________________________________________________________________________
+
+    public void IncreaseSpeed(float percent)
+    {
+        speedMultiplier += percent;
     }
 
-    private void IncreaseDamageStat(int amount)
+    public float GetSpeed(float baseSpeed)
     {
-        damageMultiplier += amount;
+        return baseSpeed * speedMultiplier;
+    }
+    //DMG stats____________________________________________________________________________
+    public void IncreaseDamage(float percent)
+    {
+        damageMultiplier += percent;
+    }
+
+    public int GetDamage(int baseDamage)
+    {
+        return Mathf.RoundToInt(baseDamage * damageMultiplier);
+    }
+
+
+    public void ApplyLevelUpChoice(string choiceId)
+    {
+        switch (choiceId)
+        {
+            case "strength":
+                IncreaseHealthPercent(StrengthHealthIncrease);
+                if (player != null)
+                {
+                    player.UpdateMaxHealth(GetMaxHealth());
+                }
+                Debug.Log($"Strength selected. Max Health: {GetMaxHealth()}", this);
+                break;
+            case "dexterity":
+                IncreaseDexterity(DexterityFireRateIncrease);
+                Debug.Log($"Dexterity selected. Fire Rate Multiplier: {dexterityMultiplier}", this);
+                break;
+            case "intelligence":
+                IncreaseDamage(IntelligenceDamageIncrease);
+                Debug.Log($"Intelligence selected. Damage Multiplier: {damageMultiplier}", this);
+                break;
+            default:
+                Debug.LogWarning($"Unknown level up choice: {choiceId}", this);
+                break;
+        }
     }
 }
