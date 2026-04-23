@@ -1,8 +1,10 @@
-using System;
 using UnityEngine;
 
 public class Stats : MonoBehaviour
 {
+    private const float StrengthHealthIncrease = 0.1f;
+    private const float DexterityFireRateIncrease = 0.1f;
+    private const float IntelligenceDamageIncrease = 0.1f;
 
     public float speedMultiplier = 1f;
     public float damageMultiplier = 1f;
@@ -13,12 +15,11 @@ public class Stats : MonoBehaviour
     public float healthMultiplier = 1f;
 
     public float dexterityMultiplier = 1f;
-    private PlayerLevelUp levelSytem;
+
     private Player player;
 
     private void Awake()
     {
-        levelSytem = GetComponent<PlayerLevelUp>();
         player = GetComponent<Player>();
     }
     private void OnEnable()
@@ -56,6 +57,8 @@ public class Stats : MonoBehaviour
     }
     //health stats____________________________________________________________________________
     private void IncreaseFlatHealth(int amount)
+
+    private void IncreaseDexterity(float percent)
     {
         flatHealthBonus += amount;
     }
@@ -103,5 +106,29 @@ public class Stats : MonoBehaviour
     }
 
 
-
+    public void ApplyLevelUpChoice(string choiceId)
+    {
+        switch (choiceId)
+        {
+            case "strength":
+                IncreaseHealth(StrengthHealthIncrease);
+                if (player != null)
+                {
+                    player.UpdateMaxHealth(GetMaxHealth());
+                }
+                Debug.Log($"Strength selected. Max Health: {GetMaxHealth()}", this);
+                break;
+            case "dexterity":
+                IncreaseDexterity(DexterityFireRateIncrease);
+                Debug.Log($"Dexterity selected. Fire Rate Multiplier: {dexterityMultiplier}", this);
+                break;
+            case "intelligence":
+                IncreaseDamage(IntelligenceDamageIncrease);
+                Debug.Log($"Intelligence selected. Damage Multiplier: {damageMultiplier}", this);
+                break;
+            default:
+                Debug.LogWarning($"Unknown level up choice: {choiceId}", this);
+                break;
+        }
+    }
 }
