@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour {
     private VisualElement _levelProgressFill;
     private VisualElement _levelUpRoot;
     private PlayerLevelUp _playerLevelUp;
+    private Stats _playerStats;
     private VisualElement _gameOverRoot;
     private float _currentRunTime;
     private bool _isGameOver;
@@ -71,6 +72,7 @@ public class GameManager : MonoBehaviour {
         if (quitButton != null) quitButton.clicked += QuitToMenu;
 
         _playerLevelUp = FindAnyObjectByType<PlayerLevelUp>();
+        _playerStats = FindAnyObjectByType<Stats>();
         if (_playerLevelUp != null)
         {
             _playerLevelUp.OnXpChanged += HandleXpChanged;
@@ -129,6 +131,10 @@ public class GameManager : MonoBehaviour {
         }
 
         Debug.Log($"Level up choice selected: {choiceId}", this);
+        if (_playerStats != null)
+        {
+            _playerStats.ApplyLevelUpChoice(choiceId);
+        }
         if (_levelUpRoot != null)
         {
             _levelUpRoot.style.display = DisplayStyle.None;

@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class Enemy : MonoBehaviour
 {
@@ -15,10 +14,8 @@ public class Enemy : MonoBehaviour
 
 
     public int maxHealth = 10;
-  
+
     private int currentHealth;
-    private float damageCooldown = 1f;
-    private float damageTimer = 0f;
 
     // public int damageMultiplier;
     //damage mult will be increased when enemy levls up using similar level up system to player, but for now just a base damage
@@ -154,20 +151,10 @@ public class Enemy : MonoBehaviour
         float damageMultiplier = (stats != null) ? stats.damageMultiplier : 2f;
         if (collision.gameObject != null && collision.gameObject.CompareTag("Player"))
         {
-            //Replace this with a damage player call
-            if (collision.gameObject.CompareTag("Player"))
+            Player player = collision.gameObject.GetComponent<Player>();
+            if (player != null)
             {
-                damageTimer -= Time.deltaTime;
-                if (damageTimer <= 0f)
-                {
-                    Player player = collision.gameObject.GetComponent<Player>();
-                    if (player != null)
-                    {
-                        Debug.Log("TAKE DAMAGE");
-                        player.TakeDamage((int)(baseDamage * damageMultiplier));
-                        damageTimer = damageCooldown;
-                    }
-                }
+                player.TakeDamage((int)(baseDamage * damageMultiplier));
             }
             //Leads to fun lose screen by accident, all the enemies just fall down.
         }
