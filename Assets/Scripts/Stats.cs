@@ -23,6 +23,7 @@ public class Stats : MonoBehaviour
     private void Awake()
     {
         player = GetComponent<Player>();
+        levelSytem = GetComponent<PlayerLevelUp>();
     }
     private void OnEnable()
     {
