@@ -1,30 +1,95 @@
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class Enemy : MonoBehaviour
 {
-    private EnemyStats stats;
-    private float moveSpeed = 0.5f;
+    private static readonly List<Enemy> ActiveEnemies = new();
+    private static readonly RaycastHit2D[] ObstacleHits = new RaycastHit2D[8];
+    private static readonly ContactFilter2D ObstacleContactFilter = new()
+    {
+        useTriggers = false
+    };
+
+    private const float DefaultMoveSpeed = 0.5f;
+    private const float DefaultSpeedMultiplier = 5f;
+    private const float DefaultDamageMultiplier = 2f;
+    [Header("Drops")]
     [SerializeField] private GameObject xpOrbPrefab;
     [SerializeField] private int minXpOrbDrops = 1;
     [SerializeField] private int maxXpOrbDrops = 2;
     [SerializeField] private float xpDropRadius = 0.6f;
     [SerializeField] private float minXpOrbSpacing = 0.35f;
 
-    private Transform playerLocation;
+    [Header("Combat")]
+    [SerializeField] private int maxHealth = 10;
+    [SerializeField] private float baseDamage = 1f;
+    [SerializeField] private float contactDamageInterval = 0.5f;
 
+    [Header("Swarm Movement")]
+    [SerializeField] private float moveSpeed = DefaultMoveSpeed;
+    [SerializeField] private float acceleration = 18f;
+    [SerializeField] private float steeringSmoothing = 12f;
+    [SerializeField] private float desiredPlayerDistance = 0.85f;
+    [SerializeField] private float orbitStrength = 0.75f;
+    [SerializeField] private float separationRadius = 1.2f;
+    [SerializeField] private float separationStrength = 1.8f;
+    [SerializeField] private float obstacleProbeDistance = 1.2f;
+    [SerializeField] private float obstacleAvoidanceStrength = 2.5f;
+    [SerializeField] private float obstacleClearanceRadius = 0.25f;
+    [SerializeField] private float obstacleSideProbeAngle = 55f;
+    [SerializeField] private float repathInterval = 0.2f;
+    [SerializeField] private float stuckCheckInterval = 0.45f;
+    [SerializeField] private float stuckDistanceThreshold = 0.08f;
+    [SerializeField] private float stuckRecoveryTime = 0.6f;
+    [SerializeField] private float stuckSideBias = 1.35f;
+    [SerializeField] private float wanderStrength = 0.4f;
+    [SerializeField] private float wanderFrequency = 1.1f;
+    [SerializeField] private float separationRandomness = 0.35f;
 
-    public int maxHealth = 10;
-  
+    private EnemyStats stats;
+    private Rigidbody2D rb;
+    private Collider2D enemyCollider;
+    private Transform playerTransform;
+
     private int currentHealth;
+    private float damageCooldownTimer;
+    private float repathTimer;
+    private float stuckTimer;
+    private float recoveryTimer;
+    private float orbitSign;
+    private float wanderSeed;
+    private float separationRadiusMultiplier;
+    private float separationStrengthMultiplier;
+    private float desiredDistanceMultiplier;
+    private Vector2 desiredVelocity;
+    private Vector2 currentVelocity;
+    private Vector2 appliedVelocity;
+    private Vector2 lastStuckPosition;
+    private Vector2 cachedPathDirection;
+    private Vector2 recoveryDirection;
 
-    // public int damageMultiplier;
-    //damage mult will be increased when enemy levls up using similar level up system to player, but for now just a base damage
-    public float baseDamage = 1;
+    private void Awake()
+    {
+        stats = GetComponent<EnemyStats>();
+        rb = GetComponent<Rigidbody2D>();
+        enemyCollider = GetComponent<Collider2D>();
+        orbitSign = Random.value < 0.5f ? -1f : 1f;
+        wanderSeed = Random.Range(0f, 1000f);
+        separationRadiusMultiplier = Random.Range(0.82f, 1.18f);
+        separationStrengthMultiplier = Random.Range(0.8f, 1.25f);
+        desiredDistanceMultiplier = Random.Range(0.8f, 1.2f);
+        currentHealth = maxHealth;
+    }
+
+    private void OnEnable()
+    {
+        RegisterEnemy();
+        CachePlayer();
+        lastStuckPosition = rb != null ? rb.position : (Vector2)transform.position;
+    }
 
     private void Start()
     {
-        currentHealth = maxHealth;
         if (stats != null)
         {
             maxHealth = stats.maxHealthStat;
@@ -32,20 +97,119 @@ public class Enemy : MonoBehaviour
 
         currentHealth = maxHealth;
     }
-    private void Awake()
-    {
-        stats = GetComponent<EnemyStats>();
-    }
 
+    private void OnDisable()
+    {
+        UnregisterEnemy();
+    }
 
     public void TakeDamage(int damageTaken)
     {
         currentHealth -= damageTaken;
-        //Debug.Log("Enemy HP: " + currentHealth);
         if (currentHealth <= 0)
         {
             Die();
         }
+    }
+
+    public void UpdateMaxHealth(int newMaxHealth)
+    {
+        maxHealth = newMaxHealth;
+
+        if (currentHealth < maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+
+        Debug.Log("Max HP: " + maxHealth + " | Current HP: " + currentHealth);
+    }
+
+    private void FixedUpdate()
+    {
+        if (rb == null)
+        {
+            return;
+        }
+
+        damageCooldownTimer -= Time.fixedDeltaTime;
+        repathTimer -= Time.fixedDeltaTime;
+        stuckTimer -= Time.fixedDeltaTime;
+
+        if (!EnsurePlayer())
+        {
+            rb.linearVelocity = Vector2.zero;
+            currentVelocity = Vector2.zero;
+            appliedVelocity = Vector2.zero;
+            return;
+        }
+
+        if (stuckTimer <= 0f)
+        {
+            UpdateStuckState();
+            stuckTimer = stuckCheckInterval;
+        }
+
+        Vector2 position = rb.position;
+        Vector2 toPlayer = (Vector2)playerTransform.position - position;
+        float distanceToPlayer = toPlayer.magnitude;
+        Vector2 toPlayerDirection = distanceToPlayer > 0.001f ? toPlayer / distanceToPlayer : Vector2.zero;
+
+        if (repathTimer <= 0f)
+        {
+            cachedPathDirection = CalculatePathDirection(position, toPlayerDirection);
+            repathTimer = repathInterval;
+        }
+
+        Vector2 steeringDirection = cachedPathDirection;
+        steeringDirection += CalculateSeparation(position) * separationStrength * separationStrengthMultiplier;
+        steeringDirection += CalculateOrbit(position, distanceToPlayer);
+        steeringDirection += CalculateWander();
+        steeringDirection += CalculateRecoveryDirection();
+
+        if (steeringDirection.sqrMagnitude < 0.0001f)
+        {
+            steeringDirection = toPlayerDirection;
+        }
+
+        steeringDirection.Normalize();
+
+        float speedMultiplier = stats != null ? stats.speedMultiplier : DefaultSpeedMultiplier;
+        float targetSpeed = moveSpeed * speedMultiplier;
+
+        float personalDesiredDistance = desiredPlayerDistance * desiredDistanceMultiplier;
+        if (distanceToPlayer < personalDesiredDistance)
+        {
+            targetSpeed *= Mathf.Clamp01(distanceToPlayer / personalDesiredDistance);
+        }
+
+        desiredVelocity = steeringDirection * targetSpeed;
+        currentVelocity = Vector2.MoveTowards(
+            currentVelocity,
+            desiredVelocity,
+            acceleration * Time.fixedDeltaTime * Mathf.Max(1f, speedMultiplier * 0.15f));
+
+        appliedVelocity = Vector2.Lerp(appliedVelocity, currentVelocity, steeringSmoothing * Time.fixedDeltaTime);
+        Vector2 smoothedVelocity = appliedVelocity;
+        rb.MovePosition(position + smoothedVelocity * Time.fixedDeltaTime);
+        rb.linearVelocity = Vector2.zero;
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (damageCooldownTimer > 0f || collision.gameObject == null || !collision.gameObject.CompareTag("Player"))
+        {
+            return;
+        }
+
+        Player player = collision.gameObject.GetComponent<Player>();
+        if (player == null)
+        {
+            return;
+        }
+
+        float damageMultiplier = stats != null ? stats.damageMultiplier : DefaultDamageMultiplier;
+        player.TakeDamage(Mathf.Max(1, Mathf.RoundToInt(baseDamage * damageMultiplier)));
+        damageCooldownTimer = contactDamageInterval;
     }
 
     private void Die()
@@ -108,56 +272,255 @@ public class Enemy : MonoBehaviour
         return true;
     }
 
-    public void UpdateMaxHealth(int newMaxHealth)
+    private Vector2 CalculatePathDirection(Vector2 position, Vector2 directDirection)
     {
-        maxHealth = newMaxHealth;
+        Vector2 bestDirection = directDirection;
+        float bestScore = ScoreDirection(position, directDirection, directDirection, 0f);
 
-        if (currentHealth < maxHealth)
+        Vector2 left = Rotate(directDirection, obstacleSideProbeAngle * 0.5f);
+        float leftScore = ScoreDirection(position, left, directDirection, 0.1f);
+        if (leftScore > bestScore)
         {
-            currentHealth = maxHealth;
+            bestScore = leftScore;
+            bestDirection = left;
         }
-        Debug.Log("Max HP: " + maxHealth + " | Current HP: " + currentHealth);
-    }
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-        //Seems a bit jank maybe fix this at some point
-        //Currently it grabs the player by finding it's movement script, but considering it's called test movement
-        //Doesn't exactly seem likely to stick around for long
-        //So might want to replace with a method that finds the player in a more abstract way.
-        float speedMult = (stats != null) ? stats.speedMultiplier : 5f;
-        TestMovement player = FindAnyObjectByType<TestMovement>();
 
+        Vector2 right = Rotate(directDirection, -obstacleSideProbeAngle * 0.5f);
+        float rightScore = ScoreDirection(position, right, directDirection, 0.1f);
+        if (rightScore > bestScore)
+        {
+            bestScore = rightScore;
+            bestDirection = right;
+        }
+
+        Vector2 hardLeft = Rotate(directDirection, obstacleSideProbeAngle);
+        float hardLeftScore = ScoreDirection(position, hardLeft, directDirection, 0.25f);
+        if (hardLeftScore > bestScore)
+        {
+            bestScore = hardLeftScore;
+            bestDirection = hardLeft;
+        }
+
+        Vector2 hardRight = Rotate(directDirection, -obstacleSideProbeAngle);
+        float hardRightScore = ScoreDirection(position, hardRight, directDirection, 0.25f);
+        if (hardRightScore > bestScore)
+        {
+            bestScore = hardRightScore;
+            bestDirection = hardRight;
+        }
+
+        Vector2 reverseLeft = Rotate(directDirection, obstacleSideProbeAngle * 1.5f);
+        float reverseLeftScore = ScoreDirection(position, reverseLeft, directDirection, 0.45f);
+        if (reverseLeftScore > bestScore)
+        {
+            bestScore = reverseLeftScore;
+            bestDirection = reverseLeft;
+        }
+
+        Vector2 reverseRight = Rotate(directDirection, -obstacleSideProbeAngle * 1.5f);
+        float reverseRightScore = ScoreDirection(position, reverseRight, directDirection, 0.45f);
+        if (reverseRightScore > bestScore)
+        {
+            bestDirection = reverseRight;
+        }
+
+        return bestDirection.sqrMagnitude > 0.0001f ? bestDirection.normalized : directDirection;
+    }
+
+    private float ScoreDirection(Vector2 position, Vector2 candidateDirection, Vector2 preferredDirection, float directionPenalty)
+    {
+        if (candidateDirection.sqrMagnitude < 0.0001f)
+        {
+            return float.MinValue;
+        }
+
+        candidateDirection.Normalize();
+        float hitDistance = ProbeObstacleDistance(position, candidateDirection);
+        float clearanceScore = (hitDistance / obstacleProbeDistance) * obstacleAvoidanceStrength;
+        float alignment = Vector2.Dot(candidateDirection, preferredDirection.normalized);
+        return clearanceScore + alignment - directionPenalty;
+    }
+
+    private float ProbeObstacleDistance(Vector2 origin, Vector2 direction)
+    {
+        int hitCount = Physics2D.CircleCast(
+            origin,
+            obstacleClearanceRadius,
+            direction,
+            ObstacleContactFilter,
+            ObstacleHits,
+            obstacleProbeDistance);
+
+        float bestDistance = obstacleProbeDistance;
+
+        for (int i = 0; i < hitCount; i++)
+        {
+            Collider2D hitCollider = ObstacleHits[i].collider;
+            if (!IsObstacle(hitCollider))
+            {
+                continue;
+            }
+
+            bestDistance = Mathf.Min(bestDistance, ObstacleHits[i].distance);
+        }
+
+        return bestDistance;
+    }
+
+    private Vector2 CalculateSeparation(Vector2 position)
+    {
+        Vector2 separation = Vector2.zero;
+        float personalSeparationRadius = separationRadius * separationRadiusMultiplier;
+
+        for (int i = 0; i < ActiveEnemies.Count; i++)
+        {
+            Enemy other = ActiveEnemies[i];
+            if (other == null || other == this || other.rb == null)
+            {
+                continue;
+            }
+
+            Vector2 offset = position - other.rb.position;
+            float distance = offset.magnitude;
+            if (distance <= 0.001f || distance > personalSeparationRadius)
+            {
+                continue;
+            }
+
+            float weight = 1f - (distance / personalSeparationRadius);
+            float randomBias = 1f + Mathf.Sin((Time.time * 2.7f) + wanderSeed + (i * 0.73f)) * separationRandomness;
+            separation += (offset / distance) * (weight * randomBias);
+        }
+
+        return separation;
+    }
+
+    private Vector2 CalculateOrbit(Vector2 position, float distanceToPlayer)
+    {
+        if (playerTransform == null || distanceToPlayer > (separationRadius * separationRadiusMultiplier) * 2.35f)
+        {
+            return Vector2.zero;
+        }
+
+        Vector2 toPlayer = (Vector2)playerTransform.position - position;
+        if (toPlayer.sqrMagnitude < 0.0001f)
+        {
+            return Vector2.zero;
+        }
+
+        Vector2 tangent = new(-toPlayer.y, toPlayer.x);
+        tangent.Normalize();
+
+        float personalDesiredDistance = desiredPlayerDistance * desiredDistanceMultiplier;
+        float orbitWeight = Mathf.InverseLerp((separationRadius * separationRadiusMultiplier) * 2.35f, personalDesiredDistance, distanceToPlayer);
+        return tangent * (orbitStrength * orbitWeight * orbitSign);
+    }
+
+    private Vector2 CalculateWander()
+    {
+        float noiseX = Mathf.PerlinNoise(wanderSeed, Time.time * wanderFrequency) - 0.5f;
+        float noiseY = Mathf.PerlinNoise(Time.time * wanderFrequency, wanderSeed) - 0.5f;
+        Vector2 wander = new(noiseX, noiseY);
+        return wander * wanderStrength;
+    }
+
+    private Vector2 CalculateRecoveryDirection()
+    {
+        if (recoveryTimer <= 0f)
+        {
+            return Vector2.zero;
+        }
+
+        recoveryTimer -= Time.fixedDeltaTime;
+        return recoveryDirection * stuckSideBias;
+    }
+
+    private void UpdateStuckState()
+    {
+        Vector2 currentPosition = rb.position;
+        float movedDistance = Vector2.Distance(currentPosition, lastStuckPosition);
+
+        if (movedDistance < stuckDistanceThreshold && EnsurePlayer())
+        {
+            Vector2 toPlayer = ((Vector2)playerTransform.position - currentPosition).normalized;
+            float leftClearance = ProbeObstacleDistance(currentPosition, Rotate(toPlayer, obstacleSideProbeAngle));
+            float rightClearance = ProbeObstacleDistance(currentPosition, Rotate(toPlayer, -obstacleSideProbeAngle));
+            float chosenSign = leftClearance > rightClearance ? 1f : -1f;
+            recoveryDirection = Rotate(toPlayer, obstacleSideProbeAngle * chosenSign).normalized;
+            recoveryTimer = stuckRecoveryTime;
+        }
+
+        lastStuckPosition = currentPosition;
+    }
+
+    private bool EnsurePlayer()
+    {
+        if (playerTransform != null)
+        {
+            return true;
+        }
+
+        CachePlayer();
+        return playerTransform != null;
+    }
+
+    private void CachePlayer()
+    {
+        TestMovement player = FindAnyObjectByType<TestMovement>();
         if (player != null)
         {
-            //Small note, for some reason the enemy is in front of the trees because it teleports to z 0
-            playerLocation = FindAnyObjectByType<TestMovement>().transform;
-            Vector3 newPosition = Vector3.MoveTowards(transform.localPosition, playerLocation.localPosition, moveSpeed * speedMult * Time.fixedDeltaTime);
-
-            //Replaced with rigidbody to stay more consistent
-            //Maybe delete the collider if the physics is too annoying, and maybe constrain rotation
-            //transform.localPosition = newPosition;
-
-            Rigidbody2D rb = GetComponent<Rigidbody2D>();
-            rb.MovePosition(newPosition);
-
-            //Attempt to keep the position behind trees.
-            //It failed preserved for future attempts
-            // transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -1);
+            playerTransform = player.transform;
         }
     }
 
-    void OnCollisionStay2D(Collision2D collision)
+    private void RegisterEnemy()
     {
-        float damageMultiplier = (stats != null) ? stats.damageMultiplier : 2f;
-        if (collision.gameObject != null && collision.gameObject.CompareTag("Player"))
+        if (ActiveEnemies.Contains(this))
         {
-            Player player = collision.gameObject.GetComponent<Player>();
-            if (player != null)
-            {
-                player.TakeDamage((int)(baseDamage * damageMultiplier));
-            }
-            //Leads to fun lose screen by accident, all the enemies just fall down.
+            return;
         }
+
+        for (int i = 0; i < ActiveEnemies.Count; i++)
+        {
+            Enemy other = ActiveEnemies[i];
+            if (other == null || other.enemyCollider == null || enemyCollider == null)
+            {
+                continue;
+            }
+
+            Physics2D.IgnoreCollision(enemyCollider, other.enemyCollider, true);
+        }
+
+        ActiveEnemies.Add(this);
+    }
+
+    private void UnregisterEnemy()
+    {
+        ActiveEnemies.Remove(this);
+    }
+
+    private bool IsObstacle(Collider2D colliderToCheck)
+    {
+        if (colliderToCheck == null || colliderToCheck == enemyCollider || colliderToCheck.isTrigger)
+        {
+            return false;
+        }
+
+        if (colliderToCheck.CompareTag("Enemy") || colliderToCheck.CompareTag("Player"))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private static Vector2 Rotate(Vector2 vector, float degrees)
+    {
+        float radians = degrees * Mathf.Deg2Rad;
+        float cos = Mathf.Cos(radians);
+        float sin = Mathf.Sin(radians);
+        return new Vector2(
+            vector.x * cos - vector.y * sin,
+            vector.x * sin + vector.y * cos);
     }
 }
