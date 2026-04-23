@@ -7,21 +7,31 @@ public class Bullet : MonoBehaviour
     public float speed = 10f;
     public float lifetime = 3f;
     public int damage;
-
+   
     private Vector2 moveDirection;
+    private GameObject owner;
+    public WeaponSO weaponSO;
+
+    private Stats stats;
 
 
+    void Awake()
+    {
+        stats = GetComponentInParent<Stats>();
+       
+
+    }
 
     void Update()
     {
 
         transform.position += (Vector3)(moveDirection * (speed * Time.deltaTime));
     }
-    public void SetDirection(Vector2 direction, float bulletSpeed, int damageAmount)
+    public void SetDirection(Vector2 direction, float bulletSpeed)
     {
         moveDirection = direction.normalized;
         speed = bulletSpeed;
-        damage = damageAmount;
+        
 
         RotateBullet();
         Destroy(gameObject, lifetime);
@@ -35,16 +45,34 @@ public class Bullet : MonoBehaviour
 
     }
 
+    public void SetOwner(GameObject bulletOwner)
+    {
+        owner = bulletOwner;
+        
+    }
 
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+
+        damage = weaponSO.baseDamage;
+        if (stats != null)
+        {
+            damage *= stats.damageMultiplier;
+        }
+        if (collision.gameObject == owner) return;
+
+        Player player = collision.GetComponent<Player>();
         Enemy enemy = collision.GetComponent<Enemy>();
 
-        if (enemy != null)
+        if (owner.GetComponent<Enemy>() != null && player != null)
+        {
+            player.TakeDamage(damage);
+            Destroy(gameObject);
+        }
+        else if (owner.GetComponent<Player>() != null && enemy != null)
         {
             enemy.TakeDamage(damage);
-            Debug.Log("Bullet hit enemy for " + damage + " damage.");
             Destroy(gameObject);
         }
     }
