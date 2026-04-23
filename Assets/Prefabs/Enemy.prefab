@@ -108,6 +108,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51a3186fad65a504cad2b28dcbdeec6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  xpOrbPrefab: {fileID: 6034623416384411684, guid: ca6fe6d51e7593b4ba6f2eef87017da4, type: 3}
+  minXpOrbDrops: 1
+  maxXpOrbDrops: 2
+  xpDropRadius: 0.6
+  minXpOrbSpacing: 0.35
   maxHealth: 10
   baseDamage: 1
 --- !u!114 &2105547825413297556
