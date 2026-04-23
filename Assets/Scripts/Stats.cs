@@ -4,9 +4,11 @@ using UnityEngine;
 public class Stats : MonoBehaviour
 {
 
-    public int speedMultiplier = 5;
-    public int damageMultiplier = 2;
-    public int maxHealthStat = 10;
+    public float speedMultiplier = 1f;
+    public float damageMultiplier = 1f;
+    public float maxHealthStat = 1f;
+
+    public float dexterityMultiplier = 1f;
     private PlayerLevelUp levelSytem;
     private Player player;
 
@@ -19,7 +21,7 @@ public class Stats : MonoBehaviour
     {
         if (levelSytem != null)
         {
-            levelSytem.OnLevelUp += statChange;
+            levelSytem.OnLevelUp += OnStatChange;
         }
 
     }
@@ -28,37 +30,64 @@ public class Stats : MonoBehaviour
     {
         if (levelSytem != null)
         {
-            levelSytem.OnLevelUp -= statChange;
+            levelSytem.OnLevelUp -= OnStatChange;
         }
     }
 
-    private void statChange(object sender, EventArgs e)
+    private void OnStatChange(object sender, EventArgs e)
     {
-        IncreaseSpeedStat(1);
-        IncreaseDamageStat(10);
-        IncreaseHealthStat(10);
+        IncreaseSpeed(0.1f);
+        IncreaseDamage(0.1f);
+        IncreaseHealth(0.1f);
+        IncreaseDexterity(0.1f);
 
         if (player != null)
         {
-            player.UpdateMaxHealth(maxHealthStat);
+            player.UpdateMaxHealth(GetMaxHealth());
         }
-        Debug.Log("Speed Multiplier: " + speedMultiplier);
-        Debug.Log("Damage Multiplier: " + damageMultiplier);
-        Debug.Log("Max health stat: " + maxHealthStat);
+
     }
 
-    private void IncreaseHealthStat(int amount)
+    private void IncreaseDexterity(float percent)
     {
-        maxHealthStat += amount;
+        dexterityMultiplier += percent;
     }
 
-    private void IncreaseSpeedStat(int amount)
+    public void IncreaseSpeed(float percent)
     {
-        speedMultiplier += amount;
+        speedMultiplier += percent;
     }
 
-    private void IncreaseDamageStat(int amount)
+    public void IncreaseDamage(float percent)
     {
-        damageMultiplier += amount;
+        damageMultiplier += percent;
     }
+
+    public void IncreaseHealth(float percent)
+    {
+        maxHealthStat += percent;
+    }
+
+    public float GetSpeed(float baseSpeed)
+    {
+        return baseSpeed * speedMultiplier;
+    }
+
+    public int GetDamage(int baseDamage)
+    {
+        return Mathf.RoundToInt(baseDamage * damageMultiplier);
+    }
+
+    public int GetMaxHealth()
+    {
+        int baseHealth = 10;
+        return Mathf.RoundToInt(baseHealth * maxHealthStat);
+    }
+
+    public float GetFireRate(float baseFireRate)
+    {
+        return baseFireRate * dexterityMultiplier;
+    }
+
+
 }

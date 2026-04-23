@@ -3,7 +3,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     private Stats stats;
-    private SpeedTower speedTower;
+
     public int maxHealth = 10;
     private int currentHealth;
 
@@ -13,7 +13,7 @@ public class Player : MonoBehaviour
     {
         if (stats != null)
         {
-            maxHealth = stats.maxHealthStat;
+            maxHealth = stats.GetMaxHealth();
         }
 
         currentHealth = maxHealth;
