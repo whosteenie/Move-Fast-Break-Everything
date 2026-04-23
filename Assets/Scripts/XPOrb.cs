@@ -82,12 +82,33 @@ public class XPOrb : MonoBehaviour {
         StartMagnetSequence(collision.transform);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision) {
-        if(!collision.gameObject.CompareTag("Player")) {
+    private void FixedUpdate() {
+        if(_magnetTarget == null) {
             return;
         }
 
-        Collect(collision.gameObject);
+        if(_launchTimer > 0f) {
+            _launchTimer -= Time.fixedDeltaTime;
+            MoveOrb(_launchVelocity * Time.fixedDeltaTime);
+            return;
+        }
+
+        if(!_isMagnetized) {
+            return;
+        }
+
+        _currentMagnetSpeed = Mathf.MoveTowards(_currentMagnetSpeed, magnetSpeed, magnetAcceleration * Time.fixedDeltaTime);
+
+        var directionToPlayer = ((Vector2)_magnetTarget.position - GetCurrentPosition()).normalized;
+        MoveOrb(directionToPlayer * (_currentMagnetSpeed * Time.fixedDeltaTime));
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision) {
+        if(_hasTriggeredPickupRange || !collision.CompareTag("Player")) {
+            return;
+        }
+
+        StartMagnetSequence(collision.transform);
     }
 
     private void ApplyTierVisuals() {
