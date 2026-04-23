@@ -1,29 +1,38 @@
+using System.Collections;
 using System;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
     private Stats stats;
-    private SpeedTower speedTower;
-    private PlayerHealthBar healthBar;
+    private SpriteRenderer _spriteRenderer;
+    private Color _originalColor;
+
+    private PlayerHealthBar _healthBar;
     public int maxHealth = 10;
-    private int currentHealth;
+
+    [SerializeField] private float invulnerabilityDuration = 1f;
+    [SerializeField] private float flashInterval = 0.1f;
+    [SerializeField] private float flashAlpha = 0.35f;
 
     private const int debugHealAmount = 10;
+    private bool _isInvulnerable;
+    private Coroutine _invulnerabilityRoutine;
 
     public event Action<int, int> OnHealthChanged;
 
-    public int CurrentHealth => currentHealth;
+    public int CurrentHealth { get; private set; }
+
     public int MaxHealth => maxHealth;
 
     private void Start()
     {
         if (stats != null)
         {
-            maxHealth = stats.maxHealthStat;
+            maxHealth = stats.GetMaxHealth();
         }
 
-        currentHealth = maxHealth;
+        CurrentHealth = maxHealth;
         EnsureHealthBar();
         NotifyHealthChanged();
     }
@@ -31,6 +40,11 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         stats = GetComponent<Stats>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        if (_spriteRenderer != null)
+        {
+            _originalColor = _spriteRenderer.color;
+        }
         EnsureHealthBar();
     }
 
@@ -49,23 +63,23 @@ public class Player : MonoBehaviour
     {
         maxHealth = newMaxHealth;
 
-        if (currentHealth > maxHealth)
+        if (CurrentHealth > maxHealth)
         {
-            currentHealth = maxHealth;
+            CurrentHealth = maxHealth;
         }
-        Debug.Log("Max HP: " + maxHealth + " | Current HP: " + currentHealth);
+        Debug.Log("Max HP: " + maxHealth + " | Current HP: " + CurrentHealth);
         NotifyHealthChanged();
     }
 
     public void Heal(int healAmount)
     {
 
-        currentHealth += healAmount;
-        if (currentHealth > maxHealth)
+        CurrentHealth += healAmount;
+        if (CurrentHealth > maxHealth)
         {
-            currentHealth = maxHealth;
+            CurrentHealth = maxHealth;
         }
-        Debug.Log("Player HP: " + currentHealth);
+        Debug.Log("Player HP: " + CurrentHealth);
         NotifyHealthChanged();
     }
 
@@ -73,46 +87,99 @@ public class Player : MonoBehaviour
 
     public void TakeDamage(int damageTaken)
     {
+        if (_isInvulnerable)
+        {
+            return;
+        }
 
-        currentHealth -= damageTaken;
-        currentHealth = Mathf.Max(currentHealth, 0);
-        Debug.Log("Player HP: " + currentHealth);
+        CurrentHealth -= damageTaken;
+        CurrentHealth = Mathf.Max(CurrentHealth, 0);
+        Debug.Log("Player HP: " + CurrentHealth);
         NotifyHealthChanged();
-        if (currentHealth <= 0)
+        if (CurrentHealth <= 0)
         {
             Die();
+            return;
         }
+
+        if (_invulnerabilityRoutine != null)
+        {
+            StopCoroutine(_invulnerabilityRoutine);
+        }
+
+        _invulnerabilityRoutine = StartCoroutine(InvulnerabilityFlashRoutine());
     }
 
     private void Die()
     {
+        RestoreSpriteColors();
         GameManager.Instance.ShowGameOver();
         Destroy(gameObject);
     }
 
-    private void EnsureHealthBar()
+    private IEnumerator InvulnerabilityFlashRoutine()
     {
-        if (healthBar == null)
+        _isInvulnerable = true;
+        var timer = 0f;
+        var useFlashColor = true;
+
+        while (timer < invulnerabilityDuration)
         {
-            healthBar = GetComponentInChildren<PlayerHealthBar>(true);
+            SetSpriteAlpha(useFlashColor ? flashAlpha : 1f);
+            useFlashColor = !useFlashColor;
+            yield return new WaitForSeconds(flashInterval);
+            timer += flashInterval;
         }
 
-        if (healthBar != null)
+        RestoreSpriteColors();
+        _isInvulnerable = false;
+        _invulnerabilityRoutine = null;
+    }
+
+    private void SetSpriteAlpha(float alpha)
+    {
+        if (_spriteRenderer == null)
         {
-            healthBar.Initialize(this);
+            return;
+        }
+
+        var color = _originalColor;
+        color.a = alpha;
+        _spriteRenderer.color = color;
+    }
+
+    private void RestoreSpriteColors()
+    {
+        if (_spriteRenderer == null)
+        {
+            return;
+        }
+
+        _spriteRenderer.color = _originalColor;
+    }
+    private void EnsureHealthBar()
+    {
+        if (_healthBar == null)
+        {
+            _healthBar = GetComponentInChildren<PlayerHealthBar>(true);
+        }
+
+        if (_healthBar != null)
+        {
+            _healthBar.Initialize(this);
             return;
         }
 
         GameObject healthBarObject = new("PlayerHealthBar");
         healthBarObject.transform.SetParent(transform, false);
-        healthBar = healthBarObject.AddComponent<PlayerHealthBar>();
-        healthBar.Initialize(this);
+        _healthBar = healthBarObject.AddComponent<PlayerHealthBar>();
+        _healthBar.Initialize(this);
     }
 
     private void NotifyHealthChanged()
     {
-        OnHealthChanged?.Invoke(currentHealth, maxHealth);
-        if(healthBar != null) healthBar.Refresh(currentHealth, maxHealth);
+        OnHealthChanged?.Invoke(CurrentHealth, maxHealth);
+        if(_healthBar != null) _healthBar.Refresh(CurrentHealth, maxHealth);
     }
 
 }
