@@ -274,12 +274,15 @@ public class Enemy : MonoBehaviour
         return true;
     }
 
+    // Samples several directions around the direct path to the player
+    // and picks the clearest option, so enemies steer around obstacles
+    // instead of always running straight into them.
     private Vector2 CalculatePathDirection(Vector2 position, Vector2 directDirection)
     {
         var bestDirection = directDirection;
         var bestScore = ScoreDirection(position, directDirection, directDirection, 0f);
 
-        var left = Rotate(directDirection, ObstacleSideProbeAngle * 0.5f);
+        var left = (Vector2)(Quaternion.Euler(0f, 0f, ObstacleSideProbeAngle * 0.5f) * directDirection);
         var leftScore = ScoreDirection(position, left, directDirection, 0.1f);
         if (leftScore > bestScore)
         {
@@ -287,7 +290,7 @@ public class Enemy : MonoBehaviour
             bestDirection = left;
         }
 
-        var right = Rotate(directDirection, -ObstacleSideProbeAngle * 0.5f);
+        var right = (Vector2)(Quaternion.Euler(0f, 0f, -ObstacleSideProbeAngle * 0.5f) * directDirection);
         var rightScore = ScoreDirection(position, right, directDirection, 0.1f);
         if (rightScore > bestScore)
         {
@@ -295,7 +298,7 @@ public class Enemy : MonoBehaviour
             bestDirection = right;
         }
 
-        var hardLeft = Rotate(directDirection, ObstacleSideProbeAngle);
+        var hardLeft = (Vector2)(Quaternion.Euler(0f, 0f, ObstacleSideProbeAngle) * directDirection);
         var hardLeftScore = ScoreDirection(position, hardLeft, directDirection, 0.25f);
         if (hardLeftScore > bestScore)
         {
@@ -303,7 +306,7 @@ public class Enemy : MonoBehaviour
             bestDirection = hardLeft;
         }
 
-        var hardRight = Rotate(directDirection, -ObstacleSideProbeAngle);
+        var hardRight = (Vector2)(Quaternion.Euler(0f, 0f, -ObstacleSideProbeAngle) * directDirection);
         var hardRightScore = ScoreDirection(position, hardRight, directDirection, 0.25f);
         if (hardRightScore > bestScore)
         {
@@ -311,7 +314,7 @@ public class Enemy : MonoBehaviour
             bestDirection = hardRight;
         }
 
-        var reverseLeft = Rotate(directDirection, ObstacleSideProbeAngle * 1.5f);
+        var reverseLeft = (Vector2)(Quaternion.Euler(0f, 0f, ObstacleSideProbeAngle * 1.5f) * directDirection);
         var reverseLeftScore = ScoreDirection(position, reverseLeft, directDirection, 0.45f);
         if (reverseLeftScore > bestScore)
         {
@@ -319,7 +322,7 @@ public class Enemy : MonoBehaviour
             bestDirection = reverseLeft;
         }
 
-        var reverseRight = Rotate(directDirection, -ObstacleSideProbeAngle * 1.5f);
+        var reverseRight = (Vector2)(Quaternion.Euler(0f, 0f, -ObstacleSideProbeAngle * 1.5f) * directDirection);
         var reverseRightScore = ScoreDirection(position, reverseRight, directDirection, 0.45f);
         if (reverseRightScore > bestScore)
         {
@@ -329,6 +332,9 @@ public class Enemy : MonoBehaviour
         return bestDirection.sqrMagnitude > 0.0001f ? bestDirection.normalized : directDirection;
     }
 
+    // Scores a candidate movement direction by balancing two things:
+    // how much open space is ahead, and how closely it still points
+    // toward the player.
     private float ScoreDirection(Vector2 position, Vector2 candidateDirection, Vector2 preferredDirection, float directionPenalty)
     {
         if (candidateDirection.sqrMagnitude < 0.0001f)
@@ -343,6 +349,8 @@ public class Enemy : MonoBehaviour
         return clearanceScore + alignment - directionPenalty;
     }
 
+    // Checks how far this direction stays clear before hitting an obstacle.
+    // Used by the path scoring step to prefer routes with more space.
     private float ProbeObstacleDistance(Vector2 origin, Vector2 direction)
     {
         var hitCount = Physics2D.CircleCast(
@@ -369,6 +377,8 @@ public class Enemy : MonoBehaviour
         return bestDistance;
     }
 
+    // Pushes this enemy away from nearby enemies so the swarm spreads out
+    // instead of collapsing into a single overlapping clump.
     private Vector2 CalculateSeparation(Vector2 position)
     {
         var separation = Vector2.zero;
@@ -397,6 +407,8 @@ public class Enemy : MonoBehaviour
         return separation;
     }
 
+    // Adds a sideways movement bias near the player so enemies circle in
+    // slightly instead of all aiming for the exact same point.
     private Vector2 CalculateOrbit(Vector2 position, float distanceToPlayer)
     {
         if (playerTransform == null || distanceToPlayer > (separationRadius * _separationRadiusMultiplier) * 2.35f)
@@ -418,6 +430,8 @@ public class Enemy : MonoBehaviour
         return tangent * (orbitStrength * orbitWeight * _orbitSign);
     }
 
+    // Adds a small drifting offset so enemies feel less uniform and the
+    // swarm movement stays a little messy.
     private Vector2 CalculateWander()
     {
         var noiseX = Mathf.PerlinNoise(_wanderSeed, Time.time * WanderFrequency) - 0.5f;
@@ -426,6 +440,8 @@ public class Enemy : MonoBehaviour
         return wander * wanderStrength;
     }
 
+    // Applies a temporary escape direction after the enemy is detected as
+    // stuck, helping it slide away from obstacles and rejoin the chase.
     private Vector2 CalculateRecoveryDirection()
     {
         if (_recoveryTimer <= 0f)
@@ -437,6 +453,8 @@ public class Enemy : MonoBehaviour
         return _recoveryDirection * StuckSideBias;
     }
 
+    // Detects enemies that are barely moving and picks a clearer sideways
+    // direction to help them break free from obstacles.
     private void UpdateStuckState()
     {
         var currentPosition = rb.position;
@@ -445,10 +463,10 @@ public class Enemy : MonoBehaviour
         if (movedDistance < StuckDistanceThreshold && EnsurePlayer())
         {
             var toPlayer = ((Vector2)playerTransform.position - currentPosition).normalized;
-            var leftClearance = ProbeObstacleDistance(currentPosition, Rotate(toPlayer, ObstacleSideProbeAngle));
-            var rightClearance = ProbeObstacleDistance(currentPosition, Rotate(toPlayer, -ObstacleSideProbeAngle));
+            var leftClearance = ProbeObstacleDistance(currentPosition, (Vector2)(Quaternion.Euler(0f, 0f, ObstacleSideProbeAngle) * toPlayer));
+            var rightClearance = ProbeObstacleDistance(currentPosition, (Vector2)(Quaternion.Euler(0f, 0f, -ObstacleSideProbeAngle) * toPlayer));
             var chosenSign = leftClearance > rightClearance ? 1f : -1f;
-            _recoveryDirection = Rotate(toPlayer, ObstacleSideProbeAngle * chosenSign).normalized;
+            _recoveryDirection = ((Vector2)(Quaternion.Euler(0f, 0f, ObstacleSideProbeAngle * chosenSign) * toPlayer)).normalized;
             _recoveryTimer = StuckRecoveryTime;
         }
 
@@ -507,15 +525,5 @@ public class Enemy : MonoBehaviour
         }
 
         return !colliderToCheck.CompareTag("Enemy") && !colliderToCheck.CompareTag("Player");
-    }
-
-    private static Vector2 Rotate(Vector2 vector, float degrees)
-    {
-        var radians = degrees * Mathf.Deg2Rad;
-        var cos = Mathf.Cos(radians);
-        var sin = Mathf.Sin(radians);
-        return new Vector2(
-            vector.x * cos - vector.y * sin,
-            vector.x * sin + vector.y * cos);
     }
 }
