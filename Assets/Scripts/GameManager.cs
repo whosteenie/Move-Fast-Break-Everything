@@ -23,9 +23,11 @@ public class GameManager : MonoBehaviour {
     private VisualElement _gameOverRoot;
     private float _currentRunTime;
     private bool _isGameOver;
+    private bool _isPaused;
 
     public static GameManager Instance { get; private set; }
     public static float CurrentRunTimeSeconds => Instance != null ? Instance._currentRunTime : 0f;
+    public static bool IsGameplayPaused => Instance != null && Instance._isPaused;
 
     private void Awake() {
         Instance = this;
@@ -93,6 +95,7 @@ public class GameManager : MonoBehaviour {
         }
 
         RefreshLevelProgressBar();
+        ApplyTimeScale();
     }
 
     private void Update() {
@@ -114,11 +117,12 @@ public class GameManager : MonoBehaviour {
 
     private void HandleLevelUp(object sender, EventArgs e)
     {
-        Time.timeScale = 0f;
         if (_levelUpRoot != null)
         {
             _levelUpRoot.style.display = DisplayStyle.Flex;
         }
+
+        ApplyTimeScale();
     }
 
     private void ResolveLevelUpChoice(string choiceId)
@@ -133,7 +137,7 @@ public class GameManager : MonoBehaviour {
         {
             _levelUpRoot.style.display = DisplayStyle.None;
         }
-        Time.timeScale = 1f;
+        ApplyTimeScale();
         _playerLevelUp.ResolveLevelUpChoice();
     }
 
@@ -164,12 +168,33 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    public void TogglePause()
+    {
+        if (_isGameOver || IsLevelUpMenuOpen())
+        {
+            return;
+        }
+
+        _isPaused = !_isPaused;
+        ApplyTimeScale();
+    }
+
     private static void RetryRun() {
         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
     }
 
     private static void QuitToMenu() {
         Debug.LogWarning("Not yet implemented");
+    }
+
+    private bool IsLevelUpMenuOpen()
+    {
+        return _levelUpRoot != null && _levelUpRoot.style.display != DisplayStyle.None;
+    }
+
+    private void ApplyTimeScale()
+    {
+        Time.timeScale = _isPaused || IsLevelUpMenuOpen() ? 0f : 1f;
     }
 
     private static string FormatRunTime(float runTimeSeconds) {

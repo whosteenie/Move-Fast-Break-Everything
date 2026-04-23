@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 4613269872209259729}
   - component: {fileID: 9007521428449226668}
   - component: {fileID: 325345116678476301}
+  - component: {fileID: 5122223334445556667}
   - component: {fileID: 1826873285969335579}
   - component: {fileID: 1269611933969825367}
   - component: {fileID: 8550780378805119090}
@@ -193,6 +194,20 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
+--- !u!114 &5122223334445556667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5711766594770397432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b84ae1c41b3ac746af378935aafb63c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInputController
+  inputActions: {fileID: -944628639613478452, guid: 5ee8780c3e4580343962ac5721f934fd, type: 3}
+  actionMapName: Player
 --- !u!114 &1826873285969335579
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,15 +219,13 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cb9a614f21eb5b14aaf5a1688510d1d6, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: '::'
+  m_EditorClassIdentifier: Assembly-CSharp::TestMovement
   rb: {fileID: 9007521428449226668}
+  inputController: {fileID: 5122223334445556667}
   dashSpeed: 25
   dashDuration: 0.2
   dashCooldown: 1
   moveSpeed: 5
-  dashKey: 32
-  slideKey: 304
-  chargeKey: 122
   slideMovementSO: {fileID: 11400000, guid: 663f6dc32ecaa9e4e88ecf6145993f89, type: 2}
   chargeMovementSO: {fileID: 11400000, guid: a70904dca67ea5c4c99c12c2679eb9af, type: 2}
   movementStateMachine: {fileID: 0}
