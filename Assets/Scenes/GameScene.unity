@@ -634,6 +634,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -6438699549702643509, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
+      propertyPath: healthBarOffset.y
+      value: -0.45
+      objectReference: {fileID: 0}
     - target: {fileID: 942206545015901672, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
       propertyPath: m_IsActive
       value: 1
