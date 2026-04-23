@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class AutoAim : MonoBehaviour
 {
-
+    public WeaponSO weaponSO;
     [Header("Shooting")]
     public GameObject bulletPrefab;
     public Transform firePoint;
-    public float fireRate = 2f;
-    public float bulletSpeed = 10f;
+    public float bulletSpeed;
+    public float fireRate;
 
     [Header("Targeting")]
     public float detectionRange = 10f;
@@ -17,18 +17,18 @@ public class AutoAim : MonoBehaviour
     private GameObject currentTarget;
 
     private Stats stats;
-    public int baseDamege = 1;
+    
 
     void Start()
     {
+        bulletSpeed = weaponSO.bulletSpeed;
+        fireRate = weaponSO.fireRate;
+        
         StartCoroutine(UpdateTargetRoutine());
         StartCoroutine(ShootRoutine());
     }
 
-    void Awake()
-    {
-        stats = GetComponentInParent<Stats>();
-    }
+
 
     IEnumerator UpdateTargetRoutine()
     {
@@ -56,9 +56,10 @@ public class AutoAim : MonoBehaviour
     }
     [SerializeField]
     float dis = 10f;
+    public string tag = "";
     GameObject FindClosestEnemy()
     {
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag(tag);
 
         GameObject closest = null;
 
@@ -81,16 +82,13 @@ public class AutoAim : MonoBehaviour
     void Shoot(Vector2 direction)
     {
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
-
+        bullet.GetComponent<Bullet>().SetOwner(gameObject);
         Bullet bulletScript = bullet.GetComponent<Bullet>();
         if (bulletScript != null)
         {
             int finalDamage = bulletScript.damage;
-            if (stats != null)
-            {
-                finalDamage *= stats.damageMultiplier;
-            }
-            bulletScript.SetDirection(direction, bulletSpeed, finalDamage);
+
+            bulletScript.SetDirection(direction, bulletSpeed);
         }
     }
 

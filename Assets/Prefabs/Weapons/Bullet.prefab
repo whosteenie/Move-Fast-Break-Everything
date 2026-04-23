@@ -82,7 +82,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 75f5f34dc1b5347e0b8351032682f224, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -109,6 +109,7 @@ MonoBehaviour:
   speed: 10
   lifetime: 3
   damage: 1
+  weaponSO: {fileID: 11400000, guid: bb479f169d2f82c4f807423405bedf60, type: 2}
 --- !u!61 &4007799153845805741
 BoxCollider2D:
   m_ObjectHideFlags: 0

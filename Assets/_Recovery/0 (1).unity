@@ -534,10 +534,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: RangedEnemy
       objectReference: {fileID: 0}
-    - target: {fileID: 6455936026826344264, guid: 0e93e345cfaea7441a616a542ef2341e, type: 3}
-      propertyPath: weaponSO
-      value: 
-      objectReference: {fileID: 11400000, guid: bb479f169d2f82c4f807423405bedf60, type: 2}
     - target: {fileID: 8754503555645506187, guid: 0e93e345cfaea7441a616a542ef2341e, type: 3}
       propertyPath: m_LocalPosition.x
       value: -5.79
@@ -899,21 +895,17 @@ PrefabInstance:
       value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 1269611933969825367, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
-      propertyPath: weaponSO
-      value: 
-      objectReference: {fileID: 11400000, guid: bb479f169d2f82c4f807423405bedf60, type: 2}
-    - target: {fileID: 1269611933969825367, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1826873285969335579, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
       propertyPath: movementStateMachine
       value: 
       objectReference: {fileID: 1828502760}
     - target: {fileID: 5327108225811942733, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
+      propertyPath: weaponSO
+      value: 
+      objectReference: {fileID: 11400000, guid: ecb3b305a05a84043a17c6edd9832e5d, type: 2}
     - target: {fileID: 5327108225811942733, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
       propertyPath: bulletPrefab
       value: 
