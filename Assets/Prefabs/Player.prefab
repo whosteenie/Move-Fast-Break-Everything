@@ -48,6 +48,7 @@ GameObject:
   - component: {fileID: 8550780378805119090}
   - component: {fileID: 2436123147083778664}
   - component: {fileID: -6438699549702643509}
+  - component: {fileID: 6769700025945905945}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -279,3 +280,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
   maxHealth: 10
+--- !u!114 &6769700025945905945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5711766594770397432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50914140d9fa26241b1d38f064b3155f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealthBar
+  barSize: {x: 0.38, y: 0.035}
+  barOffset: {x: 0, y: -0.34, z: 0}
+  fillColor: {r: 0.2, g: 0.9, b: 0.3, a: 1}
+  backgroundColor: {r: 0.1, g: 0.1, b: 0.1, a: 0.85}

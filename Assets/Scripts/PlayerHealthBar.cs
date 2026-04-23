@@ -2,29 +2,42 @@ using UnityEngine;
 
 public class PlayerHealthBar : MonoBehaviour
 {
-    private static Sprite cachedSprite;
+    private static Sprite _cachedSprite;
+    private const float MinScaleComponent = 0.0001f;
+    private const string VisualRootName = "VisualRoot";
 
-    private SpriteRenderer backgroundRenderer;
-    private SpriteRenderer fillRenderer;
+    [Header("Visuals")]
+    [SerializeField] private Vector2 barSize = new(0.38f, 0.035f);
+    [SerializeField] private Vector3 barOffset = new(0f, -0.4f, 0f);
+    [SerializeField] private Color fillColor = new(0.2f, 0.9f, 0.3f, 1f);
+    [SerializeField] private Color backgroundColor = new(0.1f, 0.1f, 0.1f, 0.85f);
 
-    private Vector2 barSize = new(1.4f, 0.18f);
-    private Vector3 barOffset = new(0f, -0.85f, 0f);
-    private Color fillColor = new(0.2f, 0.9f, 0.3f, 1f);
-    private Color backgroundColor = new(0.1f, 0.1f, 0.1f, 0.85f);
+    private Player _owner;
+    private Transform _visualRoot;
+    private SpriteRenderer _backgroundRenderer;
+    private SpriteRenderer _fillRenderer;
 
     private void Awake()
     {
+        if (_owner == null)
+        {
+            _owner = GetComponentInParent<Player>();
+        }
+
         EnsureRenderers();
         ApplyVisuals();
     }
 
-    public void Configure(Vector2 size, Vector3 offset, Color fill, Color background)
+    private void LateUpdate()
     {
-        barSize = size;
-        barOffset = offset;
-        fillColor = fill;
-        backgroundColor = background;
+        CompensateForParentScale();
+        UpdateWorldPosition();
+        ApplyVisuals();
+    }
 
+    public void Initialize(Player owner)
+    {
+        _owner = owner;
         EnsureRenderers();
         ApplyVisuals();
     }
@@ -33,79 +46,162 @@ public class PlayerHealthBar : MonoBehaviour
     {
         EnsureRenderers();
 
-        float fillPercent = maxHealth <= 0 ? 0f : Mathf.Clamp01((float)currentHealth / maxHealth);
-        float fillWidth = barSize.x * fillPercent;
-        float leftEdge = -barSize.x * 0.5f;
+        var size = GetBarSize();
+        var fillPercent = maxHealth <= 0 ? 0f : Mathf.Clamp01((float)currentHealth / maxHealth);
+        var fillWidth = size.x * fillPercent;
+        var leftEdge = -size.x * 0.5f;
 
-        fillRenderer.transform.localScale = new Vector3(fillWidth, barSize.y, 1f);
-        fillRenderer.transform.localPosition = new Vector3(leftEdge + (fillWidth * 0.5f), 0f, -0.01f);
-        fillRenderer.enabled = fillPercent > 0f;
+        var tr = _fillRenderer.transform;
+        tr.localScale = new Vector3(fillWidth, size.y, 1f);
+        tr.localPosition = new Vector3(leftEdge + fillWidth * 0.5f, 0f, -0.01f);
+        _fillRenderer.enabled = fillPercent > 0f;
     }
 
     private void EnsureRenderers()
     {
-        if (backgroundRenderer == null)
+        if (_visualRoot == null)
         {
-            backgroundRenderer = GetOrCreateRenderer("Background");
+            _visualRoot = GetOrCreateVisualRoot();
         }
 
-        if (fillRenderer == null)
+        if (_backgroundRenderer == null)
         {
-            fillRenderer = GetOrCreateRenderer("Fill");
+            _backgroundRenderer = GetOrCreateRenderer("Background");
+        }
+
+        if (_fillRenderer == null)
+        {
+            _fillRenderer = GetOrCreateRenderer("Fill");
         }
     }
 
     private void ApplyVisuals()
     {
-        transform.localPosition = barOffset;
+        if (_backgroundRenderer == null || _fillRenderer == null)
+        {
+            return;
+        }
 
-        backgroundRenderer.sprite = GetBarSprite();
-        backgroundRenderer.transform.localScale = new Vector3(barSize.x, barSize.y, 1f);
-        backgroundRenderer.transform.localPosition = Vector3.zero;
-        backgroundRenderer.color = backgroundColor;
-        backgroundRenderer.sortingOrder = 10;
+        var size = GetBarSize();
+        CompensateForParentScale();
+        UpdateWorldPosition();
 
-        fillRenderer.sprite = GetBarSprite();
-        fillRenderer.color = fillColor;
-        fillRenderer.sortingOrder = 11;
+        _backgroundRenderer.sprite = GetBarSprite();
+        var tr = _backgroundRenderer.transform;
+        tr.localScale = new Vector3(size.x, size.y, 1f);
+        tr.localPosition = Vector3.zero;
+        _backgroundRenderer.color = GetBackgroundColor();
+        _backgroundRenderer.sortingOrder = 10;
+
+        _fillRenderer.sprite = GetBarSprite();
+        _fillRenderer.color = GetFillColor();
+        _fillRenderer.sortingOrder = 11;
+
+        if (_owner != null)
+        {
+            Refresh(_owner.CurrentHealth, _owner.MaxHealth);
+        }
+    }
+
+    private void UpdateWorldPosition()
+    {
+        if (_visualRoot == null)
+        {
+            return;
+        }
+
+        var anchorTransform = _owner != null ? _owner.transform : transform;
+        var offset = GetBarOffset();
+        var tr = _visualRoot;
+        tr.position = anchorTransform.position + new Vector3(offset.x, offset.y, 0f);
+        tr.rotation = Quaternion.identity;
+        tr.position = new Vector3(tr.position.x, tr.position.y, anchorTransform.position.z + offset.z);
+    }
+
+    private void CompensateForParentScale()
+    {
+        if (_visualRoot == null)
+        {
+            return;
+        }
+
+        var anchorTransform = _owner != null ? _owner.transform : transform;
+        var parentLossyScale = anchorTransform.lossyScale;
+        _visualRoot.localScale = new Vector3(
+            1f / Mathf.Max(Mathf.Abs(parentLossyScale.x), MinScaleComponent),
+            1f / Mathf.Max(Mathf.Abs(parentLossyScale.y), MinScaleComponent),
+            1f / Mathf.Max(Mathf.Abs(parentLossyScale.z), MinScaleComponent));
+    }
+
+    private Transform GetOrCreateVisualRoot()
+    {
+        var visualRoot = transform.Find(VisualRootName);
+        if (visualRoot != null)
+        {
+            return visualRoot;
+        }
+
+        var visualRootObject = new GameObject(VisualRootName);
+        visualRootObject.transform.SetParent(transform, false);
+        return visualRootObject.transform;
     }
 
     private SpriteRenderer GetOrCreateRenderer(string objectName)
     {
-        Transform child = transform.Find(objectName);
+        var child = _visualRoot.Find(objectName);
         GameObject childObject;
 
         if (child == null)
         {
             childObject = new GameObject(objectName);
-            childObject.transform.SetParent(transform, false);
+            childObject.transform.SetParent(_visualRoot, false);
         }
         else
         {
             childObject = child.gameObject;
         }
 
-        SpriteRenderer renderer = childObject.GetComponent<SpriteRenderer>();
-        if (renderer == null)
+        var spriteRenderer = childObject.GetComponent<SpriteRenderer>();
+        if (spriteRenderer == null)
         {
-            renderer = childObject.AddComponent<SpriteRenderer>();
+            spriteRenderer = childObject.AddComponent<SpriteRenderer>();
         }
 
-        return renderer;
+        return spriteRenderer;
+    }
+
+    private Vector2 GetBarSize()
+    {
+        return barSize;
+    }
+
+    private Vector3 GetBarOffset()
+    {
+        return barOffset;
+    }
+
+    private Color GetFillColor()
+    {
+        return fillColor;
+    }
+
+    private Color GetBackgroundColor()
+    {
+        return backgroundColor;
     }
 
     private static Sprite GetBarSprite()
     {
-        if (cachedSprite != null)
+        if (_cachedSprite != null)
         {
-            return cachedSprite;
+            return _cachedSprite;
         }
 
         Texture2D texture = new(1, 1, TextureFormat.RGBA32, false);
         texture.SetPixel(0, 0, Color.white);
         texture.Apply();
 
-        cachedSprite = Sprite.Create(texture, new Rect(0f, 0f, 1f, 1f), new Vector2(0.5f, 0.5f), 1f);
-        return cachedSprite;
+        _cachedSprite = Sprite.Create(texture, new Rect(0f, 0f, 1f, 1f), new Vector2(0.5f, 0.5f), 1f);
+        return _cachedSprite;
     }
 }

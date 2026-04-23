@@ -9,13 +9,6 @@ public class Player : MonoBehaviour
     public int maxHealth = 10;
     private int currentHealth;
 
-    [Header("Health Bar")]
-    [SerializeField] private Vector2 healthBarSize = new(1.4f, 0.18f);
-    [SerializeField] private bool autoPositionHealthBar = true;
-    [SerializeField] private Vector3 healthBarOffset = new(0f, -0.85f, 0f);
-    [SerializeField] private Color healthBarFillColor = new(0.2f, 0.9f, 0.3f, 1f);
-    [SerializeField] private Color healthBarBackgroundColor = new(0.1f, 0.1f, 0.1f, 0.85f);
-
     private const int debugHealAmount = 10;
 
     public event Action<int, int> OnHealthChanged;
@@ -51,7 +44,6 @@ public class Player : MonoBehaviour
         Heal(debugHealAmount);
 
     }
-
 
     public void UpdateMaxHealth(int newMaxHealth)
     {
@@ -102,53 +94,25 @@ public class Player : MonoBehaviour
     {
         if (healthBar == null)
         {
-            healthBar = GetComponentInChildren<PlayerHealthBar>();
+            healthBar = GetComponentInChildren<PlayerHealthBar>(true);
         }
 
         if (healthBar != null)
         {
-            healthBar.Configure(healthBarSize, GetResolvedHealthBarOffset(), healthBarFillColor, healthBarBackgroundColor);
+            healthBar.Initialize(this);
             return;
         }
 
         GameObject healthBarObject = new("PlayerHealthBar");
         healthBarObject.transform.SetParent(transform, false);
         healthBar = healthBarObject.AddComponent<PlayerHealthBar>();
-        healthBar.Configure(healthBarSize, GetResolvedHealthBarOffset(), healthBarFillColor, healthBarBackgroundColor);
+        healthBar.Initialize(this);
     }
 
     private void NotifyHealthChanged()
     {
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
-        healthBar?.Refresh(currentHealth, maxHealth);
-    }
-
-    private Vector3 GetResolvedHealthBarOffset()
-    {
-        if (!autoPositionHealthBar)
-        {
-            return healthBarOffset;
-        }
-
-        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-        if (spriteRenderer != null)
-        {
-            return transform.InverseTransformPoint(new Vector3(
-                transform.position.x,
-                spriteRenderer.bounds.min.y - (healthBarSize.y * 1.5f),
-                transform.position.z));
-        }
-
-        Collider2D playerCollider = GetComponent<Collider2D>();
-        if (playerCollider != null)
-        {
-            return transform.InverseTransformPoint(new Vector3(
-                transform.position.x,
-                playerCollider.bounds.min.y - (healthBarSize.y * 1.5f),
-                transform.position.z));
-        }
-
-        return healthBarOffset;
+        if(healthBar != null) healthBar.Refresh(currentHealth, maxHealth);
     }
 
 }
