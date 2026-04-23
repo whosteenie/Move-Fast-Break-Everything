@@ -102,7 +102,7 @@ public class TestMovement : MonoBehaviour
         if (isDashing && !movementStateMachine.HasState(MovementStateMachine.State.slideDash))
         {
             // rb.MovePosition(rb.position + facing * dashSpeed * Time.fixedDeltaTime);
-            endPos += facing * (dashSpeed * Time.fixedDeltaTime);
+            endPos += Dash();
         }
         if (movementStateMachine.HasState(MovementStateMachine.State.slideDash))
         {
@@ -129,13 +129,18 @@ public class TestMovement : MonoBehaviour
         rb.MovePosition(endPos);
     }
 
+    private Vector2 Dash()
+    {
+        return facing * dashSpeed*(slideDashMovementSO.agilityScale*stats.speedMultiplier * Time.fixedDeltaTime);
+    }
+
     private Vector2 Slide()
     {
         //Shrink the Player
         // Debug.Log("In Slide");
         transform.localScale = new Vector3(.25f, .25f, .25f);
         // rb.MovePosition(rb.position + facing*slideMovementSO.movePower*Time.fixedDeltaTime);
-        return facing.normalized*slideMovementSO.movePower*Time.fixedDeltaTime;
+        return facing.normalized*slideMovementSO.movePower*(slideMovementSO.agilityScale*stats.speedMultiplier)*Time.fixedDeltaTime;
     }
 
     private Vector2 SlideDecay()
@@ -161,13 +166,13 @@ public class TestMovement : MonoBehaviour
         //Shrink the player
         transform.localScale = new UnityEngine.Vector3(.5f,.5f,.5f);
         // rb.MovePosition(rb.position + facing*(slideMovementSO.movePower)*Time.fixedDeltaTime);
-        return facing.normalized*(slideMovementSO.movePower)*Time.fixedDeltaTime;
+        return facing.normalized*slideMovementSO.movePower*(chargeMovementSO.strengthScale*stats.damageMultiplier)*Time.fixedDeltaTime;
     }
 
     private Vector2 SlideDash()
     {
         Debug.Log("In Slide Dash");
-        return facing.normalized*slideDashMovementSO.movePower*Time.fixedDeltaTime;
+        return facing.normalized*slideDashMovementSO.movePower*(slideDashMovementSO.agilityScale*stats.speedMultiplier)*Time.fixedDeltaTime;
     }
     //__________________________________________________________________________________________________
 }
