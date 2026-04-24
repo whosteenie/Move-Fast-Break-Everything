@@ -52,7 +52,12 @@ public class SoundManager : MonoBehaviour
 
         _instance = this;
         DontDestroyOnLoad(gameObject);
-        EnsureAudioSources();
+
+        if (sfxSource != null && !_sfxSourcePool.Contains(sfxSource))
+        {
+            _sfxSourcePool.Add(sfxSource);
+        }
+
         ApplyMusicVolume();
     }
 
@@ -78,8 +83,6 @@ public class SoundManager : MonoBehaviour
         {
             return;
         }
-
-        EnsureAudioSources();
 
         switch (sound.Category)
         {
@@ -154,36 +157,6 @@ public class SoundManager : MonoBehaviour
 
         var baseVolume = _currentMusic != null ? _currentMusic.BaseVolume : 1f;
         musicSource.volume = baseVolume * musicVolume;
-    }
-
-    private void EnsureAudioSources()
-    {
-        if (sfxSource == null)
-        {
-            sfxSource = GetComponent<AudioSource>();
-        }
-
-        if (sfxSource == null)
-        {
-            sfxSource = gameObject.AddComponent<AudioSource>();
-        }
-
-        if (musicSource == null)
-        {
-            musicSource = gameObject.AddComponent<AudioSource>();
-        }
-
-        sfxSource.playOnAwake = false;
-        sfxSource.loop = false;
-        sfxSource.spatialBlend = 0f;
-        musicSource.playOnAwake = false;
-        musicSource.loop = true;
-        musicSource.spatialBlend = 0f;
-
-        if (!_sfxSourcePool.Contains(sfxSource))
-        {
-            _sfxSourcePool.Add(sfxSource);
-        }
     }
 
     private void CleanupFinishedVoices()
