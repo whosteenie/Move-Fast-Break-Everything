@@ -5,7 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     private Stats stats;
-    private SpriteRenderer _spriteRenderer;
+    [SerializeField] private SpriteRenderer visualSpriteRenderer;
     private Color _originalColor;
 
     private PlayerHealthBar _healthBar;
@@ -40,10 +40,9 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         stats = GetComponent<Stats>();
-        _spriteRenderer = GetComponent<SpriteRenderer>();
-        if (_spriteRenderer != null)
+        if (visualSpriteRenderer != null)
         {
-            _originalColor = _spriteRenderer.color;
+            _originalColor = visualSpriteRenderer.color;
         }
         EnsureHealthBar();
     }
@@ -138,24 +137,24 @@ public class Player : MonoBehaviour
 
     private void SetSpriteAlpha(float alpha)
     {
-        if (_spriteRenderer == null)
+        if (visualSpriteRenderer == null)
         {
             return;
         }
 
         var color = _originalColor;
         color.a = alpha;
-        _spriteRenderer.color = color;
+        visualSpriteRenderer.color = color;
     }
 
     private void RestoreSpriteColors()
     {
-        if (_spriteRenderer == null)
+        if (visualSpriteRenderer == null)
         {
             return;
         }
 
-        _spriteRenderer.color = _originalColor;
+        visualSpriteRenderer.color = _originalColor;
     }
     private void EnsureHealthBar()
     {
