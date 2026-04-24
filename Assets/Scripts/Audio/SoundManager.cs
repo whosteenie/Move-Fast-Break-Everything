@@ -104,9 +104,8 @@ public class SoundManager : MonoBehaviour
         }
 
         var activeVoiceCount = 0;
-        for (var i = 0; i < _activeSfxVoices.Count; i++)
-        {
-            if (_activeSfxVoices[i].Sound == sound)
+        foreach(var v in _activeSfxVoices) {
+            if (v.Sound == sound)
             {
                 activeVoiceCount++;
             }
@@ -203,9 +202,7 @@ public class SoundManager : MonoBehaviour
     {
         CleanupFinishedVoices();
 
-        for (var i = 0; i < _sfxSourcePool.Count; i++)
-        {
-            var pooledSource = _sfxSourcePool[i];
+        foreach(var pooledSource in _sfxSourcePool) {
             if (pooledSource != null && !pooledSource.isPlaying)
             {
                 return pooledSource;
