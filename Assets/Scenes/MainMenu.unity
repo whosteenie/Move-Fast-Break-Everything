@@ -569,6 +569,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenuManager
   playSceneName: GameScene
+  menuMusic: {fileID: 11400000, guid: 0f3c0d403bcecae40a66dd2134db2c59, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

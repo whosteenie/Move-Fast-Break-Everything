@@ -22,6 +22,7 @@ public class SoundManager : MonoBehaviour
     private readonly List<AudioSource> _sfxSourcePool = new();
     private readonly List<ActiveSfxVoice> _activeSfxVoices = new();
     private readonly Dictionary<SoundDefinition, float> _lastPlayTimes = new();
+    private SoundDefinition _currentMusic;
 
     private static SoundManager Instance
     {
@@ -132,13 +133,14 @@ public class SoundManager : MonoBehaviour
 
     private void PlayMusic(SoundDefinition sound)
     {
-        if (musicSource.clip == sound.Clip && musicSource.isPlaying)
+        if (_currentMusic == sound && musicSource.clip == sound.Clip && musicSource.isPlaying)
         {
             return;
         }
 
+        _currentMusic = sound;
         musicSource.clip = sound.Clip;
-        musicSource.volume = sound.BaseVolume * musicVolume;
+        ApplyMusicVolume();
         musicSource.loop = true;
         musicSource.Play();
     }
@@ -150,7 +152,8 @@ public class SoundManager : MonoBehaviour
             return;
         }
 
-        musicSource.volume = musicVolume;
+        var baseVolume = _currentMusic != null ? _currentMusic.BaseVolume : 1f;
+        musicSource.volume = baseVolume * musicVolume;
     }
 
     private void EnsureAudioSources()

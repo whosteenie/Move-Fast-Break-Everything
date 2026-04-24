@@ -557,6 +557,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   uiDocument: {fileID: 1828502758}
+  gameMusic: {fileID: 11400000, guid: 2261cb4120a032643bc7c200637298e9, type: 2}
 --- !u!114 &1828502760
 MonoBehaviour:
   m_ObjectHideFlags: 0
