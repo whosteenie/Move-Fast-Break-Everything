@@ -12,6 +12,14 @@
                 <ui:Button name="intelligence-button" text="Intelligence" class="level-up-card level-up-card--intelligence"/>
             </ui:VisualElement>
         </ui:VisualElement>
+        <ui:VisualElement name="pause-root" class="pause-root" style="display: none;">
+            <ui:VisualElement class="pause-panel">
+                <ui:Label text="PAUSED" class="pause-title"/>
+                <ui:Button name="resume-button" text="Resume" class="pause-button pause-button--primary"/>
+                <ui:Button name="pause-options-button" text="Options" class="pause-button"/>
+                <ui:Button name="pause-quit-button" text="Quit" class="pause-button"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
         <ui:VisualElement name="level-progress-root" class="level-progress-root">
             <ui:VisualElement name="level-progress-track" class="level-progress-track">
                 <ui:VisualElement name="level-progress-fill" class="level-progress-fill"/>

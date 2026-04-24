@@ -12,18 +12,23 @@ public class GameManager : MonoBehaviour {
     private const string StrengthButtonName = "strength-button";
     private const string DexterityButtonName = "dexterity-button";
     private const string IntelligenceButtonName = "intelligence-button";
+    private const string PauseRootName = "pause-root";
+    private const string ResumeButtonName = "resume-button";
+    private const string PauseQuitButtonName = "pause-quit-button";
     private const string GameOverRootName = "game-over-root";
     private const string RetryButtonName = "retry-button";
-    private const string QuitButtonName = "quit-button";
+    private const string GameOverQuitButtonName = "quit-button";
 
     private Label _runTimerLabel;
     private VisualElement _levelProgressFill;
     private VisualElement _levelUpRoot;
     private PlayerLevelUp _playerLevelUp;
     private Stats _playerStats;
+    private VisualElement _pauseRoot;
     private VisualElement _gameOverRoot;
     private float _currentRunTime;
     private bool _isGameOver;
+    private bool _isPaused;
 
     public static GameManager Instance { get; private set; }
     public static float CurrentRunTimeSeconds => Instance != null ? Instance._currentRunTime : 0f;
@@ -57,19 +62,24 @@ public class GameManager : MonoBehaviour {
         _runTimerLabel = root.Q<Label>(RunTimerLabelName);
         _levelProgressFill = root.Q<VisualElement>(LevelProgressFillName);
         _levelUpRoot = root.Q<VisualElement>(LevelUpRootName);
+        _pauseRoot = root.Q<VisualElement>(PauseRootName);
         _gameOverRoot = root.Q<VisualElement>(GameOverRootName);
 
         var strengthButton = root.Q<Button>(StrengthButtonName);
         var dexterityButton = root.Q<Button>(DexterityButtonName);
         var intelligenceButton = root.Q<Button>(IntelligenceButtonName);
+        var resumeButton = root.Q<Button>(ResumeButtonName);
+        var pauseQuitButton = root.Q<Button>(PauseQuitButtonName);
         var retryButton = root.Q<Button>(RetryButtonName);
-        var quitButton = root.Q<Button>(QuitButtonName);
+        var gameOverQuitButton = root.Q<Button>(GameOverQuitButtonName);
 
         if (strengthButton != null) strengthButton.clicked += () => ResolveLevelUpChoice("strength");
         if (dexterityButton != null) dexterityButton.clicked += () => ResolveLevelUpChoice("dexterity");
         if (intelligenceButton != null) intelligenceButton.clicked += () => ResolveLevelUpChoice("intelligence");
+        if (resumeButton != null) resumeButton.clicked += ResumeGame;
+        if (pauseQuitButton != null) pauseQuitButton.clicked += QuitToMenu;
         if (retryButton != null) retryButton.clicked += RetryRun;
-        if (quitButton != null) quitButton.clicked += QuitToMenu;
+        if (gameOverQuitButton != null) gameOverQuitButton.clicked += QuitToMenu;
 
         _playerLevelUp = FindAnyObjectByType<PlayerLevelUp>();
         _playerStats = FindAnyObjectByType<Stats>();
@@ -94,11 +104,26 @@ public class GameManager : MonoBehaviour {
             _gameOverRoot.style.display = DisplayStyle.None;
         }
 
+        if (_pauseRoot != null)
+        {
+            _pauseRoot.style.display = DisplayStyle.None;
+        }
+
         RefreshLevelProgressBar();
     }
 
     private void Update() {
         if(_isGameOver) {
+            return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogglePause();
+        }
+
+        if (_isPaused)
+        {
             return;
         }
 
@@ -116,6 +141,11 @@ public class GameManager : MonoBehaviour {
 
     private void HandleLevelUp(object sender, EventArgs e)
     {
+        if (_isPaused)
+        {
+            ResumeGame();
+        }
+
         Time.timeScale = 0f;
         if (_levelUpRoot != null)
         {
@@ -164,17 +194,62 @@ public class GameManager : MonoBehaviour {
         if(_isGameOver) return;
 
         _isGameOver = true;
+        _isPaused = false;
+        if (_pauseRoot != null)
+        {
+            _pauseRoot.style.display = DisplayStyle.None;
+        }
         if (_gameOverRoot != null)
         {
             _gameOverRoot.style.display = DisplayStyle.Flex;
         }
     }
 
+    private void TogglePause()
+    {
+        if (_levelUpRoot != null && _levelUpRoot.style.display == DisplayStyle.Flex)
+        {
+            return;
+        }
+
+        if (_isPaused)
+        {
+            ResumeGame();
+            return;
+        }
+
+        PauseGame();
+    }
+
+    private void PauseGame()
+    {
+        if (_pauseRoot == null)
+        {
+            return;
+        }
+
+        _isPaused = true;
+        Time.timeScale = 0f;
+        _pauseRoot.style.display = DisplayStyle.Flex;
+    }
+
+    private void ResumeGame()
+    {
+        _isPaused = false;
+        if (_pauseRoot != null)
+        {
+            _pauseRoot.style.display = DisplayStyle.None;
+        }
+        Time.timeScale = 1f;
+    }
+
     private static void RetryRun() {
+        Time.timeScale = 1f;
         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
     }
 
     private static void QuitToMenu() {
+        Time.timeScale = 1f;
         SceneManager.LoadSceneAsync("MainMenu");
     }
 
