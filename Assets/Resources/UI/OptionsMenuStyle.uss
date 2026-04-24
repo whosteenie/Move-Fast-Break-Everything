@@ -10,12 +10,15 @@
 }
 
 .options-menu__panel {
-    width: 560px;
+    width: 680px;
     max-width: 92%;
+    height: 620px;
+    max-height: 88%;
     padding-top: 24px;
     padding-right: 24px;
     padding-bottom: 24px;
     padding-left: 24px;
+    flex-direction: column;
     background-color: rgb(21, 28, 40);
     border-top-width: 1px;
     border-right-width: 1px;
@@ -41,16 +44,9 @@
     flex-grow: 1;
 }
 
-.options-menu__eyebrow {
-    color: rgb(239, 191, 99);
-    font-size: 13px;
-    -unity-font-style: bold;
-}
-
 .options-menu__title {
-    margin-top: 6px;
     color: rgb(244, 247, 251);
-    font-size: 30px;
+    font-size: 34px;
     -unity-font-style: bold;
 }
 
@@ -88,10 +84,19 @@
 }
 
 .options-menu__content {
+    flex-grow: 1;
+}
+
+.options-menu__scrollview {
+    flex-grow: 1;
     margin-top: 18px;
     padding-top: 18px;
     border-top-width: 1px;
     border-top-color: rgba(255, 255, 255, 0.16);
+}
+
+.options-menu__scrollview .unity-scroll-view__content-container {
+    padding-right: 6px;
 }
 
 .options-menu__row {

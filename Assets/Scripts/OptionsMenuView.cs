@@ -10,6 +10,7 @@ public sealed class OptionsMenuView
     private const string ControlsContentName = "options-content-controls";
     private const string SfxSliderName = "options-sfx-slider";
     private const string MusicSliderName = "options-music-slider";
+    private const string ContentScrollViewName = "options-content-scrollview";
 
     public VisualElement Root { get; }
 
@@ -35,10 +36,6 @@ public sealed class OptionsMenuView
         titleBlock.AddToClassList("options-menu__title-block");
         header.Add(titleBlock);
 
-        var eyebrow = new Label("SETTINGS");
-        eyebrow.AddToClassList("options-menu__eyebrow");
-        titleBlock.Add(eyebrow);
-
         var title = new Label("Options");
         title.AddToClassList("options-menu__title");
         titleBlock.Add(title);
@@ -59,13 +56,20 @@ public sealed class OptionsMenuView
         _controlsTabButton.AddToClassList("options-menu__tab");
         tabs.Add(_controlsTabButton);
 
+        var contentScrollView = new ScrollView {
+            name = ContentScrollViewName,
+            mode = ScrollViewMode.Vertical
+        };
+        contentScrollView.AddToClassList("options-menu__scrollview");
+        panel.Add(contentScrollView);
+
         _soundsContent = BuildSoundsContent();
         _soundsContent.name = SoundsContentName;
-        panel.Add(_soundsContent);
+        contentScrollView.Add(_soundsContent);
 
         _controlsContent = BuildControlsContent();
         _controlsContent.name = ControlsContentName;
-        panel.Add(_controlsContent);
+        contentScrollView.Add(_controlsContent);
 
         _soundsTabButton.clicked += ShowSoundsTab;
         _controlsTabButton.clicked += ShowControlsTab;
@@ -89,7 +93,7 @@ public sealed class OptionsMenuView
         SetActiveTab(true);
     }
 
-    public void ShowControlsTab()
+    private void ShowControlsTab()
     {
         SetActiveTab(false);
     }
