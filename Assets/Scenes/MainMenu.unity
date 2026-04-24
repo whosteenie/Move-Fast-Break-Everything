@@ -511,6 +511,7 @@ GameObject:
   - component: {fileID: 1811845663}
   - component: {fileID: 1811845664}
   - component: {fileID: 1811845665}
+  - component: {fileID: 1811845666}
   m_Layer: 0
   m_Name: MainMenuManager
   m_TagString: Untagged
@@ -570,6 +571,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MainMenuManager
   playSceneName: GameScene
   menuMusic: {fileID: 11400000, guid: 0f3c0d403bcecae40a66dd2134db2c59, type: 2}
+--- !u!114 &1811845666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1811845662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5337d11b9193b8b4d9c048a8fcd3f87c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonSoundBinder
+  hoverSound: {fileID: 11400000, guid: 6ef694b585c95b64d83a4152f621aa45, type: 2}
+  clickSound: {fileID: 11400000, guid: ed49a2a629e7fed438ea47ed79415005, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
