@@ -1,14 +1,17 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI%20Toolkit/MainMenuStyle.uss?fileID=7433441132597879392&amp;guid=7c5c5f18b2505804a8caddafa47cca6a&amp;type=3#MainMenuStyle"/>
+    <Style src="project://database/Assets/UI%20Toolkit/OptionsMenuStyle.uss?fileID=7433441132597879392&amp;guid=84437dc6247ebaa4cbdf7219dbb16ade&amp;type=3#OptionsMenuStyle"/>
+    <ui:Template name="OptionsMenu" src="OptionsMenu.uxml"/>
     <ui:VisualElement name="main-menu" class="main-menu">
-        <ui:VisualElement class="main-menu__panel" style="width: 472px;">
-            <ui:Label text="MOVE FAST" class="main-menu__eyebrow" style="font-size: 31px;"/>
+        <ui:VisualElement class="main-menu__hero">
+            <ui:Label text="MOVE FAST" class="main-menu__eyebrow"/>
             <ui:Label text="Break Everything" class="main-menu__title"/>
-            <ui:VisualElement class="main-menu__button-list" style="margin-top: 15px;">
-                <ui:Button name="play-button" text="Play" class="main-menu__button main-menu__button--primary"/>
-                <ui:Button name="options-button" text="Options" class="main-menu__button"/>
-                <ui:Button name="quit-button" text="Quit" class="main-menu__button"/>
-            </ui:VisualElement>
         </ui:VisualElement>
+        <ui:VisualElement class="main-menu__actions">
+            <ui:Button name="play-button" text="Play" class="main-menu__button main-menu__button--primary"/>
+            <ui:Button name="options-button" text="Options" class="main-menu__button"/>
+            <ui:Button name="quit-button" text="Quit" class="main-menu__button"/>
+        </ui:VisualElement>
+        <ui:Instance template="OptionsMenu" name="options-menu-root" class="options-menu" style="display: none;"/>
     </ui:VisualElement>
 </ui:UXML>

@@ -5,7 +5,6 @@ using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour {
     [SerializeField] private UIDocument uiDocument;
-    private const string OptionsMenuStylePath = "UI/OptionsMenuStyle";
 
     private const string RunTimerLabelName = "run-timer-label";
     private const string LevelProgressFillName = "level-progress-fill";
@@ -62,14 +61,8 @@ public class GameManager : MonoBehaviour {
         if(uiDocument == null) return;
 
         var root = uiDocument.rootVisualElement;
-        var optionsStyleSheet = Resources.Load<StyleSheet>(OptionsMenuStylePath);
-        if (optionsStyleSheet != null && !root.styleSheets.Contains(optionsStyleSheet))
-        {
-            root.styleSheets.Add(optionsStyleSheet);
-        }
-
-        _optionsMenuView = new OptionsMenuView();
-        root.Add(_optionsMenuView.Root);
+        var optionsRoot = root.Q<VisualElement>(OptionsMenuView.RootName);
+        _optionsMenuView = optionsRoot != null ? new OptionsMenuView(optionsRoot) : null;
         _runTimerLabel = root.Q<Label>(RunTimerLabelName);
         _levelProgressFill = root.Q<VisualElement>(LevelProgressFillName);
         _levelUpRoot = root.Q<VisualElement>(LevelUpRootName);

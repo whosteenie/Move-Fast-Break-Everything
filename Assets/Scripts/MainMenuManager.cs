@@ -11,19 +11,12 @@ public class MainMenuManager : MonoBehaviour
     public event Action<string> ButtonPressed;
 
     private OptionsMenuView _optionsMenuView;
-    private const string OptionsMenuStylePath = "UI/OptionsMenuStyle";
 
     private void Start()
     {
         var root = GetComponent<UIDocument>().rootVisualElement;
-        var optionsStyleSheet = Resources.Load<StyleSheet>(OptionsMenuStylePath);
-        if (optionsStyleSheet != null && !root.styleSheets.Contains(optionsStyleSheet))
-        {
-            root.styleSheets.Add(optionsStyleSheet);
-        }
-
-        _optionsMenuView = new OptionsMenuView();
-        root.Add(_optionsMenuView.Root);
+        var optionsRoot = root.Q<VisualElement>(OptionsMenuView.RootName);
+        _optionsMenuView = optionsRoot != null ? new OptionsMenuView(optionsRoot) : null;
 
         root.Q<Button>("play-button").clicked += () => HandleButtonPressed("play", PlayGame);
         root.Q<Button>("options-button").clicked += () => HandleButtonPressed("options", OpenOptions);
