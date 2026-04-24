@@ -10,13 +10,25 @@ public class MainMenuManager : MonoBehaviour
 
     public event Action<string> ButtonPressed;
 
+    private OptionsMenuView _optionsMenuView;
+    private const string OptionsMenuStylePath = "UI/OptionsMenuStyle";
+
     private void Start()
     {
         var root = GetComponent<UIDocument>().rootVisualElement;
+        var optionsStyleSheet = Resources.Load<StyleSheet>(OptionsMenuStylePath);
+        if (optionsStyleSheet != null && !root.styleSheets.Contains(optionsStyleSheet))
+        {
+            root.styleSheets.Add(optionsStyleSheet);
+        }
+
+        _optionsMenuView = new OptionsMenuView();
+        root.Add(_optionsMenuView.Root);
 
         root.Q<Button>("play-button").clicked += () => HandleButtonPressed("play", PlayGame);
         root.Q<Button>("options-button").clicked += () => HandleButtonPressed("options", OpenOptions);
         root.Q<Button>("quit-button").clicked += () => HandleButtonPressed("quit", QuitGame);
+        root.Q<Button>(OptionsMenuView.CloseButtonName).clicked += CloseOptions;
     }
 
     private void HandleButtonPressed(string buttonId, Action action)
@@ -32,6 +44,13 @@ public class MainMenuManager : MonoBehaviour
 
     private void OpenOptions()
     {
+        _optionsMenuView?.ShowSoundsTab();
+        _optionsMenuView?.Show();
+    }
+
+    private void CloseOptions()
+    {
+        _optionsMenuView?.Hide();
     }
 
     private void QuitGame()

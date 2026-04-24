@@ -5,6 +5,7 @@ using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour {
     [SerializeField] private UIDocument uiDocument;
+    private const string OptionsMenuStylePath = "UI/OptionsMenuStyle";
 
     private const string RunTimerLabelName = "run-timer-label";
     private const string LevelProgressFillName = "level-progress-fill";
@@ -14,6 +15,7 @@ public class GameManager : MonoBehaviour {
     private const string IntelligenceButtonName = "intelligence-button";
     private const string PauseRootName = "pause-root";
     private const string ResumeButtonName = "resume-button";
+    private const string PauseOptionsButtonName = "pause-options-button";
     private const string PauseQuitButtonName = "pause-quit-button";
     private const string GameOverRootName = "game-over-root";
     private const string RetryButtonName = "retry-button";
@@ -26,6 +28,7 @@ public class GameManager : MonoBehaviour {
     private Stats _playerStats;
     private VisualElement _pauseRoot;
     private VisualElement _gameOverRoot;
+    private OptionsMenuView _optionsMenuView;
     private float _currentRunTime;
     private bool _isGameOver;
     private bool _isPaused;
@@ -59,6 +62,14 @@ public class GameManager : MonoBehaviour {
         if(uiDocument == null) return;
 
         var root = uiDocument.rootVisualElement;
+        var optionsStyleSheet = Resources.Load<StyleSheet>(OptionsMenuStylePath);
+        if (optionsStyleSheet != null && !root.styleSheets.Contains(optionsStyleSheet))
+        {
+            root.styleSheets.Add(optionsStyleSheet);
+        }
+
+        _optionsMenuView = new OptionsMenuView();
+        root.Add(_optionsMenuView.Root);
         _runTimerLabel = root.Q<Label>(RunTimerLabelName);
         _levelProgressFill = root.Q<VisualElement>(LevelProgressFillName);
         _levelUpRoot = root.Q<VisualElement>(LevelUpRootName);
@@ -69,17 +80,21 @@ public class GameManager : MonoBehaviour {
         var dexterityButton = root.Q<Button>(DexterityButtonName);
         var intelligenceButton = root.Q<Button>(IntelligenceButtonName);
         var resumeButton = root.Q<Button>(ResumeButtonName);
+        var pauseOptionsButton = root.Q<Button>(PauseOptionsButtonName);
         var pauseQuitButton = root.Q<Button>(PauseQuitButtonName);
         var retryButton = root.Q<Button>(RetryButtonName);
         var gameOverQuitButton = root.Q<Button>(GameOverQuitButtonName);
+        var optionsCloseButton = root.Q<Button>(OptionsMenuView.CloseButtonName);
 
         if (strengthButton != null) strengthButton.clicked += () => ResolveLevelUpChoice("strength");
         if (dexterityButton != null) dexterityButton.clicked += () => ResolveLevelUpChoice("dexterity");
         if (intelligenceButton != null) intelligenceButton.clicked += () => ResolveLevelUpChoice("intelligence");
         if (resumeButton != null) resumeButton.clicked += ResumeGame;
+        if (pauseOptionsButton != null) pauseOptionsButton.clicked += OpenPauseOptions;
         if (pauseQuitButton != null) pauseQuitButton.clicked += QuitToMenu;
         if (retryButton != null) retryButton.clicked += RetryRun;
         if (gameOverQuitButton != null) gameOverQuitButton.clicked += QuitToMenu;
+        if (optionsCloseButton != null) optionsCloseButton.clicked += ClosePauseOptions;
 
         _playerLevelUp = FindAnyObjectByType<PlayerLevelUp>();
         _playerStats = FindAnyObjectByType<Stats>();
@@ -114,6 +129,16 @@ public class GameManager : MonoBehaviour {
 
     private void Update() {
         if(_isGameOver) {
+            return;
+        }
+
+        if (_optionsMenuView != null && _optionsMenuView.Root.style.display == DisplayStyle.Flex)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                ClosePauseOptions();
+            }
+
             return;
         }
 
@@ -195,6 +220,7 @@ public class GameManager : MonoBehaviour {
 
         _isGameOver = true;
         _isPaused = false;
+        ClosePauseOptions();
         if (_pauseRoot != null)
         {
             _pauseRoot.style.display = DisplayStyle.None;
@@ -236,11 +262,41 @@ public class GameManager : MonoBehaviour {
     private void ResumeGame()
     {
         _isPaused = false;
+        ClosePauseOptions();
         if (_pauseRoot != null)
         {
             _pauseRoot.style.display = DisplayStyle.None;
         }
         Time.timeScale = 1f;
+    }
+
+    private void OpenPauseOptions()
+    {
+        if (_optionsMenuView == null)
+        {
+            return;
+        }
+
+        if (_pauseRoot != null)
+        {
+            _pauseRoot.style.display = DisplayStyle.None;
+        }
+
+        _optionsMenuView.ShowSoundsTab();
+        _optionsMenuView.Show();
+    }
+
+    private void ClosePauseOptions()
+    {
+        if (_optionsMenuView != null)
+        {
+            _optionsMenuView.Hide();
+        }
+
+        if (_isPaused && !_isGameOver && _pauseRoot != null)
+        {
+            _pauseRoot.style.display = DisplayStyle.Flex;
+        }
     }
 
     private static void RetryRun() {
