@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 public class GameManager : MonoBehaviour {
     [SerializeField] private UIDocument uiDocument;
     [SerializeField] private SoundDefinition gameMusic;
+    [SerializeField] private SoundDefinition levelUpSound;
 
     private const string RunTimerLabelName = "run-timer-label";
     private const string LevelProgressFillName = "level-progress-fill";
@@ -119,6 +120,7 @@ public class GameManager : MonoBehaviour {
     private void HandleLevelUp(object sender, EventArgs e)
     {
         Time.timeScale = 0f;
+        SoundManager.Play(levelUpSound);
         if (_levelUpRoot != null)
         {
             _levelUpRoot.style.display = DisplayStyle.Flex;
