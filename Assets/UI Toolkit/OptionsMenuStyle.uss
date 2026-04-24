@@ -14,10 +14,7 @@
     max-width: 92%;
     height: 620px;
     max-height: 88%;
-    padding-top: 24px;
-    padding-right: 24px;
-    padding-bottom: 24px;
-    padding-left: 24px;
+    padding: 24px;
     flex-direction: column;
     background-color: rgb(21, 28, 40);
     border-top-width: 1px;
@@ -28,10 +25,7 @@
     border-right-color: rgb(66, 79, 101);
     border-bottom-color: rgb(66, 79, 101);
     border-left-color: rgb(66, 79, 101);
-    border-top-left-radius: 16px;
-    border-top-right-radius: 16px;
-    border-bottom-right-radius: 16px;
-    border-bottom-left-radius: 16px;
+    border-radius: 16px;
 }
 
 .options-menu__header {
@@ -55,10 +49,7 @@
     height: 42px;
     color: rgb(244, 247, 251);
     background-color: rgba(255, 255, 255, 0.08);
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-    border-bottom-left-radius: 10px;
+    border-radius: 10px;
 }
 
 .options-menu__tabs {
@@ -72,10 +63,7 @@
     margin-right: 10px;
     color: rgb(220, 226, 233);
     background-color: rgba(255, 255, 255, 0.08);
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-    border-bottom-left-radius: 10px;
+    border-radius: 10px;
 }
 
 .options-menu__tab--active {
@@ -105,15 +93,9 @@
     align-items: center;
     min-height: 56px;
     margin-top: 10px;
-    padding-top: 12px;
-    padding-right: 14px;
-    padding-bottom: 12px;
-    padding-left: 14px;
+    padding: 12px 14px;
     background-color: rgba(255, 255, 255, 0.04);
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-    border-bottom-right-radius: 12px;
-    border-bottom-left-radius: 12px;
+    border-radius: 12px;
 }
 
 .options-menu__row--first {
@@ -128,12 +110,55 @@
 }
 
 .options-menu__slider-wrap {
+    position: relative;
+    top: -2px;
     flex-grow: 1;
     margin-left: 16px;
+    justify-content: center;
+    align-self: center;
 }
 
 .options-menu__slider {
+    position: relative;
     flex-grow: 1;
+    height: 18px;
+}
+
+.options-slider__track {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 5px;
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.16);
+    border-radius: 4px;
+}
+
+.options-slider__fill {
+    position: absolute;
+    left: 0;
+    top: 5px;
+    height: 8px;
+    background-color: rgb(239, 191, 99);
+    border-radius: 4px 0 0 4px;
+}
+
+.options-slider__knob {
+    position: absolute;
+    top: 0;
+    width: 18px;
+    height: 18px;
+    margin-left: -9px;
+    background-color: rgb(244, 247, 251);
+    border-top-width: 2px;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
+    border-left-width: 2px;
+    border-top-color: rgb(239, 191, 99);
+    border-right-color: rgb(239, 191, 99);
+    border-bottom-color: rgb(239, 191, 99);
+    border-left-color: rgb(239, 191, 99);
+    border-radius: 999px;
 }
 
 .options-menu__binding-button {
@@ -149,10 +174,7 @@
     border-right-color: rgba(255, 255, 255, 0.14);
     border-bottom-color: rgba(255, 255, 255, 0.14);
     border-left-color: rgba(255, 255, 255, 0.14);
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-    border-bottom-left-radius: 10px;
+    border-radius: 10px;
     font-size: 16px;
 }
 
