@@ -383,6 +383,7 @@ MonoBehaviour:
   invulnerabilityDuration: 1
   flashInterval: 0.1
   flashAlpha: 0.35
+  hurtSound: {fileID: 11400000, guid: 2ea0d9881c835c04ab6efe298af23aa7, type: 2}
 --- !u!114 &6769700025945905945
 MonoBehaviour:
   m_ObjectHideFlags: 0
