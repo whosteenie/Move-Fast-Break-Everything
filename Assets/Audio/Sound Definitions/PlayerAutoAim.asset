@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 34d4617e45eda8a4db9496c291253229, type: 3}
-  m_Name: JumpSound
+  m_Name: PlayerAutoAim
   m_EditorClassIdentifier: Assembly-CSharp::SoundDefinition
-  clip: {fileID: 8300000, guid: db2281b9de1863f409d62f9edf69c6cf, type: 3}
+  clip: {fileID: 8300000, guid: df77c49f28bdf8a4aa93e78de3be6deb, type: 3}
   category: 0
-  baseVolume: 1
-  maxSimultaneousVoices: 3
+  baseVolume: 0.3
+  maxSimultaneousVoices: 5
   minReplayDelay: 0

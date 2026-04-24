@@ -15,3 +15,5 @@ MonoBehaviour:
   clip: {fileID: 8300000, guid: cb6800566b40e2449bc4b5a23d5deae7, type: 3}
   category: 0
   baseVolume: 0.5
+  maxSimultaneousVoices: 5
+  minReplayDelay: 0

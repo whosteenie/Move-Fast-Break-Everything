@@ -329,6 +329,7 @@ MonoBehaviour:
   firePoint: {fileID: 3551539267116345053}
   fireRate: 2
   bulletSpeed: 10
+  shootSound: {fileID: 11400000, guid: 1e8c5d55452df354f980a2e7b2fb07e7, type: 2}
   detectionRange: 10
   targetRefreshRate: 0.3
   baseDamage: 4
