@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 34d4617e45eda8a4db9496c291253229, type: 3}
-  m_Name: PlayerAutoAim
+  m_Name: EnemyHurt
   m_EditorClassIdentifier: Assembly-CSharp::SoundDefinition
-  clip: {fileID: 8300000, guid: df77c49f28bdf8a4aa93e78de3be6deb, type: 3}
+  clip: {fileID: 8300000, guid: 9347dae8b6e28b64c8521297fe832638, type: 3}
   category: 0
-  baseVolume: 0.2
-  maxSimultaneousVoices: 5
-  minReplayDelay: 0
+  baseVolume: 0.12
+  maxSimultaneousVoices: 8
+  minReplayDelay: 0.03
