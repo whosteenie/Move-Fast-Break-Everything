@@ -81,8 +81,15 @@ public class Player : MonoBehaviour
             return;
         }
 
-        currentHealth -= damageTaken;
-        Debug.Log("Player HP: " + currentHealth);
+        int finalDamage = damageTaken;
+
+        if (stats != null)
+        {
+            finalDamage = stats.CalculateDamageTaken(damageTaken);
+        }
+        currentHealth -= finalDamage;
+        Debug.Log($"Player took {finalDamage} damage. HP: {currentHealth}");
+
         if (currentHealth <= 0)
         {
             Die();

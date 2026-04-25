@@ -54,23 +54,27 @@ Assets/Scripts/
  AutoAim.cs
  Bullet.cs
  ChunkManager.cs
- DamageTower.cs
  Enemy.cs
  EnemyLevelUp.cs
  EnemySpawner.cs
  EnemyStats.cs
  GameManager.cs
- HealthTower.cs
- LevelTower.cs
  MainMenuManager.cs
  MovementStateMachine.cs
  ObstacleSpawner.cs
  Player.cs
  PlayerLevelUp.cs
  ScriptableObjects/MovementSO.cs
- SpeedTower.cs
  Stats.cs
  TestMovement.cs
+ Towers/
+  Tower_Agility.cs
+  Tower_Base.cs
+  Tower_Defense.cs
+  Tower_Dex.cs
+  Tower_Health.cs
+  Tower_Level.cs
+  Tower_Strength.cs
  XPOrb.cs
 Temp/obj/Assembly-CSharp/.NETStandard,Version=v2.1.AssemblyAttributes.cs
 
@@ -432,7 +436,7 @@ Library/ScriptAssemblies/
  Unity.Properties.SourceGenerator.dll
  Unity.SourceGenerators.dll
  Unity.UIToolkit.SourceGenerator.dll
-C:/Users/andre/.vscode/extensions/visualstudiotoolsforunity.vstuc-1.2.1/Analyzers/Microsoft.Unity.Analyzers.dll
+C:/Users/andre/.vscode/extensions/visualstudiotoolsforunity.vstuc-1.2.2/Analyzers/Microsoft.Unity.Analyzers.dll
 
 [analyzerConfigFiles]
 Temp/obj/Assembly-CSharp/Assembly-CSharp.GeneratedMSBuildEditorConfig.editorconfig

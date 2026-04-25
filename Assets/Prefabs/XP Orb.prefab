@@ -187,6 +187,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::XPOrb
   tier: 0
   spriteRenderer: {fileID: 7613546048959103778}
+  pickupCollider: {fileID: 8853686799882276811}
   tier1Color: {r: 0.09, g: 0.52, b: 0.85, a: 1}
   tier2Color: {r: 0.22, g: 0.82, b: 0.33, a: 1}
   tier3Color: {r: 0.88, g: 0.24, b: 0.24, a: 1}
