@@ -19,7 +19,6 @@ public sealed class MainMenuShopView
     private const string ItemCardClassName = "shop-menu__item-card";
     private const string ItemCardSelectedClassName = "shop-menu__item-card--selected";
     private const string RankPipFilledClassName = "shop-menu__rank-pip--filled";
-    private const string TotalCoinsKey = "MetaCurrency.TotalCoins";
     private const int MaxDescriptionCharacters = 105;
 
     private readonly VisualElement _root;
@@ -145,7 +144,7 @@ public sealed class MainMenuShopView
         }
 
         var cost = _selectedItem.GetCostForRank(rank);
-        if (!TrySpendCoins(cost))
+        if (!MetaCurrency.TrySpendCoins(cost))
         {
             return;
         }
@@ -159,7 +158,7 @@ public sealed class MainMenuShopView
     {
         if (_coinLabel != null)
         {
-            _coinLabel.text = GetTotalCoins().ToString();
+            _coinLabel.text = MetaCurrency.TotalCoins.ToString();
         }
 
         RefreshDetails();
@@ -185,7 +184,7 @@ public sealed class MainMenuShopView
         if (_buyButton != null)
         {
             _buyButton.text = isMaxed ? "Maxed" : "Buy";
-            _buyButton.SetEnabled(!isMaxed && GetTotalCoins() >= cost);
+            _buyButton.SetEnabled(!isMaxed && MetaCurrency.TotalCoins >= cost);
         }
 
         RefreshCardRanks();
@@ -243,29 +242,6 @@ public sealed class MainMenuShopView
     {
         var id = string.IsNullOrWhiteSpace(item.PowerUpId) ? item.name : item.PowerUpId;
         return $"Shop.PowerUp.{id}.Rank";
-    }
-
-    private static int GetTotalCoins()
-    {
-        return PlayerPrefs.GetInt(TotalCoinsKey, 0);
-    }
-
-    private static bool TrySpendCoins(int amount)
-    {
-        if (amount <= 0)
-        {
-            return true;
-        }
-
-        var totalCoins = GetTotalCoins();
-        if (totalCoins < amount)
-        {
-            return false;
-        }
-
-        PlayerPrefs.SetInt(TotalCoinsKey, totalCoins - amount);
-        PlayerPrefs.Save();
-        return true;
     }
 
     private static string GetStableDescription(string description)

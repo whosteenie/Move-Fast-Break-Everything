@@ -18,4 +18,22 @@ public static class MetaCurrency
         PlayerPrefs.Save();
         Debug.Log($"Added {amount} coins. Total coins: {newTotal}");
     }
+
+    public static bool TrySpendCoins(int amount)
+    {
+        if (amount <= 0)
+        {
+            return true;
+        }
+
+        if (TotalCoins < amount)
+        {
+            return false;
+        }
+
+        var newTotal = TotalCoins - amount;
+        PlayerPrefs.SetInt(TotalCoinsKey, newTotal);
+        PlayerPrefs.Save();
+        return true;
+    }
 }
