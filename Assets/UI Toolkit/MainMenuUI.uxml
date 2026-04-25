@@ -34,7 +34,10 @@
                         <ui:Label name="shop-detail-rank" text="Rank 0/0" class="shop-menu__detail-rank"/>
                     </ui:VisualElement>
                     <ui:VisualElement class="shop-menu__buy-column">
-                        <ui:Label name="shop-detail-cost" text="0" class="shop-menu__detail-cost"/>
+                        <ui:VisualElement class="shop-menu__detail-cost-row">
+                            <ui:Image name="shop-detail-cost-icon" class="shop-menu__detail-cost-icon"/>
+                            <ui:Label name="shop-detail-cost" text="0" class="shop-menu__detail-cost"/>
+                        </ui:VisualElement>
                         <ui:Button name="shop-buy-button" text="Buy" class="shop-menu__buy-button"/>
                     </ui:VisualElement>
                 </ui:VisualElement>

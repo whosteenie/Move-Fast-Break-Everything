@@ -325,6 +325,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenuManager
   playSceneName: GameScene
+  shopCoinSprite: {fileID: 4994948417755550580, guid: 90e374de09503b1439bc13bc4575e623, type: 3}
+  shopPowerUps: []
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

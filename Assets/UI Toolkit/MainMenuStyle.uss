@@ -303,12 +303,32 @@
     justify-content: center;
 }
 
+.shop-menu__detail-cost-row {
+    height: 26px;
+    min-height: 26px;
+    max-height: 26px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.shop-menu__detail-cost-icon {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    max-width: 20px;
+    min-height: 20px;
+    max-height: 20px;
+    margin-right: 6px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
 .shop-menu__detail-cost {
     color: rgb(255, 255, 255);
     font-size: 22px;
     -unity-font-style: bold;
     -unity-text-align: middle-center;
-    margin-bottom: 10px;
 }
 
 .shop-menu__buy-button {

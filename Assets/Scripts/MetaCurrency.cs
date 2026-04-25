@@ -3,8 +3,16 @@ using UnityEngine;
 public static class MetaCurrency
 {
     private const string TotalCoinsKey = "MetaCurrency.TotalCoins";
+    private const int DebugMinimumCoins = 5000;
 
-    public static int TotalCoins => PlayerPrefs.GetInt(TotalCoinsKey, 0);
+    public static int TotalCoins
+    {
+        get
+        {
+            EnsureDebugMinimumCoins();
+            return PlayerPrefs.GetInt(TotalCoinsKey, 0);
+        }
+    }
 
     public static void AddCoins(int amount)
     {
@@ -35,5 +43,19 @@ public static class MetaCurrency
         PlayerPrefs.SetInt(TotalCoinsKey, newTotal);
         PlayerPrefs.Save();
         return true;
+    }
+
+    private static void EnsureDebugMinimumCoins()
+    {
+        var currentCoins = PlayerPrefs.GetInt(TotalCoinsKey, 0);
+        if (currentCoins >= DebugMinimumCoins)
+        {
+            return;
+        }
+
+        // TODO: Remove this debug coin bootstrap after shop testing is complete.
+        Debug.LogWarning($"DEBUG SHOP TESTING: Raising meta coin total to {DebugMinimumCoins}. Remove this before release.");
+        PlayerPrefs.SetInt(TotalCoinsKey, DebugMinimumCoins);
+        PlayerPrefs.Save();
     }
 }

@@ -14,6 +14,7 @@ public sealed class MainMenuShopView
     private const string DetailDescriptionName = "shop-detail-description";
     private const string DetailIconName = "shop-detail-icon";
     private const string DetailRankName = "shop-detail-rank";
+    private const string DetailCostIconName = "shop-detail-cost-icon";
     private const string DetailCostName = "shop-detail-cost";
     private const string BuyButtonName = "shop-buy-button";
     private const string ItemCardClassName = "shop-menu__item-card";
@@ -51,6 +52,12 @@ public sealed class MainMenuShopView
         if (coinIcon != null)
         {
             coinIcon.sprite = coinSprite;
+        }
+
+        var detailCostIcon = root.Q<Image>(DetailCostIconName);
+        if (detailCostIcon != null)
+        {
+            detailCostIcon.sprite = coinSprite;
         }
 
         LoadItems(configuredItems);
