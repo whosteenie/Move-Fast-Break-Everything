@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 249118bd5fff6b045855fbf7f76241b9, type: 3}
-  m_Name: PowerUp_MaxHealth
+  m_Name: PowerUp_MoveSpeed
   m_EditorClassIdentifier: Assembly-CSharp::ShopPowerUpDefinition
-  powerUpId: max_health
-  displayName: Max Health
-  description: Increases maximum health by 10% per rank.
-  icon: {fileID: 5092664303399960636, guid: b3c295f8ace5adf4b806d7f6881ae570, type: 3}
-  baseCost: 180
-  costIncreasePerRank: 110
-  maxRank: 5
+  powerUpId: move_speed
+  displayName: Move Speed
+  description: Increases movement speed by 4% per rank.
+  icon: {fileID: -6869751320748356421, guid: 2bf9f2ede805f4c4289b9dc2840ce377, type: 3}
+  baseCost: 200
+  costIncreasePerRank: 150
+  maxRank: 3
