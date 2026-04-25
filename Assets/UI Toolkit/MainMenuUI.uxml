@@ -23,6 +23,7 @@
             </ui:VisualElement>
             <ui:VisualElement class="shop-menu__panel">
                 <ui:Label text="Shop" class="shop-menu__title"/>
+                <ui:Button name="shop-refund-button" text="Refund Power Ups" class="shop-menu__refund-button"/>
                 <ui:ScrollView name="shop-item-scroll" class="shop-menu__item-scroll" mode="Vertical"/>
                 <ui:VisualElement class="shop-menu__details">
                     <ui:VisualElement class="shop-menu__detail-icon-frame">

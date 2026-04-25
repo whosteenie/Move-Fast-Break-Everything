@@ -17,6 +17,7 @@ public sealed class MainMenuShopView
     private const string DetailCostIconName = "shop-detail-cost-icon";
     private const string DetailCostName = "shop-detail-cost";
     private const string BuyButtonName = "shop-buy-button";
+    private const string RefundButtonName = "shop-refund-button";
     private const string ItemCardClassName = "shop-menu__item-card";
     private const string ItemCardSelectedClassName = "shop-menu__item-card--selected";
     private const string RankPipFilledClassName = "shop-menu__rank-pip--filled";
@@ -31,6 +32,7 @@ public sealed class MainMenuShopView
     private readonly Label _detailRank;
     private readonly Label _detailCost;
     private readonly Button _buyButton;
+    private readonly Button _refundButton;
     private readonly List<ShopPowerUpDefinition> _items = new();
     private readonly Dictionary<ShopPowerUpDefinition, Button> _cardByItem = new();
 
@@ -47,6 +49,7 @@ public sealed class MainMenuShopView
         _detailRank = root.Q<Label>(DetailRankName);
         _detailCost = root.Q<Label>(DetailCostName);
         _buyButton = root.Q<Button>(BuyButtonName);
+        _refundButton = root.Q<Button>(RefundButtonName);
 
         var coinIcon = root.Q<Image>(CoinIconName);
         if (coinIcon != null)
@@ -66,6 +69,11 @@ public sealed class MainMenuShopView
         if (_buyButton != null)
         {
             _buyButton.clicked += BuySelectedItem;
+        }
+
+        if (_refundButton != null)
+        {
+            _refundButton.clicked += RefundPowerUps;
         }
 
         SelectItem(_items.Count > 0 ? _items[0] : null);
@@ -152,11 +160,34 @@ public sealed class MainMenuShopView
         Refresh();
     }
 
+    private void RefundPowerUps()
+    {
+        var refundAmount = CalculateRefundAmount();
+        if (refundAmount <= 0)
+        {
+            return;
+        }
+
+        foreach (var item in _items)
+        {
+            PlayerPrefs.SetInt(GetRankKey(item), 0);
+        }
+
+        PlayerPrefs.Save();
+        MetaCurrency.AddCoins(refundAmount);
+        Refresh();
+    }
+
     private void Refresh()
     {
         if (_coinLabel != null)
         {
             _coinLabel.text = MetaCurrency.TotalCoins.ToString();
+        }
+
+        if (_refundButton != null)
+        {
+            _refundButton.SetEnabled(CalculateRefundAmount() > 0);
         }
 
         RefreshDetails();
@@ -229,6 +260,22 @@ public sealed class MainMenuShopView
             row.Add(copy);
             pair.Value.Add(row);
         }
+    }
+
+    private int CalculateRefundAmount()
+    {
+        var refundAmount = 0;
+
+        foreach (var item in _items)
+        {
+            var rank = GetRank(item);
+            for (var purchasedRank = 0; purchasedRank < rank; purchasedRank++)
+            {
+                refundAmount += item.GetCostForRank(purchasedRank);
+            }
+        }
+
+        return refundAmount;
     }
 
     private static int GetRank(ShopPowerUpDefinition item)
