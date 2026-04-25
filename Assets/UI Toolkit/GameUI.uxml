@@ -4,6 +4,10 @@
         <ui:VisualElement name="run-timer-container" class="run-timer-container">
             <ui:Label name="run-timer-label" text="00:00" class="run-timer-label"/>
         </ui:VisualElement>
+        <ui:VisualElement name="run-coin-root" class="run-coin-root">
+            <ui:Image name="run-coin-icon" class="run-coin-icon"/>
+            <ui:Label name="run-coin-label" text="0" class="run-coin-label"/>
+        </ui:VisualElement>
         <ui:VisualElement name="level-up-root" class="level-up-root" style="display: none;">
             <ui:Label text="LEVEL UP" class="level-up-title"/>
             <ui:VisualElement class="level-up-card-row">

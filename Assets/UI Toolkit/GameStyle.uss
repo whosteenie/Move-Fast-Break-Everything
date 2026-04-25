@@ -4,6 +4,33 @@
     padding-top: 16px;
 }
 
+.run-coin-root {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    min-width: 90px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.55);
+    border-radius: 6px;
+    padding: 6px 12px 6px 10px;
+}
+
+.run-coin-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.run-coin-label {
+    color: rgb(255, 244, 201);
+    font-size: 22px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-left;
+}
+
 .run-timer-container {
     width: 120px;
 }

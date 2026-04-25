@@ -17,6 +17,10 @@ public class CoinPickup : MagneticPickup
         }
 
         MetaCurrency.AddCoins(coinAmount);
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.AddRunCoins(coinAmount);
+        }
         return true;
     }
 }
