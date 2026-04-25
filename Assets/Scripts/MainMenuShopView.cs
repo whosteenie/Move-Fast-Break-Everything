@@ -97,16 +97,6 @@ public sealed class MainMenuShopView
                 }
             }
         }
-
-        if (_items.Count == 0)
-        {
-            _items.Add(CreatePlaceholder("might", "Might", "Raises inflicted damage by 5% per rank.", 200, 120, 5));
-            _items.Add(CreatePlaceholder("max_health", "Max Health", "Adds a small permanent boost to maximum health.", 180, 110, 5));
-            _items.Add(CreatePlaceholder("move_speed", "Move Speed", "Increases movement speed by 4% per rank.", 160, 100, 5));
-            _items.Add(CreatePlaceholder("magnet", "Magnet", "Expands pickup attraction range for coins, food, and XP.", 150, 90, 4));
-            _items.Add(CreatePlaceholder("luck", "Luck", "Improves future drop and reward odds.", 220, 140, 3));
-            _items.Add(CreatePlaceholder("recovery", "Recovery", "Improves healing received from food pickups.", 140, 95, 4));
-        }
     }
 
     private void BuildItemCards()
@@ -141,6 +131,7 @@ public sealed class MainMenuShopView
     {
         if (_selectedItem == null)
         {
+            ShowEmptyDetails();
             return;
         }
 
@@ -261,11 +252,17 @@ public sealed class MainMenuShopView
         return $"{description[..(MaxDescriptionCharacters - 3)]}...";
     }
 
-    private static ShopPowerUpDefinition CreatePlaceholder(string id, string displayName, string description, int baseCost, int costIncrease, int maxRank)
+    private void ShowEmptyDetails()
     {
-        var item = ScriptableObject.CreateInstance<ShopPowerUpDefinition>();
-        item.name = $"Placeholder_{displayName}";
-        item.InitializeRuntime(id, displayName, description, baseCost, costIncrease, maxRank);
-        return item;
+        if (_detailTitle != null) _detailTitle.text = "No Power Ups";
+        if (_detailDescription != null) _detailDescription.text = "Assign ShopPowerUpDefinition assets on MainMenuManager.";
+        if (_detailIcon != null) _detailIcon.sprite = null;
+        if (_detailRank != null) _detailRank.text = "Rank 0/0";
+        if (_detailCost != null) _detailCost.text = "0";
+        if (_buyButton != null)
+        {
+            _buyButton.text = "Buy";
+            _buyButton.SetEnabled(false);
+        }
     }
 }
