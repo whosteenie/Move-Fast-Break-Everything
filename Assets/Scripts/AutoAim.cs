@@ -69,7 +69,7 @@ public class AutoAim : MonoBehaviour
 
     GameObject FindClosestTargetOfType<T>(GameObject currentClosest, ref float minDistance) where T : MonoBehaviour
     {
-        T[] targets = FindObjectsByType<T>(FindObjectsSortMode.None);
+        T[] targets = FindObjectsByType<T>();
 
         foreach (T target in targets)
         {
