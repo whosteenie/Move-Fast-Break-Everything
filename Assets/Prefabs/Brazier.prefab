@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6017636792892575145}
   - component: {fileID: 4485414217655195079}
   - component: {fileID: 2095250189159073660}
+  - component: {fileID: 7606981821831861641}
   m_Layer: 0
   m_Name: Brazier
   m_TagString: Untagged
@@ -28,8 +29,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 7, y: 7, z: 7}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -138,3 +139,20 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.14, y: 0.13090843}
   m_EdgeRadius: 0
+--- !u!114 &7606981821831861641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5046122262590631306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2fe7b5d236dd1f48a18a19f93e66f80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DestructibleObstacle
+  maxHealth: 10
+  coinDropPrefab: {fileID: 2628067428879860305, guid: d7f577c1bd02aeb42b50b88bde3fc2ca, type: 3}
+  foodDropPrefab: {fileID: 8925891680184177157, guid: d34c44036c787754fbb480f508340bc0, type: 3}
+  coinDropChance: 0.5
+  foodDropChance: 0.25
