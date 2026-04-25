@@ -1,19 +1,21 @@
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class Enemy : MonoBehaviour
 {
     private EnemyStats stats;
     private float moveSpeed = 0.5f;
+    [SerializeField] private GameObject xpOrbPrefab;
+    [SerializeField] private int minXpOrbDrops = 1;
+    [SerializeField] private int maxXpOrbDrops = 2;
+    [SerializeField] private float xpDropRadius = 0.6f;
+    [SerializeField] private float minXpOrbSpacing = 0.35f;
 
     private Transform playerLocation;
 
 
     public int maxHealth = 10;
-  
+
     private int currentHealth;
-    private float damageCooldown = 1f;
-    private float damageTimer = 0f;
 
     // public int damageMultiplier;
     //damage mult will be increased when enemy levls up using similar level up system to player, but for now just a base damage
@@ -47,7 +49,62 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
+        SpawnXpOrbs();
         Destroy(gameObject);
+    }
+
+    private void SpawnXpOrbs()
+    {
+        if (xpOrbPrefab == null)
+        {
+            return;
+        }
+
+        int dropCount = Random.Range(minXpOrbDrops, maxXpOrbDrops + 1);
+        Vector3 deathPosition = transform.position;
+        Vector3[] placedPositions = new Vector3[dropCount];
+
+        for (int i = 0; i < dropCount; i++)
+        {
+            Vector3 spawnPosition = FindXpOrbSpawnPosition(deathPosition, placedPositions, i);
+            placedPositions[i] = spawnPosition;
+            Instantiate(xpOrbPrefab, spawnPosition, xpOrbPrefab.transform.rotation);
+        }
+    }
+
+    private Vector3 FindXpOrbSpawnPosition(Vector3 center, Vector3[] placedPositions, int placedCount)
+    {
+        const int MaxAttempts = 12;
+
+        for (int attempt = 0; attempt < MaxAttempts; attempt++)
+        {
+            Vector2 offset = placedCount == 0
+                ? Random.insideUnitCircle * (xpDropRadius * 0.5f)
+                : Random.insideUnitCircle * xpDropRadius;
+            Vector3 candidate = center + new Vector3(offset.x, offset.y, 0f);
+
+            if (IsFarEnoughFromOtherDrops(candidate, placedPositions, placedCount))
+            {
+                return candidate;
+            }
+        }
+
+        float angle = placedCount * Mathf.PI;
+        Vector2 fallbackOffset = new(Mathf.Cos(angle), Mathf.Sin(angle));
+        return center + new Vector3(fallbackOffset.x, fallbackOffset.y, 0f) * minXpOrbSpacing;
+    }
+
+    private bool IsFarEnoughFromOtherDrops(Vector3 candidate, Vector3[] placedPositions, int placedCount)
+    {
+        for (int i = 0; i < placedCount; i++)
+        {
+            if (Vector2.Distance(candidate, placedPositions[i]) < minXpOrbSpacing)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public void UpdateMaxHealth(int newMaxHealth)
@@ -92,22 +149,12 @@ public class Enemy : MonoBehaviour
     void OnCollisionStay2D(Collision2D collision)
     {
         float damageMultiplier = (stats != null) ? stats.damageMultiplier : 2f;
-        if (collision.gameObject != null && collision.gameObject.tag == "Player")
+        if (collision.gameObject != null && collision.gameObject.CompareTag("Player"))
         {
-            //Replace this with a damage player call
-            if (collision.gameObject.CompareTag("Player"))
+            Player player = collision.gameObject.GetComponent<Player>();
+            if (player != null)
             {
-                damageTimer -= Time.deltaTime;
-                if (damageTimer <= 0f)
-                {
-                    Player player = collision.gameObject.GetComponent<Player>();
-                    if (player != null)
-                    {
-                        Debug.Log("TAKE DAMAGE");
-                        player.TakeDamage((int)(baseDamage * damageMultiplier));
-                        damageTimer = damageCooldown;
-                    }
-                }
+                player.TakeDamage((int)(baseDamage * damageMultiplier));
             }
             //Leads to fun lose screen by accident, all the enemies just fall down.
         }

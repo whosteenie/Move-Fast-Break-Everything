@@ -15,7 +15,7 @@ public class Bullet : MonoBehaviour
     void Update()
     {
 
-        transform.position += (Vector3)(moveDirection * speed * Time.deltaTime);
+        transform.position += (Vector3)(moveDirection * (speed * Time.deltaTime));
     }
     public void SetDirection(Vector2 direction, float bulletSpeed, int damageAmount)
     {
@@ -40,10 +40,15 @@ public class Bullet : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Enemy enemy = collision.GetComponent<Enemy>();
+        BossController boss = collision.GetComponent<BossController>();
 
         if (enemy != null)
         {
             enemy.TakeDamage(damage);
+            Debug.Log("Bullet hit enemy for " + damage + " damage.");
+            Destroy(gameObject);
+        } else if (boss != null) {
+            boss.TakeDamage(damage);
             Debug.Log("Bullet hit enemy for " + damage + " damage.");
             Destroy(gameObject);
         }
