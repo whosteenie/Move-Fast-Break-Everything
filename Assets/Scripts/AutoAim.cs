@@ -91,10 +91,7 @@ public class AutoAim : MonoBehaviour
 
         Bullet bulletScript = bullet.GetComponent<Bullet>();
 
-        Stats stats = GetComponentInParent<Stats>();
-        int finalDamage = Mathf.RoundToInt(baseDamage * stats.damageMultiplier);
-
-        Debug.Log("Multiplier: " + stats.damageMultiplier + " Final Damage: " + finalDamage);
+        int finalDamage = stats != null ? stats.GetDamage(baseDamage) : baseDamage;
 
         if (bulletScript != null)
         {

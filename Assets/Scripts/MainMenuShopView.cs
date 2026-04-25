@@ -155,7 +155,7 @@ public sealed class MainMenuShopView
             return;
         }
 
-        PlayerPrefs.SetInt(GetRankKey(_selectedItem), rank + 1);
+        ShopPowerUpProgress.SetRank(_selectedItem, rank + 1);
         PlayerPrefs.Save();
         Refresh();
     }
@@ -170,7 +170,7 @@ public sealed class MainMenuShopView
 
         foreach (var item in _items)
         {
-            PlayerPrefs.SetInt(GetRankKey(item), 0);
+            ShopPowerUpProgress.SetRank(item, 0);
         }
 
         PlayerPrefs.Save();
@@ -280,13 +280,12 @@ public sealed class MainMenuShopView
 
     private static int GetRank(ShopPowerUpDefinition item)
     {
-        return PlayerPrefs.GetInt(GetRankKey(item), 0);
+        return ShopPowerUpProgress.GetRank(item);
     }
 
     private static string GetRankKey(ShopPowerUpDefinition item)
     {
-        var id = string.IsNullOrWhiteSpace(item.PowerUpId) ? item.name : item.PowerUpId;
-        return $"Shop.PowerUp.{id}.Rank";
+        return ShopPowerUpProgress.GetRankKey(item);
     }
 
     private static string GetStableDescription(string description)
