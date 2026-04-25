@@ -23,7 +23,7 @@
                 <ui:Label text="PAUSED" class="pause-title"/>
                 <ui:Button name="resume-button" text="Resume" class="pause-button pause-button--primary"/>
                 <ui:Button name="pause-options-button" text="Options" class="pause-button"/>
-                <ui:Button name="pause-quit-button" text="Quit" class="pause-button"/>
+                <ui:Button name="pause-quit-button" text="Quit" class="pause-button pause-button--danger"/>
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:Instance template="OptionsMenu" name="options-menu-root" class="options-menu" style="display: none;"/>
