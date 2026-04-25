@@ -390,10 +390,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   enemyPrefab: {fileID: 1874990315484048395, guid: 11d95817b12e84a4082ed1ed31c29769, type: 3}
   player: {fileID: 1092388853012045805}
-  spawnInterval: 0.4
-  maxEnemies: 30
   spawnDistance: 18
   respawnDistance: 40
+  spawnPhases:
+  - startTimeSeconds: 0
+    maxEnemies: 20
+    spawnInterval: 1
+  - startTimeSeconds: 15
+    maxEnemies: 28
+    spawnInterval: 0.8
+  - startTimeSeconds: 30
+    maxEnemies: 35
+    spawnInterval: 0.6
+  - startTimeSeconds: 45
+    maxEnemies: 41
+    spawnInterval: 0.5
+  - startTimeSeconds: 60
+    maxEnemies: 46
+    spawnInterval: 0.4
 --- !u!114 &636936953
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -817,3 +831,4 @@ SceneRoots:
   - {fileID: 1828502757}
   - {fileID: 636936951}
   - {fileID: 1269148361}
+  - {fileID: 884647736}
