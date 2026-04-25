@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float invulnerabilityDuration = 1f;
     [SerializeField] private float flashInterval = 0.1f;
     [SerializeField] private float flashAlpha = 0.35f;
+    [SerializeField] private SoundDefinition hurtSound;
 
     private const int debugHealAmount = 10;
     private bool _isInvulnerable;
@@ -93,6 +94,7 @@ public class Player : MonoBehaviour
 
         CurrentHealth -= damageTaken;
         CurrentHealth = Mathf.Max(CurrentHealth, 0);
+        SoundManager.Play(hurtSound);
         Debug.Log("Player HP: " + CurrentHealth);
         NotifyHealthChanged();
         if (CurrentHealth <= 0)

@@ -7,12 +7,14 @@ using UnityEngine.UIElements;
 public class MainMenuManager : MonoBehaviour
 {
     [SerializeField] private string playSceneName = "SampleScene";
+    [SerializeField] private SoundDefinition menuMusic;
 
     public event Action<string> ButtonPressed;
 
     private void Start()
     {
         var root = GetComponent<UIDocument>().rootVisualElement;
+        SoundManager.Play(menuMusic);
 
         root.Q<Button>("play-button").clicked += () => HandleButtonPressed("play", PlayGame);
         root.Q<Button>("options-button").clicked += () => HandleButtonPressed("options", OpenOptions);

@@ -9,6 +9,7 @@ public class BossController : MonoBehaviour
     [Header("Stats")]
     public float maxHealth = 300f;
     public float contactDamage = 3f;
+    [SerializeField] private SoundDefinition hurtSound;
     private float damageCooldown = 1f;
     private float damageTimer = 0f;
     private float _health;
@@ -63,7 +64,14 @@ public class BossController : MonoBehaviour
 
     public void TakeDamage(float amount)
     {
+        if (amount <= 0f)
+        {
+            return;
+        }
+
         _health -= amount;
+        _health = Mathf.Max(_health, 0f);
+        SoundManager.Play(hurtSound);
         healthBar.Refresh(_health);
         if (_health <= 0 && _phase != BossPhase.Dead)
             SetPhase(BossPhase.Dead);

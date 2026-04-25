@@ -18,6 +18,10 @@ public class Jump : MonoBehaviour
     [Header("References")]
     public Transform spriteTransform;
 
+    [Header("Audio")]
+    [SerializeField] private SoundDefinition jumpSound;
+    [SerializeField] private SoundDefinition landSound;
+
     private bool isJumping = false;
     private float jumpTimer = 0f;
     private Vector3 spriteBasePosition;
@@ -45,6 +49,7 @@ public class Jump : MonoBehaviour
         isJumping = true;
         jumpTimer = 0f;
         SetLayer(airborneLayer);
+        SoundManager.Play(jumpSound);
     }
 
     void UpdateJump()
@@ -93,6 +98,7 @@ public class Jump : MonoBehaviour
         spriteTransform.position = worldPos;
 
         SetLayer(groundedLayer);
+        SoundManager.Play(landSound);
     }
 
     // Grounded / airborne layer so we can turn collisions on and off

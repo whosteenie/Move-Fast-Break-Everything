@@ -199,6 +199,7 @@ MonoBehaviour:
   launchDuration: 0.15
   magnetSpeed: 10
   magnetAcceleration: 30
+  collectSound: {fileID: 11400000, guid: 84685752f8aea91468d6668fd4d36184, type: 2}
 --- !u!1 &7048327071737929163
 GameObject:
   m_ObjectHideFlags: 0
