@@ -1,14 +1,45 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI%20Toolkit/MainMenuStyle.uss?fileID=7433441132597879392&amp;guid=7c5c5f18b2505804a8caddafa47cca6a&amp;type=3#MainMenuStyle"/>
+    <Style src="project://database/Assets/UI%20Toolkit/OptionsMenuStyle.uss?fileID=7433441132597879392&amp;guid=84437dc6247ebaa4cbdf7219dbb16ade&amp;type=3#OptionsMenuStyle"/>
+    <ui:Template name="OptionsMenu" src="OptionsMenu.uxml"/>
     <ui:VisualElement name="main-menu" class="main-menu">
-        <ui:VisualElement class="main-menu__panel" style="width: 472px;">
-            <ui:Label text="MOVE FAST" class="main-menu__eyebrow" style="font-size: 31px;"/>
+        <ui:VisualElement class="main-menu__hero">
+            <ui:Label text="MOVE FAST" class="main-menu__eyebrow"/>
             <ui:Label text="Break Everything" class="main-menu__title"/>
-            <ui:VisualElement class="main-menu__button-list" style="margin-top: 15px;">
-                <ui:Button name="play-button" text="Play" class="main-menu__button main-menu__button--primary"/>
-                <ui:Button name="options-button" text="Options" class="main-menu__button"/>
-                <ui:Button name="quit-button" text="Quit" class="main-menu__button"/>
+        </ui:VisualElement>
+        <ui:VisualElement class="main-menu__actions">
+            <ui:Button name="play-button" text="Play" class="main-menu__button main-menu__button--primary"/>
+            <ui:Button name="shop-button" text="Shop" class="main-menu__button"/>
+            <ui:Button name="options-button" text="Options" class="main-menu__button"/>
+            <ui:Button name="quit-button" text="Quit" class="main-menu__button"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="shop-menu-root" class="shop-menu" style="display: none;">
+            <ui:VisualElement class="shop-menu__top-bar">
+                <ui:VisualElement class="shop-menu__coin-counter">
+                    <ui:Image name="shop-coin-icon" class="shop-menu__coin-icon"/>
+                    <ui:Label name="shop-coin-label" text="0" class="shop-menu__coin-label"/>
+                </ui:VisualElement>
+                <ui:Button name="shop-back-button" text="Back" class="shop-menu__back-button"/>
+            </ui:VisualElement>
+            <ui:VisualElement class="shop-menu__panel">
+                <ui:Label text="Shop" class="shop-menu__title"/>
+                <ui:ScrollView name="shop-item-scroll" class="shop-menu__item-scroll" mode="Vertical"/>
+                <ui:VisualElement class="shop-menu__details">
+                    <ui:VisualElement class="shop-menu__detail-icon-frame">
+                        <ui:Image name="shop-detail-icon" class="shop-menu__detail-icon"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="shop-menu__detail-copy">
+                        <ui:Label name="shop-detail-title" text="Power Up" class="shop-menu__detail-title"/>
+                        <ui:Label name="shop-detail-description" text="Select a power up." class="shop-menu__detail-description"/>
+                        <ui:Label name="shop-detail-rank" text="Rank 0/0" class="shop-menu__detail-rank"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="shop-menu__buy-column">
+                        <ui:Label name="shop-detail-cost" text="0" class="shop-menu__detail-cost"/>
+                        <ui:Button name="shop-buy-button" text="Buy" class="shop-menu__buy-button"/>
+                    </ui:VisualElement>
+                </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
+        <ui:Instance template="OptionsMenu" name="options-menu-root" class="options-menu" style="display: none;"/>
     </ui:VisualElement>
 </ui:UXML>
