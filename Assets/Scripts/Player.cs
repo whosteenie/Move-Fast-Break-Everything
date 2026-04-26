@@ -90,6 +90,8 @@ public class Player : MonoBehaviour
         currentHealth -= finalDamage;
         Debug.Log($"Player took {finalDamage} damage. HP: {currentHealth}");
 
+        int thornsDamage = stats != null ? stats.GetThornsDamage(damageTaken) : 0;
+
         if (currentHealth <= 0)
         {
             Die();

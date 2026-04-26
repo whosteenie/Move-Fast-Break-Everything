@@ -13,9 +13,9 @@ public class Enemy : MonoBehaviour
     private Transform playerLocation;
 
 
-    public int maxHealth = 10;
+    public float maxHealth = 10;
 
-    private int currentHealth;
+    private float currentHealth;
 
     // public int damageMultiplier;
     //damage mult will be increased when enemy levls up using similar level up system to player, but for now just a base damage
@@ -37,10 +37,17 @@ public class Enemy : MonoBehaviour
     }
 
 
-    public void TakeDamage(int damageTaken)
+    public void TakeDamage(int damageTaken, float pierce)
     {
-        currentHealth -= damageTaken; // * defense
-        //Debug.Log("Enemy HP: " + currentHealth);
+        int finalDamage = damageTaken;
+
+        if (stats != null)
+        {
+            finalDamage = stats.CalculateDamageTaken(damageTaken, pierce);
+        }
+
+        currentHealth -= finalDamage;
+
         if (currentHealth <= 0)
         {
             Die();
@@ -154,7 +161,17 @@ public class Enemy : MonoBehaviour
             Player player = collision.gameObject.GetComponent<Player>();
             if (player != null)
             {
-                player.TakeDamage((int)(baseDamage * damageMultiplier));
+                int damage = (int)(baseDamage * damageMultiplier);
+                player.TakeDamage(damage);
+
+                Stats playerStats = player.GetComponent<Stats>();
+
+                if (playerStats != null)
+                {
+                    int thornsDamage = playerStats.GetThornsDamage(damage);
+                    TakeDamage(thornsDamage, 0f);
+                }
+                //  player.TakeDamage((int)(baseDamage * damageMultiplier));
             }
             //Leads to fun lose screen by accident, all the enemies just fall down.
         }

@@ -4,9 +4,10 @@ using UnityEngine;
 public class EnemyStats : MonoBehaviour
 {
 
-    public int speedMultiplier = 5;
-    public int damageMultiplier = 2;
-    public int maxHealthStat = 10;
+    public float speedMultiplier = .1f;
+    public float damageMultiplier = .1f;
+    public float maxHealthStat = 10;
+    public float defense = .2f;
     private EnemyLevelUp levelSytem;
     private Enemy enemy;
 
@@ -60,5 +61,13 @@ public class EnemyStats : MonoBehaviour
     private void IncreaseDamageStat(int amount)
     {
         damageMultiplier += amount;
+    }
+
+    public int CalculateDamageTaken(int incomingDamage, float pierce)
+    {
+        float effectiveDefense = Mathf.Max(0f, defense - pierce);
+
+        float reduced = incomingDamage * (1f / (1f + effectiveDefense));
+        return Mathf.Max(1, Mathf.RoundToInt(reduced));
     }
 }

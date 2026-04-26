@@ -86,13 +86,15 @@ public class AutoAim : MonoBehaviour
         Bullet bulletScript = bullet.GetComponent<Bullet>();
 
         Stats stats = GetComponentInParent<Stats>();
-        int finalDamage = Mathf.RoundToInt(baseDamage * stats.rangedDamageMultiplier);
+        // int finalDamage = Mathf.RoundToInt(baseDamage * stats.rangedDamageMultiplier);
 
-        Debug.Log("Multiplier: " + stats.rangedDamageMultiplier + " Final Damage: " + finalDamage);
+        // Debug.Log("Multiplier: " + stats.rangedDamageMultiplier + " Final Damage: " + finalDamage);
 
         if (bulletScript != null)
         {
-            bulletScript.SetDirection(direction, bulletSpeed, finalDamage);
+            int finalDamage = stats != null ? stats.GetDamage(baseDamage) : baseDamage;
+            float pierce = stats != null ? stats.GetPierce() : 0f;
+            bulletScript.SetDirection(direction, bulletSpeed, finalDamage, pierce);
         }
     }
 

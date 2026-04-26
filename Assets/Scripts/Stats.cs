@@ -9,8 +9,11 @@ public class Stats : MonoBehaviour
     public float speedMultiplier = 0.2f;
     public float rangedDamageMultiplier = 1f;
 
-    public float defense = 0f;
+    public float defense = .2f;
 
+    public float thorns = 0.2f;
+
+    public float pirece = .2f;
 
     public int baseHealth = 10;
     public int flatHealthBonus = 0;
@@ -122,13 +125,32 @@ public class Stats : MonoBehaviour
         float reduceDamage = incomingDamage * (1f / (1f + defense));
         return Mathf.Max(1, Mathf.RoundToInt(reduceDamage));
     }
+    //Strength stat____________________________________________________
+    public void IncreasePierce(float percent)
+    {
+        pirece += percent;
+    }
 
+    public void IncreaseThorns(float percent)
+    {
+        thorns += percent;
+    }
 
+    public int GetThornsDamage(int incomingDamage)
+    {
+        return Mathf.RoundToInt(incomingDamage * thorns);
+    }
+
+    public float GetPierce()
+    {
+        return pirece;
+    }
+    //Applying level up___________________________________
     public void ApplyLevelUpChoice(string choiceId)
     {
         switch (choiceId)
         {
-            case "strength":
+            case "health":
                 IncreaseHealthPercent(healthIncrease);
                 if (player != null)
                 {
@@ -140,7 +162,7 @@ public class Stats : MonoBehaviour
                 IncreaseDexterity(DexterityFireRateIncrease);
                 Debug.Log($"Dexterity selected. Fire Rate Multiplier: {dexterityMultiplier}", this);
                 break;
-            case "intelligence":
+            case "agility":
                 IncreaseRangedDamage(rangeDamageIncrease);
                 IncreaseSpeed(speedMultiplier);
                 Debug.Log($"Agility selected.  Ranged Damage Multiplier: {rangedDamageMultiplier}", this);
@@ -149,6 +171,12 @@ public class Stats : MonoBehaviour
             case "defense":
                 IncreaseDefense(0.5f);
                 Debug.Log($"Deffense selected. New defense at: {defense}", this);
+                break;
+            case "strength":
+                IncreasePierce(pirece);
+                IncreaseThorns(thorns);
+                Debug.Log($"Strength selected. New pierce at: {pirece}", this);
+                Debug.Log($"Strength selected. New thorns at: {thorns}", this);
                 break;
             default:
                 Debug.LogWarning($"Unknown level up choice: {choiceId}", this);
