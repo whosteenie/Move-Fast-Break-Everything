@@ -1,5 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="project://database/Assets/UI%20Toolkit/GameStyle.uss?fileID=7433441132597879392&amp;guid=29f28c5d439c55549a18c8a1a6f60af8&amp;type=3#GameStyle"/>
+    <Style src="project://database/Assets/UI%20Toolkit/OptionsMenuStyle.uss?fileID=7433441132597879392&amp;guid=84437dc6247ebaa4cbdf7219dbb16ade&amp;type=3#OptionsMenuStyle"/>
+    <ui:Template name="OptionsMenu" src="OptionsMenu.uxml"/>
     <ui:VisualElement name="game-ui-root" class="game-ui-root">
         <ui:VisualElement name="run-timer-container" class="run-timer-container">
             <ui:Label name="run-timer-label" text="00:00" class="run-timer-label"/>
@@ -12,6 +14,15 @@
                 <ui:Button name="intelligence-button" text="Intelligence" class="level-up-card level-up-card--intelligence"/>
             </ui:VisualElement>
         </ui:VisualElement>
+        <ui:VisualElement name="pause-root" class="pause-root" style="display: none;">
+            <ui:VisualElement class="pause-panel">
+                <ui:Label text="PAUSED" class="pause-title"/>
+                <ui:Button name="resume-button" text="Resume" class="pause-button pause-button--primary"/>
+                <ui:Button name="pause-options-button" text="Options" class="pause-button"/>
+                <ui:Button name="pause-quit-button" text="Quit" class="pause-button"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:Instance template="OptionsMenu" name="options-menu-root" class="options-menu" style="display: none;"/>
         <ui:VisualElement name="level-progress-root" class="level-progress-root">
             <ui:VisualElement name="level-progress-track" class="level-progress-track">
                 <ui:VisualElement name="level-progress-fill" class="level-progress-fill"/>

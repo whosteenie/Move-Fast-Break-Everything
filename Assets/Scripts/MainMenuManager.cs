@@ -7,16 +7,28 @@ using UnityEngine.UIElements;
 public class MainMenuManager : MonoBehaviour
 {
     [SerializeField] private string playSceneName = "SampleScene";
+    [SerializeField] private Sprite shopCoinSprite;
+    [SerializeField] private ShopPowerUpDefinition[] shopPowerUps;
 
     public event Action<string> ButtonPressed;
+
+    private OptionsMenuView _optionsMenuView;
+    private MainMenuShopView _shopView;
 
     private void Start()
     {
         var root = GetComponent<UIDocument>().rootVisualElement;
+        var optionsRoot = root.Q<VisualElement>(OptionsMenuView.RootName);
+        _optionsMenuView = optionsRoot != null ? new OptionsMenuView(optionsRoot) : null;
+        var shopRoot = root.Q<VisualElement>(MainMenuShopView.RootName);
+        _shopView = shopRoot != null ? new MainMenuShopView(shopRoot, shopPowerUps, shopCoinSprite) : null;
 
-        root.Q<Button>("play-button").clicked += () => HandleButtonPressed("play", PlayGame);
-        root.Q<Button>("options-button").clicked += () => HandleButtonPressed("options", OpenOptions);
-        root.Q<Button>("quit-button").clicked += () => HandleButtonPressed("quit", QuitGame);
+        BindButton(root, "play-button", () => HandleButtonPressed("play", PlayGame));
+        BindButton(root, "shop-button", () => HandleButtonPressed("shop", OpenShop));
+        BindButton(root, "options-button", () => HandleButtonPressed("options", OpenOptions));
+        BindButton(root, "quit-button", () => HandleButtonPressed("quit", QuitGame));
+        BindButton(root, OptionsMenuView.CloseButtonName, CloseOptions);
+        BindButton(root, MainMenuShopView.BackButtonName, CloseShop);
     }
 
     private void HandleButtonPressed(string buttonId, Action action)
@@ -32,6 +44,33 @@ public class MainMenuManager : MonoBehaviour
 
     private void OpenOptions()
     {
+        _optionsMenuView?.ShowSoundsTab();
+        _optionsMenuView?.Show();
+    }
+
+    private void OpenShop()
+    {
+        _optionsMenuView?.Hide();
+        _shopView?.Show();
+    }
+
+    private void CloseOptions()
+    {
+        _optionsMenuView?.Hide();
+    }
+
+    private void CloseShop()
+    {
+        _shopView?.Hide();
+    }
+
+    private static void BindButton(VisualElement root, string buttonName, Action action)
+    {
+        var button = root.Q<Button>(buttonName);
+        if (button != null)
+        {
+            button.clicked += action;
+        }
     }
 
     private void QuitGame()
