@@ -15,8 +15,6 @@ public class EnemyLevelUp : MonoBehaviour
     {
         _currentLevel = 1;
 
-
-
     }
 
 

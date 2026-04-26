@@ -74,11 +74,11 @@ public class Player : MonoBehaviour
 
 
 
-    public void TakeDamage(int damageTaken)
+    public int TakeDamage(int damageTaken)
     {
         if (isInvulnerable)
         {
-            return;
+            return 0;
         }
 
         int finalDamage = damageTaken;
@@ -95,7 +95,7 @@ public class Player : MonoBehaviour
         if (currentHealth <= 0)
         {
             Die();
-            return;
+            return finalDamage;
         }
 
         if (invulnerabilityRoutine != null)
@@ -104,6 +104,8 @@ public class Player : MonoBehaviour
         }
 
         invulnerabilityRoutine = StartCoroutine(InvulnerabilityFlashRoutine());
+
+        return finalDamage;
     }
 
     private void Die()

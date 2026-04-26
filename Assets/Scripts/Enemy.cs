@@ -14,6 +14,8 @@ public class Enemy : MonoBehaviour
 
 
     public float maxHealth = 10;
+    private float damageCooldown = 1f;
+    private float damageTimer = 0f;
 
     private float currentHealth;
 
@@ -23,7 +25,6 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
-        currentHealth = maxHealth;
         if (stats != null)
         {
             maxHealth = stats.maxHealthStat;
@@ -39,6 +40,8 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(int damageTaken, float pierce)
     {
+
+
         int finalDamage = damageTaken;
 
         if (stats != null)
@@ -52,6 +55,8 @@ public class Enemy : MonoBehaviour
         {
             Die();
         }
+
+
     }
 
     private void Die()
@@ -155,23 +160,30 @@ public class Enemy : MonoBehaviour
 
     void OnCollisionStay2D(Collision2D collision)
     {
-        float damageMultiplier = (stats != null) ? stats.damageMultiplier : 2f;
+        damageTimer -= Time.deltaTime;
+
+        if (damageTimer > 0f)
+        {
+            return;
+        }
+
         if (collision.gameObject != null && collision.gameObject.CompareTag("Player"))
         {
             Player player = collision.gameObject.GetComponent<Player>();
             if (player != null)
             {
+                float damageMultiplier = (stats != null) ? stats.damageMultiplier : 2f;
                 int damage = (int)(baseDamage * damageMultiplier);
-                player.TakeDamage(damage);
+                int finalDamageTaken = player.TakeDamage(damage);
 
                 Stats playerStats = player.GetComponent<Stats>();
 
-                if (playerStats != null)
+                if (playerStats != null && finalDamageTaken > 0)
                 {
-                    int thornsDamage = playerStats.GetThornsDamage(damage);
+                    int thornsDamage = playerStats.GetThornsDamage(finalDamageTaken);
                     TakeDamage(thornsDamage, 0f);
                 }
-                //  player.TakeDamage((int)(baseDamage * damageMultiplier));
+                damageTimer = damageCooldown;
             }
             //Leads to fun lose screen by accident, all the enemies just fall down.
         }
