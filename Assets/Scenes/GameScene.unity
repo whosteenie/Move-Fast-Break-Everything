@@ -499,6 +499,7 @@ GameObject:
   - component: {fileID: 1828502758}
   - component: {fileID: 1828502759}
   - component: {fileID: 1828502760}
+  - component: {fileID: 1828502761}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -557,6 +558,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   uiDocument: {fileID: 1828502758}
+  gameMusic: {fileID: 11400000, guid: 2261cb4120a032643bc7c200637298e9, type: 2}
+  levelUpSound: {fileID: 11400000, guid: aa91232242783e845aebaa2be93aabb3, type: 2}
 --- !u!114 &1828502760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -569,6 +572,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74f496a7f1b336949b937485d11face1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovementStateMachine
+--- !u!114 &1828502761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1828502756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5337d11b9193b8b4d9c048a8fcd3f87c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonSoundBinder
+  hoverSound: {fileID: 11400000, guid: 6ef694b585c95b64d83a4152f621aa45, type: 2}
+  clickSound: {fileID: 11400000, guid: ed49a2a629e7fed438ea47ed79415005, type: 2}
 --- !u!1001 &512755429912449731
 PrefabInstance:
   m_ObjectHideFlags: 0
