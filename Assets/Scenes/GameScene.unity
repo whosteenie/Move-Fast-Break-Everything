@@ -332,10 +332,11 @@ MonoBehaviour:
   cellSize: 1
   loadRadius: 1
   unloadRadius: 10
-  noiseScale: 15
-  deathMax: 0.13
-  hazardMax: 0.25
-  earthMax: 0.5
+  noiseScale: 30
+  dangerNoiseScale: 30
+  deathMax: 0.1
+  hazardMax: 0.2
+  earthMax: 0.4
 --- !u!114 &636936950
 MonoBehaviour:
   m_ObjectHideFlags: 0

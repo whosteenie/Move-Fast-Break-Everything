@@ -22,27 +22,30 @@ public class ChunkManager : MonoBehaviour
     [SerializeField] private float cellSize = 1f;
     [SerializeField] private int loadRadius = 1; // How many chunks away from player are loaded
     [SerializeField] private int unloadRadius = 10; // How many chunks away from player until unloaded
-    [SerializeField] private float noiseScale = 15f; // Higher = Wider zones; Lower = Tighter zones
-    [SerializeField] private float deathMax = 0.13f;
-    [SerializeField] private float hazardMax = 0.25f;
+    [SerializeField] private float noiseScale = 30f; // Harmless terrain scale. Higher = Wider zones; Lower = Tighter zones
+    [SerializeField] private float dangerNoiseScale = 30f; // Danger terrain scale. Higher = Wider zones; Lower = Tighter zones
+    [SerializeField] private float deathMax = 0.1f;
+    [SerializeField] private float hazardMax = 0.2f;
     [SerializeField] private float earthMax = 0.5f;
     
     // Currently, our terrain and objects unload at the same time.
     /* TODO: If performance starts hurting, split terrain/object unloading (terrain can be unloaded
        just outside camera, while objects stick around longer for game balance) */
     
-    // In our current setup, terrain can only touch neighboring layers (Death -> Hazard -> Earth -> Tech)
-    /* TODO: Layer two Perlin noise maps on top of each other, one for Tech/Earth and one for Hazard/Death.
-       This will make the ground split open anywhere making for a more interesting map */
-    
     private readonly Dictionary<Vector2Int, GameObject> loadedChunks = new();
     private Vector2Int currentPlayerChunk;
     private Vector2 noiseOffset;
+    private Vector2 dangerNoiseOffset;
     
     private void Start()
     {
         // Random offset so each world is unique 
         noiseOffset = new Vector2(
+            Random.Range(-10000f, 10000f),
+            Random.Range(-10000f, 10000f)
+        );
+
+        dangerNoiseOffset = new Vector2(
             Random.Range(-10000f, 10000f),
             Random.Range(-10000f, 10000f)
         );
@@ -168,8 +171,7 @@ public class ChunkManager : MonoBehaviour
                     0f
                 );
                 
-                float noiseValue = EvaluateNoise(cellPosition);
-                TerrainType terrainType = GetTerrainType(noiseValue);
+                TerrainType terrainType = GetTerrainType(cellPosition);
                 GameObject floorPrefab = GetFloorPrefab(terrainType);
                 
                 Instantiate(floorPrefab, cellPosition, Quaternion.identity, chunkParent);
@@ -177,32 +179,54 @@ public class ChunkManager : MonoBehaviour
         }
     }
 
-    private float EvaluateNoise(Vector2 worldPosition)
+    private float EvaluateNoise(Vector2 worldPosition, Vector2 offset, float scale)
     {
-        float sampleX = (worldPosition.x + noiseOffset.x) / noiseScale;
-        float sampleY = (worldPosition.y + noiseOffset.y) / noiseScale;
+        float sampleX = (worldPosition.x + offset.x) / scale;
+        float sampleY = (worldPosition.y + offset.y) / scale;
         
         return Mathf.PerlinNoise(sampleX, sampleY);
     }
 
-    private TerrainType GetTerrainType(float noiseValue)
+    private TerrainType GetTerrainType(Vector2 worldPosition)
     {
-        if (noiseValue <= deathMax)
+        TerrainType baseTerrainType = GetBaseTerrainType(worldPosition);
+        TerrainType? dangerTerrainType = GetDangerTerrainType(worldPosition);
+        
+        if (dangerTerrainType.HasValue)
         {
-            return TerrainType.Death;
+            return dangerTerrainType.Value;
         }
         
-        if (noiseValue <= hazardMax)
-        {
-            return TerrainType.Hazard;
-        }
+        return baseTerrainType;
+    }
+
+    private TerrainType GetBaseTerrainType(Vector2 worldPosition)
+    {
+        float baseNoiseValue = EvaluateNoise(worldPosition, noiseOffset, noiseScale);
         
-        if (noiseValue <= earthMax)
+        if (baseNoiseValue <= earthMax) 
         {
             return TerrainType.Earth;
         }
         
         return TerrainType.Tech;
+    }
+
+    private TerrainType? GetDangerTerrainType(Vector2 worldPosition)
+    {
+        float dangerNoiseValue = EvaluateNoise(worldPosition, dangerNoiseOffset, dangerNoiseScale);
+        
+        if (dangerNoiseValue <= deathMax)
+        {
+            return TerrainType.Death;
+        }
+        
+        if (dangerNoiseValue <= hazardMax)
+        {
+            return TerrainType.Hazard;
+        }
+        
+        return null;
     }
 
     private GameObject GetFloorPrefab(TerrainType terrainType)
@@ -227,21 +251,21 @@ public class ChunkManager : MonoBehaviour
     
     public bool IsDeathTerrain(Vector2 worldPosition)
     {
-        return GetTerrainType(EvaluateNoise(worldPosition)) == TerrainType.Death;
+        return GetTerrainType(worldPosition) == TerrainType.Death;
     }
     
     public bool IsHazardTerrain(Vector2 worldPosition)
     {
-        return GetTerrainType(EvaluateNoise(worldPosition)) == TerrainType.Hazard;
+        return GetTerrainType(worldPosition) == TerrainType.Hazard;
     }
     
     public bool IsEarthTerrain(Vector2 worldPosition)
     {
-        return GetTerrainType(EvaluateNoise(worldPosition)) == TerrainType.Earth;
+        return GetTerrainType(worldPosition) == TerrainType.Earth;
     }
     
     public bool IsTechTerrain(Vector2 worldPosition)
     {
-        return GetTerrainType(EvaluateNoise(worldPosition)) == TerrainType.Tech;
+        return GetTerrainType(worldPosition) == TerrainType.Tech;
     }
 }
