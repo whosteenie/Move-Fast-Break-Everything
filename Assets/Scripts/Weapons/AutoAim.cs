@@ -83,14 +83,14 @@ public class AutoAim : MonoBehaviour
 
     void Shoot(Vector2 direction)
     {
-<<<<<<< Updated upstream
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
+
+       
         SoundManager.Play(shootSound);
 
-        Bullet bulletScript = bullet.GetComponent<Bullet>();
-=======
+        
+
         Bullet bulletScript = Instantiate(weaponSO.bulletPrefab, firePoint.position, Quaternion.identity).GetComponent<Bullet>();
->>>>>>> Stashed changes
+
 
       
         bulletScript.weaponSO = weaponSO;

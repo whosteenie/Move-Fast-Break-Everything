@@ -6,7 +6,7 @@ public class Bullet : MonoBehaviour
     [Header("Stats")]
     public float speed = 10f;
     public float lifetime = 3f;
-    public float damage;
+    public int damage;
    
     private Vector2 moveDirection;
     private GameObject owner;
@@ -65,7 +65,7 @@ public class Bullet : MonoBehaviour
         damage = weaponSO.baseDamage;
         if (stats != null)
         {
-            damage *= stats.damageMultiplier;
+            damage = Mathf.RoundToInt(damage * stats.damageMultiplier);
         }
         if (collision.gameObject == owner) return;
 
