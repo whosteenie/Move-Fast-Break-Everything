@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7254310988291782036}
   - component: {fileID: 4861496404516698642}
   - component: {fileID: 4389050920263816928}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: BrokenTree7_Mirrored
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -80,7 +80,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7125985115595100609, guid: b757e44d5e5c73e42add23b680761f2e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
