@@ -51,6 +51,7 @@ public class Enemy : MonoBehaviour
         }
 
         currentHealth -= finalDamage;
+        SoundManager.Play(hurtSound);
 
         if (currentHealth <= 0)
         {
