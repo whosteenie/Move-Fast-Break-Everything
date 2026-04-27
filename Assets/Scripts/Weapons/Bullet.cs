@@ -64,6 +64,7 @@ public class Bullet : MonoBehaviour
 
         Player player = collision.GetComponent<Player>();
         Enemy enemy = collision.GetComponent<Enemy>();
+        BossController boss = collision.GetComponent<BossController>();
 
         if (owner.GetComponent<Enemy>() != null && player != null)
         {
@@ -73,6 +74,10 @@ public class Bullet : MonoBehaviour
         else if (owner.GetComponent<Player>() != null && enemy != null)
         {
             enemy.TakeDamage(damage);
+            Destroy(gameObject);
+        } else if (boss != null) {
+            boss.TakeDamage(damage);
+            Debug.Log("Bullet hit enemy for " + damage + " damage.");
             Destroy(gameObject);
         }
     }
