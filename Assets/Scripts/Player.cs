@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     [SerializeField] private SpriteRenderer visualSpriteRenderer;
     private Color _originalColor;
 
+<<<<<<< Updated upstream
     private PlayerHealthBar _healthBar;
     public int maxHealth = 10;
 

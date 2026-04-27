@@ -20,6 +20,7 @@ public class AutoAim : MonoBehaviour
     private Stats stats;
     public int baseDamage = 1;
 
+    public WeaponSO weaponSO;
     void Start()
     {
         StartCoroutine(UpdateTargetRoutine());
@@ -82,20 +83,26 @@ public class AutoAim : MonoBehaviour
 
     void Shoot(Vector2 direction)
     {
+<<<<<<< Updated upstream
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
         SoundManager.Play(shootSound);
 
         Bullet bulletScript = bullet.GetComponent<Bullet>();
+=======
+        Bullet bulletScript = Instantiate(weaponSO.bulletPrefab, firePoint.position, Quaternion.identity).GetComponent<Bullet>();
+>>>>>>> Stashed changes
 
+      
+        bulletScript.weaponSO = weaponSO;
+        
         Stats stats = GetComponentInParent<Stats>();
         int finalDamage = Mathf.RoundToInt(baseDamage * stats.damageMultiplier);
 
         Debug.Log("Multiplier: " + stats.damageMultiplier + " Final Damage: " + finalDamage);
 
-        if (bulletScript != null)
-        {
-            bulletScript.SetDirection(direction, bulletSpeed, finalDamage);
-        }
+ 
+
+        bulletScript.Initialize(direction, weaponSO.bulletSpeed, weaponSO, gameObject);
     }
 
     void RotateTowards(Vector2 direction)

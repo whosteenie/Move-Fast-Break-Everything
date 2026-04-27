@@ -6,7 +6,7 @@ public class Bullet : MonoBehaviour
     [Header("Stats")]
     public float speed = 10f;
     public float lifetime = 3f;
-    public int damage;
+    public float damage;
    
     private Vector2 moveDirection;
     private GameObject owner;
@@ -14,6 +14,21 @@ public class Bullet : MonoBehaviour
 
     private Stats stats;
 
+
+
+
+    public void Initialize(Vector2 direction, float bulletSpeed, WeaponSO weapon, GameObject bulletOwner)
+    {
+        weaponSO = weapon;
+        owner = bulletOwner;
+        stats = owner.GetComponent<Stats>();
+
+        moveDirection = direction.normalized;
+        speed = bulletSpeed;
+
+        RotateBullet();
+        Destroy(gameObject, lifetime);
+    }
 
     void Awake()
     {
@@ -27,15 +42,6 @@ public class Bullet : MonoBehaviour
 
         transform.position += (Vector3)(moveDirection * (speed * Time.deltaTime));
     }
-    public void SetDirection(Vector2 direction, float bulletSpeed)
-    {
-        moveDirection = direction.normalized;
-        speed = bulletSpeed;
-        
-
-        RotateBullet();
-        Destroy(gameObject, lifetime);
-    }
 
     void RotateBullet()
     {
@@ -45,15 +51,16 @@ public class Bullet : MonoBehaviour
 
     }
 
-    public void SetOwner(GameObject bulletOwner)
-    {
-        owner = bulletOwner;
-        
-    }
+
 
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (owner == null)
+        {
+            Debug.LogError("OWNER IS NULL on bullet!");
+            return;
+        }
 
         damage = weaponSO.baseDamage;
         if (stats != null)

@@ -7,7 +7,7 @@ public class Stats : MonoBehaviour
     private const float IntelligenceDamageIncrease = 0.1f;
 
     public float speedMultiplier = 1f;
-    public float damageMultiplier = 1f;
+    public float damageMultiplier = 1;
 
 
     public int baseHealth = 10;
@@ -45,7 +45,7 @@ public class Stats : MonoBehaviour
     private void OnStatChange(object sender, System.EventArgs e)
     {
         IncreaseSpeed(0.1f);
-        IncreaseDamage(0.1f);
+        IncreaseDamage(0.8f);
 
         IncreaseFlatHealth(2);
         IncreaseHealthPercent(0.1f);

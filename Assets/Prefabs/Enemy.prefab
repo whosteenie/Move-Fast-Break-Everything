@@ -114,7 +114,6 @@ MonoBehaviour:
   maxXpOrbDrops: 2
   xpDropRadius: 0.6
   minXpOrbSpacing: 0.35
-  maxHealth: 10
   baseDamage: 1
 --- !u!114 &2105547825413297556
 MonoBehaviour:
