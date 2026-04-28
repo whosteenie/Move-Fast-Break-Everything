@@ -22,17 +22,19 @@ public class ChunkManager : MonoBehaviour
     [SerializeField] private int loadRadius = 1; // How many chunks away from player are loaded
     [SerializeField] private int terrainUnloadRadius = 1; // How many chunks away from player until terrain is unloaded
     [SerializeField] private int objectUnloadRadius = 20; // How many chunks away from player until objects are unloaded
-    [SerializeField] private float noiseScale = 30f; // Harmless terrain scale. Higher = Wider zones; Lower = Tighter zones
-    [SerializeField] private float dangerNoiseScale = 30f; // Danger terrain scale. Higher = Wider zones; Lower = Tighter zones
+    [SerializeField] private float noiseScale = 20f; // Harmless terrain scale. Higher = Wider zones; Lower = Tighter zones
+    [SerializeField] private float dangerNoiseScale = 20f; // Danger terrain scale. Higher = Wider zones; Lower = Tighter zones
     [SerializeField] private float deathMax = 0.1f;
     [SerializeField] private float hazardMax = 0.18f;
     [SerializeField] private float earthMax = 0.4f;
+    [SerializeField] private float safeSpawnRadius = 4f;
     
     private readonly Dictionary<Vector2Int, GameObject> loadedTerrainChunks = new();
     private readonly Dictionary<Vector2Int, GameObject> loadedObjectChunks = new();
     private Vector2Int currentPlayerChunk;
     private Vector2 noiseOffset;
     private Vector2 dangerNoiseOffset;
+    private Vector2 playerSpawnPoint;
     
     private void Start()
     {
@@ -47,6 +49,8 @@ public class ChunkManager : MonoBehaviour
             Random.Range(-10000f, 10000f)
         );
         
+        playerSpawnPoint = player.position;
+
         currentPlayerChunk = Vector2Int.zero;
         UpdateLoadedChunks();
     }
@@ -226,6 +230,11 @@ public class ChunkManager : MonoBehaviour
     private TerrainType GetTerrainType(Vector2 worldPosition)
     {
         TerrainType baseTerrainType = GetBaseTerrainType(worldPosition);
+        if (Vector2.Distance(worldPosition, playerSpawnPoint) < safeSpawnRadius)
+        {
+            return baseTerrainType;
+        }
+        
         TerrainType? dangerTerrainType = GetDangerTerrainType(worldPosition);
         
         if (dangerTerrainType.HasValue)

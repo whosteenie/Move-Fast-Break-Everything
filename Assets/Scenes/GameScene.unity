@@ -336,6 +336,7 @@ MonoBehaviour:
   deathMax: 0.1
   hazardMax: 0.18
   earthMax: 0.4
+  safeSpawnRadius: 4
 --- !u!4 &636936951
 Transform:
   m_ObjectHideFlags: 0
