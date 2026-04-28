@@ -1,12 +1,8 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/Audio/Sound Definitions/ButtonClick.asset.meta
 guid: ed49a2a629e7fed438ea47ed79415005
-========
-guid: 6ef694b585c95b64d83a4152f621aa45
->>>>>>>> main:Assets/Audio/Sound Definitions/ButtonHover.asset.meta
 NativeFormatImporter:
   externalObjects: {}
-  mainObjectFileID: 11400000
+  mainObjectFileID: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
