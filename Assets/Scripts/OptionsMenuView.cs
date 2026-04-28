@@ -30,8 +30,16 @@ public sealed class OptionsMenuView
         _soundsContent = root.Q<VisualElement>(SoundsContentName);
         _controlsContent = root.Q<VisualElement>(ControlsContentName);
 
-        BindSlider(root.Q<VisualElement>(SfxSliderHostName), "options-sfx-slider", 85f);
-        BindSlider(root.Q<VisualElement>(MusicSliderHostName), "options-music-slider", 70f);
+        BindSlider(
+            root.Q<VisualElement>(SfxSliderHostName),
+            "options-sfx-slider",
+            SoundManager.GetSfxVolume() * 100f,
+            value => SoundManager.SetSfxVolume(value / 100f));
+        BindSlider(
+            root.Q<VisualElement>(MusicSliderHostName),
+            "options-music-slider",
+            SoundManager.GetMusicVolume() * 100f,
+            value => SoundManager.SetMusicVolume(value / 100f));
 
         if (_soundsTabButton != null)
         {
@@ -83,7 +91,7 @@ public sealed class OptionsMenuView
         _controlsTabButton?.EnableInClassList("options-menu__tab--active", !showSounds);
     }
 
-    private static void BindSlider(VisualElement host, string sliderName, float initialValue)
+    private static void BindSlider(VisualElement host, string sliderName, float initialValue, System.Action<float> onValueChanged)
     {
         if (host == null)
         {
@@ -94,6 +102,7 @@ public sealed class OptionsMenuView
 
         var slider = new OptionsSliderControl(0f, 100f, initialValue) { name = sliderName };
         slider.AddToClassList(SliderControlClassName);
+        slider.ValueChanged += value => onValueChanged?.Invoke(value);
         host.Add(slider);
     }
 }
