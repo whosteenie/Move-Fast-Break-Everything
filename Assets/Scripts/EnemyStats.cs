@@ -3,62 +3,92 @@ using UnityEngine;
 
 public class EnemyStats : MonoBehaviour
 {
+    [Header("Base Stats")]
+    public float baseSpeed = 1f;
+    public int baseDamage = 1;
+    public int baseHealth = 10;
+    public float baseDefense = .1f;
 
-    public int speedMultiplier = 5;
-    public int damageMultiplier = 2;
-    public int maxHealthStat = 10;
-    private EnemyLevelUp levelSytem;
+    [Header("Scaling Multipliers")]
+    public float speedMult = 1f;
+    public float damageMult = 1f;
+    public float healthMult = 1f;
+    public float defenseMult = 1f;
+
+    [Header("Level Scaling")]
+    public float speedIncreasePerLvl = 0.5f;
+    public float damageIncreasePerLvl = 0.2f;
+    public float healthIncreasePerLvl = 0.3f;
+    public float defenseIncreaePerLvl = 0.3f;
+    private EnemyLevelUp levelSystem;
     private Enemy enemy;
 
     private void Awake()
     {
-        levelSytem = GetComponent<EnemyLevelUp>();
+        levelSystem = GetComponent<EnemyLevelUp>();
         enemy = GetComponent<Enemy>();
     }
+
     private void OnEnable()
     {
-        if (levelSytem != null)
+        if (levelSystem != null)
         {
-            levelSytem.OnLevelUp += statChange;
+            levelSystem.OnLevelUp += StatChange;
         }
-
     }
 
     private void OnDisable()
     {
-        if (levelSytem != null)
+        if (levelSystem != null)
         {
-            levelSytem.OnLevelUp -= statChange;
+            levelSystem.OnLevelUp -= StatChange;
         }
     }
 
-    private void statChange(object sender, EventArgs e)
+    private void StatChange(object sender, EventArgs e)
     {
-        IncreaseSpeedStat(5);
-        IncreaseDamageStat(10);
-        IncreaseHealthStat(10);
+        speedMult += speedIncreasePerLvl;
+        damageMult += damageIncreasePerLvl;
+        healthMult += healthIncreasePerLvl;
+        defenseMult += defenseIncreaePerLvl;
 
-        // if (enemy != null)
-        // {
-        //     enemy.UpdateMaxHealth(maxHealthStat);
-        // }
-        Debug.Log("Speed Multiplier: " + speedMultiplier);
-        Debug.Log("Damage Multiplier: " + damageMultiplier);
-        Debug.Log("Max health stat: " + maxHealthStat);
+        if (enemy != null)
+        {
+            enemy.UpdateMaxHealth(GetMaxHealth());
+        }
+        Debug.Log("Enemy Speed: " + GetSpeed());
+        Debug.Log("Enemy Damage: " + GetDamage());
+        Debug.Log("Enemy Health: " + GetMaxHealth());
+        Debug.Log("Enemy Defense: " + GetDefense());
+    }
+    public float GetSpeed()
+    {
+        return baseSpeed * speedMult;
     }
 
-    private void IncreaseHealthStat(int amount)
+    public int GetDamage()
     {
-        maxHealthStat += amount;
+        return Mathf.RoundToInt(baseDamage * damageMult);
     }
 
-    private void IncreaseSpeedStat(int amount)
+    public int GetMaxHealth()
     {
-        speedMultiplier += amount;
+        return Mathf.RoundToInt(baseHealth * healthMult);
     }
 
-    private void IncreaseDamageStat(int amount)
+    public float GetDefense()
     {
-        damageMultiplier += amount;
+        return baseDefense * defenseMult;
     }
+
+    public int CalculateDamageTaken(int incomingDamage, float pierce)
+    {
+        float effectiveDefense = Mathf.Max(0f, GetDefense() - pierce);
+
+        float reducedDamage =
+            incomingDamage * (1f / (1f + effectiveDefense));
+
+        return Mathf.Max(1, Mathf.RoundToInt(reducedDamage));
+    }
+
 }

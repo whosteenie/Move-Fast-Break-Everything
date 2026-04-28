@@ -14,23 +14,27 @@ public class Enemy : MonoBehaviour
     private Transform playerLocation;
 
 
-    public int maxHealth = 10;
+
 
     private int currentHealth;
 
     // public int damageMultiplier;
     //damage mult will be increased when enemy levls up using similar level up system to player, but for now just a base damage
-    public float baseDamage = 1;
+
 
     private void Start()
     {
-        currentHealth = maxHealth;
+
         if (stats != null)
         {
-            maxHealth = stats.maxHealthStat;
+            currentHealth = stats.GetMaxHealth();
+        }
+        else
+        {
+            currentHealth = 10;
         }
 
-        currentHealth = maxHealth;
+
     }
     private void Awake()
     {
@@ -38,14 +42,20 @@ public class Enemy : MonoBehaviour
     }
 
 
-    public void TakeDamage(int damageTaken)
+    public void TakeDamage(int damageTaken, float pierce)
     {
-        if (damageTaken <= 0)
+        int finalDamage = damageTaken;
+
+        if (stats != null)
+        {
+            finalDamage = stats.CalculateDamageTaken(damageTaken, pierce);
+        }
+        if (finalDamage <= 0)
         {
             return;
         }
 
-        currentHealth -= damageTaken;
+        currentHealth -= finalDamage;
         currentHealth = Mathf.Max(currentHealth, 0);
         SoundManager.Play(hurtSound);
         //Debug.Log("Enemy HP: " + currentHealth);
@@ -117,13 +127,8 @@ public class Enemy : MonoBehaviour
 
     public void UpdateMaxHealth(int newMaxHealth)
     {
-        maxHealth = newMaxHealth;
-
-        if (currentHealth < maxHealth)
-        {
-            currentHealth = maxHealth;
-        }
-        Debug.Log("Max HP: " + maxHealth + " | Current HP: " + currentHealth);
+        currentHealth = newMaxHealth;
+        Debug.Log("Enemy max hp is now: " + newMaxHealth);
     }
     // Update is called once per frame
     void FixedUpdate()
@@ -132,14 +137,14 @@ public class Enemy : MonoBehaviour
         //Currently it grabs the player by finding it's movement script, but considering it's called test movement
         //Doesn't exactly seem likely to stick around for long
         //So might want to replace with a method that finds the player in a more abstract way.
-        float speedMult = (stats != null) ? stats.speedMultiplier : 5f;
+        float speed = (stats != null) ? stats.GetSpeed() : moveSpeed;
         TestMovement player = FindAnyObjectByType<TestMovement>();
 
         if (player != null)
         {
             //Small note, for some reason the enemy is in front of the trees because it teleports to z 0
             playerLocation = FindAnyObjectByType<TestMovement>().transform;
-            Vector3 newPosition = Vector3.MoveTowards(transform.localPosition, playerLocation.localPosition, moveSpeed * speedMult * Time.fixedDeltaTime);
+            Vector3 newPosition = Vector3.MoveTowards(transform.localPosition, playerLocation.localPosition, speed * Time.fixedDeltaTime);
 
             //Replaced with rigidbody to stay more consistent
             //Maybe delete the collider if the physics is too annoying, and maybe constrain rotation
@@ -156,13 +161,13 @@ public class Enemy : MonoBehaviour
 
     void OnCollisionStay2D(Collision2D collision)
     {
-        float damageMultiplier = (stats != null) ? stats.damageMultiplier : 2f;
+        int damage = (stats != null) ? stats.GetDamage() : 1;
         if (collision.gameObject != null && collision.gameObject.CompareTag("Player"))
         {
             Player player = collision.gameObject.GetComponent<Player>();
             if (player != null)
             {
-                player.TakeDamage((int)(baseDamage * damageMultiplier));
+                player.TakeDamage(damage);
             }
             //Leads to fun lose screen by accident, all the enemies just fall down.
         }

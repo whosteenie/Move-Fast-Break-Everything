@@ -4,40 +4,48 @@ using UnityEngine;
 public class EnemyLevelUp : MonoBehaviour
 {
 
-    private const float LevelUpamount = 1f;
-
-    private float _currentLevel;
-
+    private float currentLevel = 1;
 
     public event EventHandler OnLevelUp;
 
-    private void Awake()
+    private void Start()
     {
-        _currentLevel = 1;
 
 
-        // Debug.Log($"Starting at level {_currentLevel}", this);
-    }
+        int targetLevel = GameManager.CurrentEnemyLevel;
 
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Z))
+        for (int i = 1; i < targetLevel; i++)
         {
-            Debug.Log($"Current enemy level at {_currentLevel}", this);
-            LevelUp(LevelUpamount);
+            LevelUp(1);
         }
 
-
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnEnemyLevelChanged += HandleEnemyLevelChanged;
+        }
     }
+
+    private void Oestroy()
+    {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnEnemyLevelChanged -= HandleEnemyLevelChanged;
+        }
+    }
+
+    private void HandleEnemyLevelChanged(object sender, EventArgs e)
+    {
+        LevelUp(1);
+    }
+
 
     public void LevelUp(float levelAmount)
     {
         // add level
-        _currentLevel += levelAmount;
+        currentLevel += levelAmount;
 
         // check for level up
-        Debug.Log($"Enemy leveled up! Current level: {_currentLevel}", this);
+        Debug.Log($"Enemy leveled up! Current level: {currentLevel}", this);
         OnLevelUp?.Invoke(this, EventArgs.Empty);
     }
 
