@@ -50,21 +50,50 @@ TemporaryDependencyNodeTargetIdentifier=netstandard2.1
 /warnaserror+:NU1605
 
 [sourceFiles]
+Assets/Scripts/Audio/
+ SoundCategory.cs
+ SoundDefinition.cs
+ SoundManager.cs
+ UIButtonSoundBinder.cs
 Assets/Scripts/
  AutoAim.cs
+ Boss/
+  BeamAttack.cs
+  BossAttack.cs
+  BossController.cs
+  BossHealthBar.cs
+  CrossBeamAttack.cs
+  RingAttack.cs
+  RingDamage.cs
+  SafeZoneAttack.cs
+  SpinBeamAttack.cs
+  XBeamAttack.cs
  Bullet.cs
  ChunkManager.cs
+ DestructibleObstacle.cs
  Enemy.cs
  EnemyLevelUp.cs
  EnemySpawner.cs
  EnemyStats.cs
  GameManager.cs
+ Jump.cs
  MainMenuManager.cs
+ MainMenuShopView.cs
+ MetaCurrency.cs
  MovementStateMachine.cs
  ObstacleSpawner.cs
+ OptionsMenuView.cs
+ OptionsSliderControl.cs
+ Pickups/
+  CoinPickup.cs
+  FoodPickup.cs
+  MagneticPickup.cs
  Player.cs
+ PlayerHealthBar.cs
  PlayerLevelUp.cs
  ScriptableObjects/MovementSO.cs
+ ShopPowerUpDefinition.cs
+ ShopPowerUpProgress.cs
  Stats.cs
  TestMovement.cs
  Towers/
@@ -75,6 +104,7 @@ Assets/Scripts/
   Tower_Health.cs
   Tower_Level.cs
   Tower_Strength.cs
+ TowerSpawner.cs
  XPOrb.cs
 Temp/obj/Assembly-CSharp/.NETStandard,Version=v2.1.AssemblyAttributes.cs
 
