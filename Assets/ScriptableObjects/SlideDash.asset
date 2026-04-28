@@ -14,8 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MovementSO
   moveName: SlideDash
   moveState: 11
+  baseMoveTimeLength: 0.5
   moveTimeLength: 0.5
   movePower: 25
+  healthScale: 0
+  defenseScale: 0
+  strengthScale: 0
+  agilityScale: 1
+  dexterityScale: 0
+  luckScale: 0
   hasDecay: 1
   decayState: 12
+  baseDecayTimeLength: 2
   decayTimeLength: 2
