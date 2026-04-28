@@ -12,6 +12,7 @@ public class YSortRendererGroup : MonoBehaviour
 
     [SerializeField] private Transform sortAnchor;
     [SerializeField] private Vector3 sortAnchorLocalOffset;
+    [SerializeField] private string sortingLayerName = "Default";
     [SerializeField] private int sortOrderOffset = 1000;
     [SerializeField] private int minimumSortingOrder = 0;
     [SerializeField] private int sortPrecision = 100;
@@ -82,6 +83,7 @@ public class YSortRendererGroup : MonoBehaviour
                 continue;
             }
 
+            renderer.sortingLayerName = sortingLayerName;
             renderer.sortingOrder = BaseSortingOrder + renderers[i].orderOffset;
         }
     }

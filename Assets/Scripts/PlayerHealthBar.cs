@@ -5,6 +5,7 @@ public class PlayerHealthBar : MonoBehaviour
     private static Sprite _cachedSprite;
     private const float MinScaleComponent = 0.0001f;
     private const string VisualRootName = "VisualRoot";
+    private const string SortingLayerName = "WorldUI";
     private const int BackgroundOrderOffset = 10;
     private const int FillOrderOffset = 11;
 
@@ -100,10 +101,12 @@ public class PlayerHealthBar : MonoBehaviour
         tr.localScale = new Vector3(size.x, size.y, 1f);
         tr.localPosition = Vector3.zero;
         _backgroundRenderer.color = GetBackgroundColor();
+        _backgroundRenderer.sortingLayerName = SortingLayerName;
         _backgroundRenderer.sortingOrder = GetSortingOrder(BackgroundOrderOffset);
 
         _fillRenderer.sprite = GetBarSprite();
         _fillRenderer.color = GetFillColor();
+        _fillRenderer.sortingLayerName = SortingLayerName;
         _fillRenderer.sortingOrder = GetSortingOrder(FillOrderOffset);
 
         if (_owner != null)

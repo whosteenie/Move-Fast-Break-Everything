@@ -17,6 +17,9 @@ public abstract class MagneticPickup : MonoBehaviour
     private bool _hasTriggeredPickupRange;
     private bool _isCollected;
 
+    protected Transform MagnetTarget => _magnetTarget;
+    protected bool IsMagnetized => _isMagnetized;
+
     protected virtual void Awake()
     {
         CacheReferences();

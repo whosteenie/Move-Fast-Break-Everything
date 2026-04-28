@@ -153,6 +153,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::YSortRendererGroup
   sortAnchor: {fileID: 6459021805037587553}
   sortAnchorLocalOffset: {x: 0, y: 0, z: 0}
+  sortingLayerName: LowGrounded
   sortOrderOffset: 700
   minimumSortingOrder: 0
   sortPrecision: 100

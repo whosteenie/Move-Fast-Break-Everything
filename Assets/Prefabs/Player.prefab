@@ -438,12 +438,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::YSortRendererGroup
   sortAnchor: {fileID: 7013742933698887600}
+  sortAnchorLocalOffset: {x: 0, y: 0, z: 0}
+  sortingLayerName: Actors
+  sortOrderOffset: 2000
+  minimumSortingOrder: 0
   sortPrecision: 100
   renderers:
   - renderer: {fileID: 2804115349887357000}
     orderOffset: 0
-  - renderer: {fileID: 8281735248534366337}
-    orderOffset: -1
 --- !u!1 &6492330960279350276
 GameObject:
   m_ObjectHideFlags: 0
