@@ -6,26 +6,20 @@
     bottom: 0;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0, 0, 0, 0.74);
+    background-color: rgba(4, 6, 10, 0.92);
 }
 
 .options-menu__panel {
-    width: 680px;
-    max-width: 92%;
+    width: 760px;
+    max-width: 100%;
     height: 620px;
-    max-height: 88%;
-    padding: 24px;
+    max-height: 90%;
+    padding: 18px;
     flex-direction: column;
-    background-color: rgb(21, 28, 40);
-    border-top-width: 1px;
-    border-right-width: 1px;
-    border-bottom-width: 1px;
-    border-left-width: 1px;
-    border-top-color: rgb(66, 79, 101);
-    border-right-color: rgb(66, 79, 101);
-    border-bottom-color: rgb(66, 79, 101);
-    border-left-color: rgb(66, 79, 101);
-    border-radius: 16px;
+    background-color: rgb(73, 79, 112);
+    border-color: rgb(239, 191, 99);
+    border-width: 2px;
+    border-radius: 4px;
 }
 
 .options-menu__header {
@@ -36,39 +30,51 @@
 
 .options-menu__title-block {
     flex-grow: 1;
+    align-items: flex-start;
 }
 
 .options-menu__title {
-    color: rgb(244, 247, 251);
-    font-size: 34px;
+    color: rgb(255, 255, 255);
+    font-size: 36px;
     -unity-font-style: bold;
+    -unity-text-align: middle-left;
 }
 
 .options-menu__close-button {
-    width: 110px;
-    height: 42px;
-    color: rgb(244, 247, 251);
-    background-color: rgba(255, 255, 255, 0.08);
-    border-radius: 10px;
+    width: 150px;
+    height: 58px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(163, 38, 29);
+    border-color: rgb(239, 191, 99);
+    border-width: 2px;
+    border-radius: 4px;
+    font-size: 24px;
+    -unity-font-style: bold;
 }
 
 .options-menu__tabs {
     flex-direction: row;
-    margin-top: 22px;
+    margin-top: 20px;
+    margin-bottom: 4px;
 }
 
 .options-menu__tab {
     width: 150px;
-    height: 42px;
-    margin-right: 10px;
-    color: rgb(220, 226, 233);
-    background-color: rgba(255, 255, 255, 0.08);
-    border-radius: 10px;
+    height: 52px;
+    margin-right: 12px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(139, 136, 66);
+    border-color: rgb(236, 181, 83);
+    border-width: 2px;
+    border-radius: 3px;
+    font-size: 18px;
+    -unity-font-style: bold;
 }
 
 .options-menu__tab--active {
-    color: rgb(14, 14, 14);
-    background-color: rgb(239, 191, 99);
+    color: rgb(255, 255, 255);
+    background-color: rgb(168, 158, 78);
+    border-color: rgb(255, 238, 145);
 }
 
 .options-menu__content {
@@ -77,10 +83,7 @@
 
 .options-menu__scrollview {
     flex-grow: 1;
-    margin-top: 18px;
-    padding-top: 18px;
-    border-top-width: 1px;
-    border-top-color: rgba(255, 255, 255, 0.16);
+    margin-top: 12px;
 }
 
 .options-menu__scrollview .unity-scroll-view__content-container {
@@ -91,11 +94,13 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    min-height: 56px;
+    min-height: 76px;
     margin-top: 10px;
     padding: 12px 14px;
-    background-color: rgba(255, 255, 255, 0.04);
-    border-radius: 12px;
+    background-color: rgb(139, 136, 66);
+    border-color: rgb(236, 181, 83);
+    border-width: 2px;
+    border-radius: 3px;
 }
 
 .options-menu__row--first {
@@ -104,8 +109,8 @@
 
 .options-menu__row-label {
     min-width: 120px;
-    color: rgb(244, 247, 251);
-    font-size: 18px;
+    color: rgb(255, 255, 255);
+    font-size: 22px;
     -unity-font-style: bold;
 }
 
@@ -130,8 +135,9 @@
     right: 0;
     top: 5px;
     height: 8px;
-    background-color: rgba(255, 255, 255, 0.16);
-    border-radius: 4px;
+    background-color: rgb(38, 16, 42);
+    border-color: rgb(237, 196, 101);
+    border-width: 1px;
 }
 
 .options-slider__fill {
@@ -139,8 +145,7 @@
     left: 0;
     top: 5px;
     height: 8px;
-    background-color: rgb(239, 191, 99);
-    border-radius: 4px 0 0 4px;
+    background-color: rgb(242, 212, 89);
 }
 
 .options-slider__knob {
@@ -149,35 +154,24 @@
     width: 18px;
     height: 18px;
     margin-left: -9px;
-    background-color: rgb(244, 247, 251);
-    border-top-width: 2px;
-    border-right-width: 2px;
-    border-bottom-width: 2px;
-    border-left-width: 2px;
-    border-top-color: rgb(239, 191, 99);
-    border-right-color: rgb(239, 191, 99);
-    border-bottom-color: rgb(239, 191, 99);
-    border-left-color: rgb(239, 191, 99);
-    border-radius: 999px;
+    background-color: rgb(255, 238, 145);
+    border-color: rgb(38, 16, 42);
+    border-width: 2px;
+    border-radius: 2px;
 }
 
 .options-menu__binding-button {
     min-width: 120px;
-    height: 36px;
-    color: rgb(244, 247, 251);
-    background-color: rgba(255, 255, 255, 0.08);
-    border-top-width: 1px;
-    border-right-width: 1px;
-    border-bottom-width: 1px;
-    border-left-width: 1px;
-    border-top-color: rgba(255, 255, 255, 0.14);
-    border-right-color: rgba(255, 255, 255, 0.14);
-    border-bottom-color: rgba(255, 255, 255, 0.14);
-    border-left-color: rgba(255, 255, 255, 0.14);
-    border-radius: 10px;
+    height: 40px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(20, 29, 37);
+    border-color: rgb(237, 196, 101);
+    border-width: 2px;
+    border-radius: 3px;
     font-size: 16px;
+    -unity-font-style: bold;
 }
 
 .options-menu__binding-button:hover {
-    background-color: rgba(255, 255, 255, 0.14);
+    background-color: rgb(35, 45, 56);
 }

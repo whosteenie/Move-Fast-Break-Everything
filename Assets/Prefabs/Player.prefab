@@ -312,6 +312,7 @@ MonoBehaviour:
   slideMovementSO: {fileID: 11400000, guid: 663f6dc32ecaa9e4e88ecf6145993f89, type: 2}
   chargeMovementSO: {fileID: 11400000, guid: a70904dca67ea5c4c99c12c2679eb9af, type: 2}
   movementStateMachine: {fileID: 0}
+  slideSound: {fileID: 11400000, guid: 30343b2c3eced0347b0646cd5b0dfd9b, type: 2}
 --- !u!114 &1269611933969825367
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -328,6 +329,7 @@ MonoBehaviour:
   firePoint: {fileID: 3551539267116345053}
   fireRate: 2
   bulletSpeed: 10
+  shootSound: {fileID: 11400000, guid: 1e8c5d55452df354f980a2e7b2fb07e7, type: 2}
   detectionRange: 10
   targetRefreshRate: 0.3
   baseDamage: 4
@@ -382,6 +384,7 @@ MonoBehaviour:
   invulnerabilityDuration: 1
   flashInterval: 0.1
   flashAlpha: 0.35
+  hurtSound: {fileID: 11400000, guid: 2ea0d9881c835c04ab6efe298af23aa7, type: 2}
 --- !u!114 &6769700025945905945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -418,6 +421,8 @@ MonoBehaviour:
   groundedLayer: Grounded
   airborneLayer: Airborne
   spriteTransform: {fileID: 4750889647170226346}
+  jumpSound: {fileID: 11400000, guid: 44b38e5d596cde24286ab91e8f255ef9, type: 2}
+  landSound: {fileID: 11400000, guid: 0b34db756e5810043b83a9bfc10e36bc, type: 2}
 --- !u!1 &6492330960279350276
 GameObject:
   m_ObjectHideFlags: 0

@@ -185,9 +185,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad2ca2bafd7791e4ca729bb3836fd784, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::XPOrb
+  rb: {fileID: 3543371063137826531}
+  pickupCollider: {fileID: 8853686799882276811}
+  launchSpeed: 5
+  launchDuration: 0.15
+  magnetSpeed: 10
+  magnetAcceleration: 30
   tier: 0
   spriteRenderer: {fileID: 7613546048959103778}
-  pickupCollider: {fileID: 8853686799882276811}
   tier1Color: {r: 0.09, g: 0.52, b: 0.85, a: 1}
   tier2Color: {r: 0.22, g: 0.82, b: 0.33, a: 1}
   tier3Color: {r: 0.88, g: 0.24, b: 0.24, a: 1}
@@ -199,6 +204,7 @@ MonoBehaviour:
   launchDuration: 0.15
   magnetSpeed: 10
   magnetAcceleration: 30
+  collectSound: {fileID: 11400000, guid: 84685752f8aea91468d6668fd4d36184, type: 2}
 --- !u!1 &7048327071737929163
 GameObject:
   m_ObjectHideFlags: 0
