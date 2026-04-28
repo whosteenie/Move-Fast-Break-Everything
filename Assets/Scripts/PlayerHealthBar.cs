@@ -5,9 +5,9 @@ public class PlayerHealthBar : MonoBehaviour
     private static Sprite _cachedSprite;
     private const float MinScaleComponent = 0.0001f;
     private const string VisualRootName = "VisualRoot";
-    private const string SortingLayerName = "WorldUI";
-    private const int BackgroundOrderOffset = 10;
-    private const int FillOrderOffset = 11;
+    private const string SortingLayerName = "Actors";
+    private const int BackgroundOrderOffset = 1;
+    private const int FillOrderOffset = 2;
 
     [Header("Visuals")]
     [SerializeField] private Vector2 barSize = new(0.38f, 0.035f);
