@@ -55,7 +55,7 @@ public class TestMovement : MonoBehaviour
 
     public void SetMoveInput(Vector2 input)
     {
-        moveInput = input;
+        moveInput = Vector2.ClampMagnitude(input, 1f);
 
         if (moveInput != Vector2.zero)
         {
