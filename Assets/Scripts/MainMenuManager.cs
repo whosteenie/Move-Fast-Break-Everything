@@ -9,6 +9,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private string playSceneName = "SampleScene";
     [SerializeField] private Sprite shopCoinSprite;
     [SerializeField] private ShopPowerUpDefinition[] shopPowerUps;
+    [SerializeField] private SoundDefinition menuMusic;
 
     public event Action<string> ButtonPressed;
 
@@ -18,6 +19,7 @@ public class MainMenuManager : MonoBehaviour
     private void Start()
     {
         var root = GetComponent<UIDocument>().rootVisualElement;
+        SoundManager.Play(menuMusic);
         var optionsRoot = root.Q<VisualElement>(OptionsMenuView.RootName);
         _optionsMenuView = optionsRoot != null ? new OptionsMenuView(optionsRoot) : null;
         var shopRoot = root.Q<VisualElement>(MainMenuShopView.RootName);

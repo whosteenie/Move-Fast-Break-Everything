@@ -21,6 +21,7 @@ public class XPOrb : MonoBehaviour {
     [SerializeField] private float launchDuration = 0.15f;
     [SerializeField] private float magnetSpeed = 10f;
     [SerializeField] private float magnetAcceleration = 30f;
+    [SerializeField] private SoundDefinition collectSound;
 
     private int RewardAmount => GetRewardAmount(tier);
     private Transform _magnetTarget;
@@ -142,6 +143,7 @@ public class XPOrb : MonoBehaviour {
 
         _isCollected = true;
         playerLevelUp.AddXp(RewardAmount);
+        SoundManager.Play(collectSound);
         Destroy(gameObject);
     }
 
