@@ -155,4 +155,4 @@ MonoBehaviour:
   coinDropPrefab: {fileID: 2628067428879860305, guid: d7f577c1bd02aeb42b50b88bde3fc2ca, type: 3}
   foodDropPrefab: {fileID: 8925891680184177157, guid: d34c44036c787754fbb480f508340bc0, type: 3}
   coinDropChance: 0.5
-  foodDropChance: 0.25
+  foodDropChance: 0
