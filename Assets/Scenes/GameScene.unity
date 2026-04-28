@@ -298,10 +298,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 636936951}
-  - component: {fileID: 636936950}
   - component: {fileID: 636936949}
   - component: {fileID: 636936952}
-  - component: {fileID: 636936953}
+  - component: {fileID: 636936955}
   m_Layer: 0
   m_Name: WorldGenerator
   m_TagString: Untagged
@@ -326,8 +325,7 @@ MonoBehaviour:
   floorHazardPrefab: {fileID: 4734800804745988880, guid: e7d644cfa29e81b47bfb141d0235e5df, type: 3}
   floorEarthPrefab: {fileID: 4734800804745988880, guid: d40b59c064b87234fb8dd765c35a0efa, type: 3}
   floorTechPrefab: {fileID: 4734800804745988880, guid: 6519efa9cf4b9e340886699f3375ef7e, type: 3}
-  obstacleSpawner: {fileID: 636936950}
-  towerSpawner: {fileID: 636936953}
+  objectSpawner: {fileID: 636936955}
   chunkSize: 20
   cellSize: 1
   loadRadius: 1
@@ -337,31 +335,6 @@ MonoBehaviour:
   deathMax: 0.1
   hazardMax: 0.15
   earthMax: 0.4
---- !u!114 &636936950
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 636936948}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de600f7a19147614fb6c3f8185c5bed7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ObstacleSpawner
-  obstaclePrefabs:
-  - {fileID: 6860932909762194913, guid: d283d2dd53854ec47870cd55f29d6d3b, type: 3}
-  - {fileID: 6860932909762194913, guid: 789de460444172d46bffb6f94667aa8c, type: 3}
-  - {fileID: 6860932909762194913, guid: d20170fccbcd43b48b875cac743cc905, type: 3}
-  - {fileID: 6860932909762194913, guid: d0f507c63dcb77b4e8013bfc72106c95, type: 3}
-  - {fileID: 6860932909762194913, guid: 0a414d3feed88ac4e8659cf3598156f7, type: 3}
-  - {fileID: 6860932909762194913, guid: 18b37dce6e53b874e86149319603d37b, type: 3}
-  chunkManager: {fileID: 636936949}
-  obstacleCount: 3
-  playerSpawnPoint: {x: 0, y: 0}
-  obstacleSpacing: 1.5
-  playerSpacing: 2
-  maxPlacementAttempts: 10
 --- !u!4 &636936951
 Transform:
   m_ObjectHideFlags: 0
@@ -409,7 +382,7 @@ MonoBehaviour:
   - startTimeSeconds: 60
     maxEnemies: 46
     spawnInterval: 0.4
---- !u!114 &636936953
+--- !u!114 &636936955
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -418,22 +391,55 @@ MonoBehaviour:
   m_GameObject: {fileID: 636936948}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a7c6e33448340e0af0f4e3267ee16a4, type: 3}
+  m_Script: {fileID: 11500000, guid: 1bc5ad7cbe204f2dbe04d0cf1c9da2fd, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TowerSpawner
-  towerPrefabs:
-  - {fileID: 2311890830828110298, guid: 65a95123cf7eeed49840fac229109a95, type: 3}
-  - {fileID: 7777900955581189186, guid: 9550ea7b69289a64a89fa8930adcc4ff, type: 3}
-  - {fileID: 4775551448602699699, guid: 26d97c43d0b9b2245a041fce69b6de4b, type: 3}
-  - {fileID: 5539367028798991948, guid: 9e230f857f49d0041812c49ef7ef9bf2, type: 3}
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectSpawner
   chunkManager: {fileID: 636936949}
-  towerCount: 5
-  towerSpawnChance: 0.1
-  playerSpawnPoint: {x: 0, y: 0}
-  towerSpacing: 4
-  obstacleSpacing: 1.5
-  playerSpacing: 20
-  maxPlacementAttempts: 10
+  spawnGroups:
+  - prefabs:
+    - {fileID: 6860932909762194913, guid: d283d2dd53854ec47870cd55f29d6d3b, type: 3}
+    - {fileID: 6860932909762194913, guid: 789de460444172d46bffb6f94667aa8c, type: 3}
+    - {fileID: 6860932909762194913, guid: d20170fccbcd43b48b875cac743cc905, type: 3}
+    - {fileID: 6860932909762194913, guid: d0f507c63dcb77b4e8013bfc72106c95, type: 3}
+    - {fileID: 6860932909762194913, guid: 0a414d3feed88ac4e8659cf3598156f7, type: 3}
+    - {fileID: 6860932909762194913, guid: 18b37dce6e53b874e86149319603d37b, type: 3}
+    objectCount: 6
+    spawnChance: 0.6
+    playerSpawnPoint: {x: 0, y: 0}
+    objectSpacing: 4
+    playerSpacing: 5
+    maxPlacementAttempts: 10
+    spawnOnEarth: 1
+    spawnOnTech: 0
+    spawnOnHazard: 0
+    spawnOnDeath: 0
+  - prefabs:
+    - {fileID: 2311890830828110298, guid: 65a95123cf7eeed49840fac229109a95, type: 3}
+    - {fileID: 7777900955581189186, guid: 9550ea7b69289a64a89fa8930adcc4ff, type: 3}
+    - {fileID: 4775551448602699699, guid: 26d97c43d0b9b2245a041fce69b6de4b, type: 3}
+    - {fileID: 5539367028798991948, guid: 9e230f857f49d0041812c49ef7ef9bf2, type: 3}
+    objectCount: 5
+    spawnChance: 0.1
+    playerSpawnPoint: {x: 0, y: 0}
+    objectSpacing: 4
+    playerSpacing: 20
+    maxPlacementAttempts: 10
+    spawnOnEarth: 1
+    spawnOnTech: 1
+    spawnOnHazard: 0
+    spawnOnDeath: 0
+  - prefabs:
+    - {fileID: 5046122262590631306, guid: 4a220988e5aab5f4fb33d30eaac72dde, type: 3}
+    objectCount: 5
+    spawnChance: 0.1
+    playerSpawnPoint: {x: 0, y: 0}
+    objectSpacing: 4
+    playerSpacing: 20
+    maxPlacementAttempts: 10
+    spawnOnEarth: 1
+    spawnOnTech: 1
+    spawnOnHazard: 0
+    spawnOnDeath: 0
 --- !u!1 &1269148358
 GameObject:
   m_ObjectHideFlags: 0
