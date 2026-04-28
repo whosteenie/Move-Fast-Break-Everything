@@ -14,7 +14,7 @@ public class YSortRendererGroup : MonoBehaviour
     [SerializeField] private Vector3 sortAnchorLocalOffset;
     [SerializeField] private string sortingLayerName = "Default";
     [SerializeField] private int sortOrderOffset = 1000;
-    [SerializeField] private int minimumSortingOrder = 0;
+    [SerializeField] private int minimumSortingOrder;
     [SerializeField] private int sortPrecision = 100;
     [SerializeField] private RendererBinding[] renderers;
 
@@ -29,20 +29,19 @@ public class YSortRendererGroup : MonoBehaviour
     {
         sortAnchor = transform;
 
-        if (renderers == null || renderers.Length == 0)
+        if(renderers != null && renderers.Length != 0) return;
+        
+        var spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null)
         {
-            var spriteRenderer = GetComponent<SpriteRenderer>();
-            if (spriteRenderer != null)
+            renderers = new[]
             {
-                renderers = new[]
+                new RendererBinding
                 {
-                    new RendererBinding
-                    {
-                        renderer = spriteRenderer,
-                        orderOffset = 0
-                    }
-                };
-            }
+                    renderer = spriteRenderer,
+                    orderOffset = 0
+                }
+            };
         }
     }
 
@@ -68,23 +67,22 @@ public class YSortRendererGroup : MonoBehaviour
         var anchor = sortAnchor != null ? sortAnchor : transform;
         var sortPosition = anchor.TransformPoint(sortAnchorLocalOffset);
         BaseSortingOrder = sortOrderOffset - Mathf.RoundToInt(sortPosition.y * sortPrecision);
-        BaseSortingOrder = Mathf.Max(minimumSortingOrder, BaseSortingOrder);
 
         if (renderers == null)
         {
             return;
         }
 
-        for (int i = 0; i < renderers.Length; i++)
+        for (var i = 0; i < renderers.Length; i++)
         {
-            var renderer = renderers[i].renderer;
-            if (renderer == null)
+            var spriteRenderer = renderers[i].renderer;
+            if (spriteRenderer == null)
             {
                 continue;
             }
 
-            renderer.sortingLayerName = sortingLayerName;
-            renderer.sortingOrder = BaseSortingOrder + renderers[i].orderOffset;
+            spriteRenderer.sortingLayerName = sortingLayerName;
+            spriteRenderer.sortingOrder = BaseSortingOrder + renderers[i].orderOffset;
         }
     }
 }
