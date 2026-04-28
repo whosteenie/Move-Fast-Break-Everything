@@ -5,10 +5,14 @@ using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour {
     [SerializeField] private UIDocument uiDocument;
+    [SerializeField] private Sprite runCoinSprite;
     [SerializeField] private SoundDefinition gameMusic;
     [SerializeField] private SoundDefinition levelUpSound;
 
     private const string RunTimerLabelName = "run-timer-label";
+    private const string RunCoinRootName = "run-coin-root";
+    private const string RunCoinIconName = "run-coin-icon";
+    private const string RunCoinLabelName = "run-coin-label";
     private const string LevelProgressFillName = "level-progress-fill";
     private const string LevelUpRootName = "level-up-root";
     private const string StrengthButtonName = "strength-button";
@@ -23,6 +27,8 @@ public class GameManager : MonoBehaviour {
     private const string GameOverQuitButtonName = "quit-button";
 
     private Label _runTimerLabel;
+    private Label _runCoinLabel;
+    private Image _runCoinIcon;
     private VisualElement _levelProgressFill;
     private VisualElement _levelUpRoot;
     private PlayerLevelUp _playerLevelUp;
@@ -31,6 +37,7 @@ public class GameManager : MonoBehaviour {
     private VisualElement _gameOverRoot;
     private OptionsMenuView _optionsMenuView;
     private float _currentRunTime;
+    private int _currentRunCoins;
     private bool _isGameOver;
     private bool _isPaused;
 
@@ -67,6 +74,8 @@ public class GameManager : MonoBehaviour {
         _optionsMenuView = optionsRoot != null ? new OptionsMenuView(optionsRoot) : null;
         SoundManager.Play(gameMusic);
         _runTimerLabel = root.Q<Label>(RunTimerLabelName);
+        _runCoinLabel = root.Q<Label>(RunCoinLabelName);
+        _runCoinIcon = root.Q<Image>(RunCoinIconName);
         _levelProgressFill = root.Q<VisualElement>(LevelProgressFillName);
         _levelUpRoot = root.Q<VisualElement>(LevelUpRootName);
         _pauseRoot = root.Q<VisualElement>(PauseRootName);
@@ -103,6 +112,12 @@ public class GameManager : MonoBehaviour {
         if (_runTimerLabel != null)
         {
             _runTimerLabel.text = FormatRunTime(_currentRunTime);
+        }
+
+        RefreshRunCoinDisplay();
+        if (_runCoinIcon != null)
+        {
+            _runCoinIcon.sprite = runCoinSprite;
         }
 
         if (_levelUpRoot != null)
@@ -296,6 +311,17 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    public void AddRunCoins(int amount)
+    {
+        if (amount <= 0)
+        {
+            return;
+        }
+
+        _currentRunCoins += amount;
+        RefreshRunCoinDisplay();
+    }
+
     private static void RetryRun() {
         Time.timeScale = 1f;
         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
@@ -312,5 +338,13 @@ public class GameManager : MonoBehaviour {
         var seconds = totalSeconds % 60;
 
         return $"{minutes:00}:{seconds:00}";
+    }
+
+    private void RefreshRunCoinDisplay()
+    {
+        if (_runCoinLabel != null)
+        {
+            _runCoinLabel.text = _currentRunCoins.ToString();
+        }
     }
 }

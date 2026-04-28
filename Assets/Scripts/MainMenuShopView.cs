@@ -14,12 +14,13 @@ public sealed class MainMenuShopView
     private const string DetailDescriptionName = "shop-detail-description";
     private const string DetailIconName = "shop-detail-icon";
     private const string DetailRankName = "shop-detail-rank";
+    private const string DetailCostIconName = "shop-detail-cost-icon";
     private const string DetailCostName = "shop-detail-cost";
     private const string BuyButtonName = "shop-buy-button";
+    private const string RefundButtonName = "shop-refund-button";
     private const string ItemCardClassName = "shop-menu__item-card";
     private const string ItemCardSelectedClassName = "shop-menu__item-card--selected";
     private const string RankPipFilledClassName = "shop-menu__rank-pip--filled";
-    private const string TotalCoinsKey = "MetaCurrency.TotalCoins";
     private const int MaxDescriptionCharacters = 105;
 
     private readonly VisualElement _root;
@@ -31,6 +32,7 @@ public sealed class MainMenuShopView
     private readonly Label _detailRank;
     private readonly Label _detailCost;
     private readonly Button _buyButton;
+    private readonly Button _refundButton;
     private readonly List<ShopPowerUpDefinition> _items = new();
     private readonly Dictionary<ShopPowerUpDefinition, Button> _cardByItem = new();
 
@@ -47,11 +49,18 @@ public sealed class MainMenuShopView
         _detailRank = root.Q<Label>(DetailRankName);
         _detailCost = root.Q<Label>(DetailCostName);
         _buyButton = root.Q<Button>(BuyButtonName);
+        _refundButton = root.Q<Button>(RefundButtonName);
 
         var coinIcon = root.Q<Image>(CoinIconName);
         if (coinIcon != null)
         {
             coinIcon.sprite = coinSprite;
+        }
+
+        var detailCostIcon = root.Q<Image>(DetailCostIconName);
+        if (detailCostIcon != null)
+        {
+            detailCostIcon.sprite = coinSprite;
         }
 
         LoadItems(configuredItems);
@@ -60,6 +69,11 @@ public sealed class MainMenuShopView
         if (_buyButton != null)
         {
             _buyButton.clicked += BuySelectedItem;
+        }
+
+        if (_refundButton != null)
+        {
+            _refundButton.clicked += RefundPowerUps;
         }
 
         SelectItem(_items.Count > 0 ? _items[0] : null);
@@ -90,16 +104,6 @@ public sealed class MainMenuShopView
                     _items.Add(item);
                 }
             }
-        }
-
-        if (_items.Count == 0)
-        {
-            _items.Add(CreatePlaceholder("might", "Might", "Raises inflicted damage by 5% per rank.", 200, 120, 5));
-            _items.Add(CreatePlaceholder("max_health", "Max Health", "Adds a small permanent boost to maximum health.", 180, 110, 5));
-            _items.Add(CreatePlaceholder("move_speed", "Move Speed", "Increases movement speed by 4% per rank.", 160, 100, 5));
-            _items.Add(CreatePlaceholder("magnet", "Magnet", "Expands pickup attraction range for coins, food, and XP.", 150, 90, 4));
-            _items.Add(CreatePlaceholder("luck", "Luck", "Improves future drop and reward odds.", 220, 140, 3));
-            _items.Add(CreatePlaceholder("recovery", "Recovery", "Improves healing received from food pickups.", 140, 95, 4));
         }
     }
 
@@ -135,6 +139,7 @@ public sealed class MainMenuShopView
     {
         if (_selectedItem == null)
         {
+            ShowEmptyDetails();
             return;
         }
 
@@ -145,13 +150,31 @@ public sealed class MainMenuShopView
         }
 
         var cost = _selectedItem.GetCostForRank(rank);
-        if (!TrySpendCoins(cost))
+        if (!MetaCurrency.TrySpendCoins(cost))
         {
             return;
         }
 
-        PlayerPrefs.SetInt(GetRankKey(_selectedItem), rank + 1);
+        ShopPowerUpProgress.SetRank(_selectedItem, rank + 1);
         PlayerPrefs.Save();
+        Refresh();
+    }
+
+    private void RefundPowerUps()
+    {
+        var refundAmount = CalculateRefundAmount();
+        if (refundAmount <= 0)
+        {
+            return;
+        }
+
+        foreach (var item in _items)
+        {
+            ShopPowerUpProgress.SetRank(item, 0);
+        }
+
+        PlayerPrefs.Save();
+        MetaCurrency.AddCoins(refundAmount);
         Refresh();
     }
 
@@ -159,7 +182,12 @@ public sealed class MainMenuShopView
     {
         if (_coinLabel != null)
         {
-            _coinLabel.text = GetTotalCoins().ToString();
+            _coinLabel.text = MetaCurrency.TotalCoins.ToString();
+        }
+
+        if (_refundButton != null)
+        {
+            _refundButton.SetEnabled(CalculateRefundAmount() > 0);
         }
 
         RefreshDetails();
@@ -185,7 +213,7 @@ public sealed class MainMenuShopView
         if (_buyButton != null)
         {
             _buyButton.text = isMaxed ? "Maxed" : "Buy";
-            _buyButton.SetEnabled(!isMaxed && GetTotalCoins() >= cost);
+            _buyButton.SetEnabled(!isMaxed && MetaCurrency.TotalCoins >= cost);
         }
 
         RefreshCardRanks();
@@ -234,38 +262,30 @@ public sealed class MainMenuShopView
         }
     }
 
+    private int CalculateRefundAmount()
+    {
+        var refundAmount = 0;
+
+        foreach (var item in _items)
+        {
+            var rank = GetRank(item);
+            for (var purchasedRank = 0; purchasedRank < rank; purchasedRank++)
+            {
+                refundAmount += item.GetCostForRank(purchasedRank);
+            }
+        }
+
+        return refundAmount;
+    }
+
     private static int GetRank(ShopPowerUpDefinition item)
     {
-        return PlayerPrefs.GetInt(GetRankKey(item), 0);
+        return ShopPowerUpProgress.GetRank(item);
     }
 
     private static string GetRankKey(ShopPowerUpDefinition item)
     {
-        var id = string.IsNullOrWhiteSpace(item.PowerUpId) ? item.name : item.PowerUpId;
-        return $"Shop.PowerUp.{id}.Rank";
-    }
-
-    private static int GetTotalCoins()
-    {
-        return PlayerPrefs.GetInt(TotalCoinsKey, 0);
-    }
-
-    private static bool TrySpendCoins(int amount)
-    {
-        if (amount <= 0)
-        {
-            return true;
-        }
-
-        var totalCoins = GetTotalCoins();
-        if (totalCoins < amount)
-        {
-            return false;
-        }
-
-        PlayerPrefs.SetInt(TotalCoinsKey, totalCoins - amount);
-        PlayerPrefs.Save();
-        return true;
+        return ShopPowerUpProgress.GetRankKey(item);
     }
 
     private static string GetStableDescription(string description)
@@ -278,11 +298,17 @@ public sealed class MainMenuShopView
         return $"{description[..(MaxDescriptionCharacters - 3)]}...";
     }
 
-    private static ShopPowerUpDefinition CreatePlaceholder(string id, string displayName, string description, int baseCost, int costIncrease, int maxRank)
+    private void ShowEmptyDetails()
     {
-        var item = ScriptableObject.CreateInstance<ShopPowerUpDefinition>();
-        item.name = $"Placeholder_{displayName}";
-        item.InitializeRuntime(id, displayName, description, baseCost, costIncrease, maxRank);
-        return item;
+        if (_detailTitle != null) _detailTitle.text = "No Power Ups";
+        if (_detailDescription != null) _detailDescription.text = "Assign ShopPowerUpDefinition assets on MainMenuManager.";
+        if (_detailIcon != null) _detailIcon.sprite = null;
+        if (_detailRank != null) _detailRank.text = "Rank 0/0";
+        if (_detailCost != null) _detailCost.text = "0";
+        if (_buyButton != null)
+        {
+            _buyButton.text = "Buy";
+            _buyButton.SetEnabled(false);
+        }
     }
 }

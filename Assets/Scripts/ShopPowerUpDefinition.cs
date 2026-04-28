@@ -17,16 +17,6 @@ public class ShopPowerUpDefinition : ScriptableObject
     public Sprite Icon => icon;
     public int MaxRank => maxRank;
 
-    public void InitializeRuntime(string id, string itemName, string itemDescription, int itemBaseCost, int itemCostIncreasePerRank, int itemMaxRank)
-    {
-        powerUpId = id;
-        displayName = itemName;
-        description = itemDescription;
-        baseCost = Mathf.Max(1, itemBaseCost);
-        costIncreasePerRank = Mathf.Max(0, itemCostIncreasePerRank);
-        maxRank = Mathf.Max(1, itemMaxRank);
-    }
-
     public int GetCostForRank(int currentRank)
     {
         return baseCost + costIncreasePerRank * Mathf.Max(0, currentRank);
