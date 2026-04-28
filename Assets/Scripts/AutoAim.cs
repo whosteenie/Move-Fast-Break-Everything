@@ -92,12 +92,16 @@ public class AutoAim : MonoBehaviour
         SoundManager.Play(shootSound);
 
         Bullet bulletScript = bullet.GetComponent<Bullet>();
+        
+        // int finalDamage = Mathf.RoundToInt(baseDamage * stats.rangedDamageMultiplier);
 
-        int finalDamage = stats != null ? stats.GetDamage(baseDamage) : baseDamage;
+        // Debug.Log("Multiplier: " + stats.rangedDamageMultiplier + " Final Damage: " + finalDamage);
 
         if (bulletScript != null)
         {
-            bulletScript.SetDirection(direction, bulletSpeed, finalDamage);
+            int finalDamage = stats != null ? stats.GetDamage(baseDamage) : baseDamage;
+            float pierce = stats != null ? stats.GetPierce() : 0f;
+            bulletScript.SetDirection(direction, bulletSpeed, finalDamage, pierce);
         }
     }
 
