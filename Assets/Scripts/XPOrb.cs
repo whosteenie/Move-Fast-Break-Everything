@@ -16,10 +16,6 @@ public class XPOrb : MagneticPickup {
     [SerializeField] private int tier2Reward = 35;
     [SerializeField] private int tier3Reward = 50;
     [SerializeField] private SoundDefinition collectSound;
-    [SerializeField] private int airbornePickupSortingOrder = 800;
-    [SerializeField] private int groundedSortingOrder = 800;
-    [SerializeField] private int minimumSortingOrder;
-    [SerializeField] private string sortingLayerName = "Pickups";
 
     private int RewardAmount => GetRewardAmount(tier);
 
@@ -41,10 +37,6 @@ public class XPOrb : MagneticPickup {
         }
 
         ApplyTierVisuals();
-    }
-
-    private void LateUpdate() {
-        UpdateSortingOrder();
     }
 
     private void ApplyTierVisuals() {
@@ -80,21 +72,5 @@ public class XPOrb : MagneticPickup {
             XPOrbTier.Tier3 => tier3Color,
             _ => tier1Color
         };
-    }
-
-    private void UpdateSortingOrder() {
-        if (spriteRenderer == null) {
-            return;
-        }
-
-        spriteRenderer.sortingLayerName = sortingLayerName;
-
-        var jump = MagnetTarget != null ? MagnetTarget.GetComponent<Jump>() : null;
-        if (IsMagnetized && jump != null && jump.IsJumping) {
-            spriteRenderer.sortingOrder = Mathf.Max(minimumSortingOrder, airbornePickupSortingOrder);
-            return;
-        }
-
-        spriteRenderer.sortingOrder = groundedSortingOrder;
     }
 }

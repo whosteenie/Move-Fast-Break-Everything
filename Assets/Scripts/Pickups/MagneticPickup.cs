@@ -4,10 +4,15 @@ public abstract class MagneticPickup : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Collider2D pickupCollider;
+    [SerializeField] private SpriteRenderer visualRenderer;
     [SerializeField] private float launchSpeed = 5f;
     [SerializeField] private float launchDuration = 0.15f;
     [SerializeField] private float magnetSpeed = 10f;
     [SerializeField] private float magnetAcceleration = 30f;
+    [SerializeField] private string groundedSortingLayerName = "GroundShadow";
+    [SerializeField] private int groundedSortingOrder;
+    [SerializeField] private string activeSortingLayerName = "Pickups";
+    [SerializeField] private int activeSortingOrder = 800;
 
     private Transform _magnetTarget;
     private Vector2 _launchVelocity;
@@ -23,15 +28,19 @@ public abstract class MagneticPickup : MonoBehaviour
     protected virtual void Awake()
     {
         CacheReferences();
+        ApplySorting();
     }
 
     protected virtual void OnValidate()
     {
         CacheReferences();
+        ApplySorting();
     }
 
     private void FixedUpdate()
     {
+        ApplySorting();
+
         if (_magnetTarget == null)
         {
             return;
@@ -142,5 +151,22 @@ public abstract class MagneticPickup : MonoBehaviour
         {
             pickupCollider = GetComponent<Collider2D>();
         }
+
+        if (visualRenderer == null)
+        {
+            visualRenderer = GetComponent<SpriteRenderer>();
+        }
+    }
+
+    private void ApplySorting()
+    {
+        if (visualRenderer == null)
+        {
+            return;
+        }
+
+        var isActive = _hasTriggeredPickupRange && !_isCollected;
+        visualRenderer.sortingLayerName = isActive ? activeSortingLayerName : groundedSortingLayerName;
+        visualRenderer.sortingOrder = isActive ? activeSortingOrder : groundedSortingOrder;
     }
 }
