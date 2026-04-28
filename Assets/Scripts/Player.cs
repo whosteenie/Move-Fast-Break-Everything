@@ -40,12 +40,7 @@ public class Player : MonoBehaviour
 
     public void Update()
     {
-        if (!Input.GetKeyDown(KeyCode.Q))
-        {
-            return;
-        }
 
-        Heal(debugHealAmount);
 
     }
 
@@ -53,6 +48,7 @@ public class Player : MonoBehaviour
     public void UpdateMaxHealth(int newMaxHealth)
     {
         maxHealth = newMaxHealth;
+        currentHealth = maxHealth;
 
         if (currentHealth > maxHealth)
         {
