@@ -14,7 +14,9 @@ public class Enemy : MonoBehaviour
     private Transform playerLocation;
 
 
+    public float maxHealth = 10;
 
+    private float currentHealth;
 
     // public int damageMultiplier;
     //damage mult will be increased when enemy levls up using similar level up system to player, but for now just a base damage
@@ -36,6 +38,7 @@ public class Enemy : MonoBehaviour
     }
 
 
+    public void TakeDamage(float damageTaken)
     {
         if (damageTaken <= 0)
         {
