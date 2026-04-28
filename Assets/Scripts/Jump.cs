@@ -27,6 +27,7 @@ public class Jump : MonoBehaviour
     private Vector3 spriteBasePosition;
     private Vector3 spriteBaseScale;
     private float spriteBaseZ;
+    public bool IsJumping => isJumping;
 
     void Awake()
     {
