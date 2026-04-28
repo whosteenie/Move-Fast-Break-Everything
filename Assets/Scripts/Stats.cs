@@ -12,6 +12,7 @@ public class Stats : MonoBehaviour
 
     public float speedMultiplier = 0.2f;
     public float rangedDamageMultiplier = 1f;
+    public float damageMultiplier => rangedDamageMultiplier;
 
     public float defense = .2f;
     public float thorns = 0.2f;
@@ -30,7 +31,6 @@ public class Stats : MonoBehaviour
     {
         player = GetComponent<Player>();
         levelSytem = GetComponent<PlayerLevelUp>();
-        ApplyPurchasedPowerUps();
         ApplyPurchasedPowerUps();
     }
 
