@@ -9,6 +9,7 @@ public class AutoAim : MonoBehaviour
     public Transform firePoint;
     public float fireRate = 2f;
     public float bulletSpeed = 10f;
+    [SerializeField] private SoundDefinition shootSound;
 
     [Header("Targeting")]
     public float detectionRange = 10f;
@@ -88,6 +89,7 @@ public class AutoAim : MonoBehaviour
     void Shoot(Vector2 direction)
     {
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
+        SoundManager.Play(shootSound);
 
         Bullet bulletScript = bullet.GetComponent<Bullet>();
 

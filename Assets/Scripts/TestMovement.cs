@@ -34,6 +34,9 @@ public class TestMovement : MonoBehaviour
 
     public MovementStateMachine movementStateMachine;
 
+    [Header("Audio")]
+    [SerializeField] private SoundDefinition slideSound;
+
     void Update()
     {
 
@@ -55,6 +58,7 @@ public class TestMovement : MonoBehaviour
         {
             // print("In Slide Key Press");
             movementStateMachine.AddState(slideMovementSO);
+            SoundManager.Play(slideSound);
         }
         if (Input.GetKeyDown(chargeKey) && !(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay) || movementStateMachine.HasState(MovementStateMachine.State.charge) || movementStateMachine.HasState(MovementStateMachine.State.chargeDecay)))
         {
