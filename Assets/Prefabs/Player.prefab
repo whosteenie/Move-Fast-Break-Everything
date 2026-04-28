@@ -141,6 +141,7 @@ GameObject:
   - component: {fileID: -6438699549702643509}
   - component: {fileID: 6769700025945905945}
   - component: {fileID: -191410844367820870}
+  - component: {fileID: 5071439206801123456}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -424,6 +425,25 @@ MonoBehaviour:
   spriteTransform: {fileID: 4750889647170226346}
   jumpSound: {fileID: 11400000, guid: 44b38e5d596cde24286ab91e8f255ef9, type: 2}
   landSound: {fileID: 11400000, guid: 0b34db756e5810043b83a9bfc10e36bc, type: 2}
+--- !u!114 &5071439206801123456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5711766594770397432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa9db57ddc0b4bb4b0a6f1f8fe1f7a21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::YSortRendererGroup
+  sortAnchor: {fileID: 7013742933698887600}
+  sortPrecision: 100
+  renderers:
+  - renderer: {fileID: 2804115349887357000}
+    orderOffset: 0
+  - renderer: {fileID: 8281735248534366337}
+    orderOffset: -1
 --- !u!1 &6492330960279350276
 GameObject:
   m_ObjectHideFlags: 0

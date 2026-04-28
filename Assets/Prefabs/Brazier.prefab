@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4485414217655195079}
   - component: {fileID: 2095250189159073660}
   - component: {fileID: 7606981821831861641}
+  - component: {fileID: 5071439206801123456}
   m_Layer: 0
   m_Name: Brazier
   m_TagString: Untagged
@@ -156,3 +157,23 @@ MonoBehaviour:
   foodDropPrefab: {fileID: 8925891680184177157, guid: d34c44036c787754fbb480f508340bc0, type: 3}
   coinDropChance: 0.5
   foodDropChance: 0.3
+--- !u!114 &5071439206801123456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5046122262590631306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa9db57ddc0b4bb4b0a6f1f8fe1f7a21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::YSortRendererGroup
+  sortAnchor: {fileID: 6017636792892575145}
+  sortAnchorLocalOffset: {x: 0, y: 0, z: 0}
+  sortOrderOffset: 700
+  minimumSortingOrder: 0
+  sortPrecision: 100
+  renderers:
+  - renderer: {fileID: 4485414217655195079}
+    orderOffset: 0

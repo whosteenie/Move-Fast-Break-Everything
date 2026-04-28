@@ -5,6 +5,8 @@ public class PlayerHealthBar : MonoBehaviour
     private static Sprite _cachedSprite;
     private const float MinScaleComponent = 0.0001f;
     private const string VisualRootName = "VisualRoot";
+    private const int BackgroundOrderOffset = 10;
+    private const int FillOrderOffset = 11;
 
     [Header("Visuals")]
     [SerializeField] private Vector2 barSize = new(0.38f, 0.035f);
@@ -13,6 +15,7 @@ public class PlayerHealthBar : MonoBehaviour
     [SerializeField] private Color backgroundColor = new(0.1f, 0.1f, 0.1f, 0.85f);
 
     private Player _owner;
+    private YSortRendererGroup _sortGroup;
     private Transform _visualRoot;
     private SpriteRenderer _backgroundRenderer;
     private SpriteRenderer _fillRenderer;
@@ -22,6 +25,11 @@ public class PlayerHealthBar : MonoBehaviour
         if (_owner == null)
         {
             _owner = GetComponentInParent<Player>();
+        }
+
+        if (_sortGroup == null)
+        {
+            _sortGroup = GetComponentInParent<YSortRendererGroup>();
         }
 
         EnsureRenderers();
@@ -38,6 +46,7 @@ public class PlayerHealthBar : MonoBehaviour
     public void Initialize(Player owner)
     {
         _owner = owner;
+        _sortGroup = owner != null ? owner.GetComponent<YSortRendererGroup>() : null;
         EnsureRenderers();
         ApplyVisuals();
     }
@@ -91,11 +100,11 @@ public class PlayerHealthBar : MonoBehaviour
         tr.localScale = new Vector3(size.x, size.y, 1f);
         tr.localPosition = Vector3.zero;
         _backgroundRenderer.color = GetBackgroundColor();
-        _backgroundRenderer.sortingOrder = 10;
+        _backgroundRenderer.sortingOrder = GetSortingOrder(BackgroundOrderOffset);
 
         _fillRenderer.sprite = GetBarSprite();
         _fillRenderer.color = GetFillColor();
-        _fillRenderer.sortingOrder = 11;
+        _fillRenderer.sortingOrder = GetSortingOrder(FillOrderOffset);
 
         if (_owner != null)
         {
@@ -178,6 +187,11 @@ public class PlayerHealthBar : MonoBehaviour
     private Vector3 GetBarOffset()
     {
         return barOffset;
+    }
+
+    private int GetSortingOrder(int orderOffset)
+    {
+        return _sortGroup != null ? _sortGroup.GetOrderWithOffset(orderOffset) : orderOffset;
     }
 
     private Color GetFillColor()

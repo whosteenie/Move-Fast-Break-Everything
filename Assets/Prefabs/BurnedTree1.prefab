@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7254310988291782036}
   - component: {fileID: 4861496404516698642}
   - component: {fileID: -9192652797039004720}
+  - component: {fileID: 5071439206801123456}
   m_Layer: 0
   m_Name: BurnedTree1
   m_TagString: Untagged
@@ -166,3 +167,21 @@ PolygonCollider2D:
       - {x: 0.08126851, y: -0.22173817}
       - {x: 0.06569522, y: -0.20231454}
   m_UseDelaunayMesh: 1
+--- !u!114 &5071439206801123456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6860932909762194913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa9db57ddc0b4bb4b0a6f1f8fe1f7a21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::YSortRendererGroup
+  sortAnchor: {fileID: 7254310988291782036}
+  sortAnchorLocalOffset: {x: 0, y: -0.16, z: 0}
+  sortPrecision: 100
+  renderers:
+  - renderer: {fileID: 4861496404516698642}
+    orderOffset: 0
