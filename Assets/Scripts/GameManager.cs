@@ -146,22 +146,7 @@ public class GameManager : MonoBehaviour {
             return;
         }
 
-        if (_optionsMenuView != null && _optionsMenuView.Root.style.display == DisplayStyle.Flex)
-        {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                ClosePauseOptions();
-            }
-
-            return;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            TogglePause();
-        }
-
-        if (_isPaused)
+        if (IsPauseOptionsOpen() || _isPaused)
         {
             return;
         }
@@ -171,6 +156,22 @@ public class GameManager : MonoBehaviour {
         if(_runTimerLabel != null) {
             _runTimerLabel.text = FormatRunTime(_currentRunTime);
         }
+    }
+
+    public void HandlePauseInput()
+    {
+        if (_isGameOver)
+        {
+            return;
+        }
+
+        if (IsPauseOptionsOpen())
+        {
+            ClosePauseOptions();
+            return;
+        }
+
+        TogglePause();
     }
 
     private void HandleXpChanged(object sender, EventArgs e)
@@ -312,6 +313,11 @@ public class GameManager : MonoBehaviour {
         {
             _pauseRoot.style.display = DisplayStyle.Flex;
         }
+    }
+
+    private bool IsPauseOptionsOpen()
+    {
+        return _optionsMenuView != null && _optionsMenuView.Root.style.display == DisplayStyle.Flex;
     }
 
     public void AddRunCoins(int amount)

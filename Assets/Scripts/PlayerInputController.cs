@@ -71,6 +71,29 @@ public class PlayerInputController : MonoBehaviour
         if(_jump != null) _jump.TryJump();
     }
 
+    private void OnPause(InputValue value)
+    {
+        if (!value.isPressed)
+        {
+            return;
+        }
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.HandlePauseInput();
+        }
+    }
+
+    private void OnInteract(InputValue value)
+    {
+        if (!value.isPressed || IsInputBlocked())
+        {
+            return;
+        }
+
+        Tower_Base.TryInteractCurrent();
+    }
+
     private bool IsInputBlocked()
     {
         if (_player != null && _player.IsDead)
