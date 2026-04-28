@@ -14,8 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MovementSO
   moveName: Charge
   moveState: 7
+  baseMoveTimeLength: 0.2
   moveTimeLength: 0.2
   movePower: 15
+  healthScale: 0
+  defenseScale: 0
+  strengthScale: 1
+  agilityScale: 0
+  dexterityScale: 0
+  luckScale: 0
   hasDecay: 1
   decayState: 8
+  baseDecayTimeLength: 0.3
   decayTimeLength: 0.3
