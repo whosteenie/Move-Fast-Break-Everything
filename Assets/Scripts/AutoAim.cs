@@ -60,24 +60,30 @@ public class AutoAim : MonoBehaviour
     float dis = 10f;
     GameObject FindClosestEnemy()
     {
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-
         GameObject closest = null;
-
         float minDistance = dis;
+        closest = FindClosestTargetOfType<Enemy>(closest, ref minDistance);
+        closest = FindClosestTargetOfType<DestructibleObstacle>(closest, ref minDistance);
 
-        foreach (GameObject enemy in enemies)
+        return closest;
+    }
+
+    GameObject FindClosestTargetOfType<T>(GameObject currentClosest, ref float minDistance) where T : MonoBehaviour
+    {
+        T[] targets = FindObjectsByType<T>();
+
+        foreach (T target in targets)
         {
-            float distance = Vector2.Distance(transform.position, enemy.transform.position);
+            float distance = Vector2.Distance(transform.position, target.transform.position);
 
             if (distance < minDistance && distance <= detectionRange)
             {
                 minDistance = distance;
-                closest = enemy;
+                currentClosest = target.gameObject;
             }
         }
 
-        return closest;
+        return currentClosest;
     }
 
     void Shoot(Vector2 direction)
@@ -87,10 +93,7 @@ public class AutoAim : MonoBehaviour
 
         Bullet bulletScript = bullet.GetComponent<Bullet>();
 
-        Stats stats = GetComponentInParent<Stats>();
-        int finalDamage = Mathf.RoundToInt(baseDamage * stats.damageMultiplier);
-
-        Debug.Log("Multiplier: " + stats.damageMultiplier + " Final Damage: " + finalDamage);
+        int finalDamage = stats != null ? stats.GetDamage(baseDamage) : baseDamage;
 
         if (bulletScript != null)
         {
