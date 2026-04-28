@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2095250189159073660}
   - component: {fileID: 7606981821831861641}
   - component: {fileID: 5071439206801123456}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Brazier
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -80,9 +80,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: 412345672
+  m_SortingLayer: 2
+  m_SortingOrder: 700
   m_MaskInteraction: 0
   m_Sprite: {fileID: 542025301103887396, guid: 5c10eae01c644ea47bf0acb3d01ecfa4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
