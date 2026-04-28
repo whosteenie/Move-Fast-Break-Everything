@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 34d4617e45eda8a4db9496c291253229, type: 3}
-  m_Name: SlideSound
+  m_Name: DashSound
   m_EditorClassIdentifier: Assembly-CSharp::SoundDefinition
-  clip: {fileID: 8300000, guid: 4d91d3a1a9ff2f544bbb06843dc26d45, type: 3}
+  clip: {fileID: 8300000, guid: a465f4e2a2f3a354f927f77994a68a08, type: 3}
   category: 0
-  baseVolume: 0.1
+  baseVolume: 0.5
   maxSimultaneousVoices: 3
   minReplayDelay: 0
