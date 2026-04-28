@@ -1,22 +1,30 @@
 using System.Collections;
+using System;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
     private Stats stats;
-    private SpriteRenderer spriteRenderer;
-    private Color originalColor;
+    [SerializeField] private SpriteRenderer visualSpriteRenderer;
+    private Color _originalColor;
 
+    private PlayerHealthBar _healthBar;
     public int maxHealth = 10;
-    private int currentHealth;
 
     [SerializeField] private float invulnerabilityDuration = 1f;
     [SerializeField] private float flashInterval = 0.1f;
     [SerializeField] private float flashAlpha = 0.35f;
+    [SerializeField] private SoundDefinition hurtSound;
 
     private const int debugHealAmount = 10;
-    private bool isInvulnerable;
-    private Coroutine invulnerabilityRoutine;
+    private bool _isInvulnerable;
+    private Coroutine _invulnerabilityRoutine;
+
+    public event Action<int, int> OnHealthChanged;
+
+    public int CurrentHealth { get; private set; }
+
+    public int MaxHealth => maxHealth;
 
     private void Start()
     {
@@ -25,17 +33,19 @@ public class Player : MonoBehaviour
             maxHealth = stats.GetMaxHealth();
         }
 
-        currentHealth = maxHealth;
+        CurrentHealth = maxHealth;
+        EnsureHealthBar();
+        NotifyHealthChanged();
     }
 
     private void Awake()
     {
         stats = GetComponent<Stats>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        if (spriteRenderer != null)
+        if (visualSpriteRenderer != null)
         {
-            originalColor = spriteRenderer.color;
+            _originalColor = visualSpriteRenderer.color;
         }
+        EnsureHealthBar();
     }
 
     public void Update()
@@ -44,35 +54,36 @@ public class Player : MonoBehaviour
 
     }
 
-
     public void UpdateMaxHealth(int newMaxHealth)
     {
         maxHealth = newMaxHealth;
         currentHealth = maxHealth;
 
-        if (currentHealth > maxHealth)
+        if (CurrentHealth > maxHealth)
         {
-            currentHealth = maxHealth;
+            CurrentHealth = maxHealth;
         }
-        Debug.Log("Max HP: " + maxHealth + " | Current HP: " + currentHealth);
+        Debug.Log("Max HP: " + maxHealth + " | Current HP: " + CurrentHealth);
+        NotifyHealthChanged();
     }
 
     public void Heal(int healAmount)
     {
 
-        currentHealth += healAmount;
-        if (currentHealth > maxHealth)
+        CurrentHealth += healAmount;
+        if (CurrentHealth > maxHealth)
         {
-            currentHealth = maxHealth;
+            CurrentHealth = maxHealth;
         }
-        Debug.Log("Player HP: " + currentHealth);
+        Debug.Log("Player HP: " + CurrentHealth);
+        NotifyHealthChanged();
     }
 
 
 
     public int TakeDamage(int damageTaken)
     {
-        if (isInvulnerable)
+        if (_isInvulnerable)
         {
             return 0;
         }
@@ -83,24 +94,26 @@ public class Player : MonoBehaviour
         {
             finalDamage = stats.CalculateDamageTaken(damageTaken);
         }
-        currentHealth -= finalDamage;
-        Debug.Log($"Player took {finalDamage} damage. HP: {currentHealth}");
+        CurrentHealth -= finalDamage;
+        CurrentHealth = Mathf.Max(CurrentHealth, 0);
+        SoundManager.Play(hurtSound);
+        Debug.Log($"Player took {finalDamage} damage. HP: {CurrentHealth}");
+        NotifyHealthChanged();
 
         int thornsDamage = stats != null ? stats.GetThornsDamage(damageTaken) : 0;
 
-        if (currentHealth <= 0)
+        if (CurrentHealth <= 0)
         {
             Die();
             return finalDamage;
         }
 
-        if (invulnerabilityRoutine != null)
+        if (_invulnerabilityRoutine != null)
         {
-            StopCoroutine(invulnerabilityRoutine);
+            StopCoroutine(_invulnerabilityRoutine);
         }
 
-        invulnerabilityRoutine = StartCoroutine(InvulnerabilityFlashRoutine());
-
+        _invulnerabilityRoutine = StartCoroutine(InvulnerabilityFlashRoutine());
         return finalDamage;
     }
 
@@ -113,9 +126,9 @@ public class Player : MonoBehaviour
 
     private IEnumerator InvulnerabilityFlashRoutine()
     {
-        isInvulnerable = true;
-        float timer = 0f;
-        bool useFlashColor = true;
+        _isInvulnerable = true;
+        var timer = 0f;
+        var useFlashColor = true;
 
         while (timer < invulnerabilityDuration)
         {
@@ -126,30 +139,54 @@ public class Player : MonoBehaviour
         }
 
         RestoreSpriteColors();
-        isInvulnerable = false;
-        invulnerabilityRoutine = null;
+        _isInvulnerable = false;
+        _invulnerabilityRoutine = null;
     }
 
     private void SetSpriteAlpha(float alpha)
     {
-        if (spriteRenderer == null)
+        if (visualSpriteRenderer == null)
         {
             return;
         }
 
-        Color color = originalColor;
+        var color = _originalColor;
         color.a = alpha;
-        spriteRenderer.color = color;
+        visualSpriteRenderer.color = color;
     }
 
     private void RestoreSpriteColors()
     {
-        if (spriteRenderer == null)
+        if (visualSpriteRenderer == null)
         {
             return;
         }
 
-        spriteRenderer.color = originalColor;
+        visualSpriteRenderer.color = _originalColor;
+    }
+    private void EnsureHealthBar()
+    {
+        if (_healthBar == null)
+        {
+            _healthBar = GetComponentInChildren<PlayerHealthBar>(true);
+        }
+
+        if (_healthBar != null)
+        {
+            _healthBar.Initialize(this);
+            return;
+        }
+
+        GameObject healthBarObject = new("PlayerHealthBar");
+        healthBarObject.transform.SetParent(transform, false);
+        _healthBar = healthBarObject.AddComponent<PlayerHealthBar>();
+        _healthBar.Initialize(this);
+    }
+
+    private void NotifyHealthChanged()
+    {
+        OnHealthChanged?.Invoke(CurrentHealth, maxHealth);
+        if(_healthBar != null) _healthBar.Refresh(CurrentHealth, maxHealth);
     }
 
 }

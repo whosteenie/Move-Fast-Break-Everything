@@ -5,6 +5,7 @@ public class Enemy : MonoBehaviour
     private EnemyStats stats;
     private float moveSpeed = 0.5f;
     [SerializeField] private GameObject xpOrbPrefab;
+    [SerializeField] private SoundDefinition hurtSound;
     [SerializeField] private int minXpOrbDrops = 1;
     [SerializeField] private int maxXpOrbDrops = 2;
     [SerializeField] private float xpDropRadius = 0.6f;
@@ -50,6 +51,7 @@ public class Enemy : MonoBehaviour
         }
 
         currentHealth -= finalDamage;
+        SoundManager.Play(hurtSound);
 
         if (currentHealth <= 0)
         {

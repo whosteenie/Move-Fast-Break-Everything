@@ -42,11 +42,16 @@ public class Bullet : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Enemy enemy = collision.GetComponent<Enemy>();
+        BossController boss = collision.GetComponent<BossController>();
 
         if (enemy != null)
         {
             enemy.TakeDamage(damage, pierce);
             Debug.Log("Bullet hit enemy for " + damage + " damage and" + pierce + "pierce damage");
+            Destroy(gameObject);
+        } else if (boss != null) {
+            boss.TakeDamage(damage);
+            Debug.Log("Bullet hit enemy for " + damage + " damage.");
             Destroy(gameObject);
         }
     }
