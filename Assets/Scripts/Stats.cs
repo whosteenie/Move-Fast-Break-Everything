@@ -31,6 +31,7 @@ public class Stats : MonoBehaviour
         player = GetComponent<Player>();
         levelSytem = GetComponent<PlayerLevelUp>();
         ApplyPurchasedPowerUps();
+        ApplyPurchasedPowerUps();
     }
 
     private void OnEnable()
