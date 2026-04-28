@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 39e2d36409380424b8572c62deb4d037, type: 3}
-  m_Name: Slide
+  m_Name: SlideDash
   m_EditorClassIdentifier: Assembly-CSharp::MovementSO
-  moveName: Slide
-  moveState: 2
-  baseMoveTimeLength: 0.25
-  moveTimeLength: 0.25
-  movePower: 15
+  moveName: SlideDash
+  moveState: 11
+  baseMoveTimeLength: 0.5
+  moveTimeLength: 0.5
+  movePower: 25
   healthScale: 0
   defenseScale: 0
   strengthScale: 0
-  agilityScale: 0.5
-  dexterityScale: 0.5
+  agilityScale: 1
+  dexterityScale: 0
   luckScale: 0
   hasDecay: 1
-  decayState: 3
-  baseDecayTimeLength: 0.25
-  decayTimeLength: 0.25
+  decayState: 12
+  baseDecayTimeLength: 2
+  decayTimeLength: 2
