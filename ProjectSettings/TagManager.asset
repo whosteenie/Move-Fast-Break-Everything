@@ -14,12 +14,12 @@ TagManager:
   - Water
   - UI
   - Wall
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Boss
+  - Grounded
+  - Airborne
+  - Enemy
+  - PlayerCollider
+  - EnemyCollider
   - 
   - 
   - 

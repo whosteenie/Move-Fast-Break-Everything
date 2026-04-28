@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 249118bd5fff6b045855fbf7f76241b9, type: 3}
+  m_Name: PowerUp_MoveSpeed
+  m_EditorClassIdentifier: Assembly-CSharp::ShopPowerUpDefinition
+  powerUpId: move_speed
+  displayName: Move Speed
+  description: Increases movement speed by 4% per rank.
+  icon: {fileID: -6869751320748356421, guid: 2bf9f2ede805f4c4289b9dc2840ce377, type: 3}
+  baseCost: 200
+  costIncreasePerRank: 150
+  maxRank: 3

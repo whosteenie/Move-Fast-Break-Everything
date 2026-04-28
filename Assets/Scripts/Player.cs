@@ -5,7 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     private Stats stats;
-    private SpriteRenderer _spriteRenderer;
+    [SerializeField] private SpriteRenderer visualSpriteRenderer;
     private Color _originalColor;
 
     private PlayerHealthBar _healthBar;
@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float invulnerabilityDuration = 1f;
     [SerializeField] private float flashInterval = 0.1f;
     [SerializeField] private float flashAlpha = 0.35f;
+    [SerializeField] private SoundDefinition hurtSound;
 
     private const int debugHealAmount = 10;
     private bool _isInvulnerable;
@@ -40,10 +41,9 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         stats = GetComponent<Stats>();
-        _spriteRenderer = GetComponent<SpriteRenderer>();
-        if (_spriteRenderer != null)
+        if (visualSpriteRenderer != null)
         {
-            _originalColor = _spriteRenderer.color;
+            _originalColor = visualSpriteRenderer.color;
         }
         EnsureHealthBar();
     }
@@ -94,6 +94,7 @@ public class Player : MonoBehaviour
 
         CurrentHealth -= damageTaken;
         CurrentHealth = Mathf.Max(CurrentHealth, 0);
+        SoundManager.Play(hurtSound);
         Debug.Log("Player HP: " + CurrentHealth);
         NotifyHealthChanged();
         if (CurrentHealth <= 0)
@@ -138,24 +139,24 @@ public class Player : MonoBehaviour
 
     private void SetSpriteAlpha(float alpha)
     {
-        if (_spriteRenderer == null)
+        if (visualSpriteRenderer == null)
         {
             return;
         }
 
         var color = _originalColor;
         color.a = alpha;
-        _spriteRenderer.color = color;
+        visualSpriteRenderer.color = color;
     }
 
     private void RestoreSpriteColors()
     {
-        if (_spriteRenderer == null)
+        if (visualSpriteRenderer == null)
         {
             return;
         }
 
-        _spriteRenderer.color = _originalColor;
+        visualSpriteRenderer.color = _originalColor;
     }
     private void EnsureHealthBar()
     {

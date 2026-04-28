@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 7009612526986155507}
   - component: {fileID: -8236634439346163064}
   - component: {fileID: 7777031547732658782}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -109,6 +109,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   xpOrbPrefab: {fileID: 6034623416384411684, guid: ca6fe6d51e7593b4ba6f2eef87017da4, type: 3}
+  hurtSound: {fileID: 11400000, guid: 6c72d3846ee21984c946066a593363e9, type: 2}
   minXpOrbDrops: 1
   maxXpOrbDrops: 2
   xpDropRadius: 0.6

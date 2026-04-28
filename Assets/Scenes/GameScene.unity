@@ -301,6 +301,7 @@ GameObject:
   - component: {fileID: 636936950}
   - component: {fileID: 636936949}
   - component: {fileID: 636936952}
+  - component: {fileID: 636936953}
   m_Layer: 0
   m_Name: WorldGenerator
   m_TagString: Untagged
@@ -326,14 +327,16 @@ MonoBehaviour:
   floorEarthPrefab: {fileID: 4734800804745988880, guid: d40b59c064b87234fb8dd765c35a0efa, type: 3}
   floorTechPrefab: {fileID: 4734800804745988880, guid: 6519efa9cf4b9e340886699f3375ef7e, type: 3}
   obstacleSpawner: {fileID: 636936950}
+  towerSpawner: {fileID: 636936953}
   chunkSize: 20
   cellSize: 1
   loadRadius: 1
   unloadRadius: 10
-  noiseScale: 15
-  deathMax: 0.13
-  hazardMax: 0.25
-  earthMax: 0.5
+  noiseScale: 20
+  dangerNoiseScale: 20
+  deathMax: 0.1
+  hazardMax: 0.15
+  earthMax: 0.4
 --- !u!114 &636936950
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -347,12 +350,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObstacleSpawner
   obstaclePrefabs:
+  - {fileID: 6860932909762194913, guid: d283d2dd53854ec47870cd55f29d6d3b, type: 3}
+  - {fileID: 6860932909762194913, guid: 789de460444172d46bffb6f94667aa8c, type: 3}
   - {fileID: 6860932909762194913, guid: d20170fccbcd43b48b875cac743cc905, type: 3}
   - {fileID: 6860932909762194913, guid: d0f507c63dcb77b4e8013bfc72106c95, type: 3}
   - {fileID: 6860932909762194913, guid: 0a414d3feed88ac4e8659cf3598156f7, type: 3}
   - {fileID: 6860932909762194913, guid: 18b37dce6e53b874e86149319603d37b, type: 3}
-  - {fileID: 6860932909762194913, guid: d283d2dd53854ec47870cd55f29d6d3b, type: 3}
-  - {fileID: 6860932909762194913, guid: 789de460444172d46bffb6f94667aa8c, type: 3}
   chunkManager: {fileID: 636936949}
   obstacleCount: 3
   playerSpawnPoint: {x: 0, y: 0}
@@ -388,10 +391,49 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   enemyPrefab: {fileID: 1874990315484048395, guid: 11d95817b12e84a4082ed1ed31c29769, type: 3}
   player: {fileID: 1092388853012045805}
-  spawnInterval: 3
-  maxEnemies: 10
-  spawnDistance: 12
+  spawnDistance: 18
   respawnDistance: 40
+  spawnPhases:
+  - startTimeSeconds: 0
+    maxEnemies: 20
+    spawnInterval: 1
+  - startTimeSeconds: 15
+    maxEnemies: 28
+    spawnInterval: 0.8
+  - startTimeSeconds: 30
+    maxEnemies: 35
+    spawnInterval: 0.6
+  - startTimeSeconds: 45
+    maxEnemies: 41
+    spawnInterval: 0.5
+  - startTimeSeconds: 60
+    maxEnemies: 46
+    spawnInterval: 0.4
+--- !u!114 &636936953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 636936948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a7c6e33448340e0af0f4e3267ee16a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TowerSpawner
+  towerPrefabs:
+  - {fileID: 2311890830828110298, guid: 65a95123cf7eeed49840fac229109a95, type: 3}
+  - {fileID: 7777900955581189186, guid: 9550ea7b69289a64a89fa8930adcc4ff, type: 3}
+  - {fileID: 4775551448602699699, guid: 26d97c43d0b9b2245a041fce69b6de4b, type: 3}
+  - {fileID: 5539367028798991948, guid: 9e230f857f49d0041812c49ef7ef9bf2, type: 3}
+  chunkManager: {fileID: 636936949}
+  towerCount: 5
+  towerSpawnChance: 0.1
+  playerSpawnPoint: {x: 0, y: 0}
+  towerSpacing: 4
+  obstacleSpacing: 1.5
+  playerSpacing: 20
+  maxPlacementAttempts: 10
 --- !u!1 &1269148358
 GameObject:
   m_ObjectHideFlags: 0
@@ -499,6 +541,7 @@ GameObject:
   - component: {fileID: 1828502758}
   - component: {fileID: 1828502759}
   - component: {fileID: 1828502760}
+  - component: {fileID: 1828502761}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -557,6 +600,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   uiDocument: {fileID: 1828502758}
+  runCoinSprite: {fileID: 4994948417755550580, guid: 90e374de09503b1439bc13bc4575e623, type: 3}
+  gameMusic: {fileID: 11400000, guid: 2261cb4120a032643bc7c200637298e9, type: 2}
+  levelUpSound: {fileID: 11400000, guid: aa91232242783e845aebaa2be93aabb3, type: 2}
 --- !u!114 &1828502760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -569,6 +615,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74f496a7f1b336949b937485d11face1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovementStateMachine
+--- !u!114 &1828502761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1828502756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5337d11b9193b8b4d9c048a8fcd3f87c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonSoundBinder
+  hoverSound: {fileID: 11400000, guid: 6ef694b585c95b64d83a4152f621aa45, type: 2}
+  clickSound: {fileID: 11400000, guid: ed49a2a629e7fed438ea47ed79415005, type: 2}
 --- !u!1001 &512755429912449731
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -646,10 +706,6 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1826873285969335579, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
-      propertyPath: slideDashMovementSO
-      value: 
-      objectReference: {fileID: 11400000, guid: 1965c343d311d004a8c364020b74cdf7, type: 2}
     - target: {fileID: 1826873285969335579, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
       propertyPath: movementStateMachine
       value: 

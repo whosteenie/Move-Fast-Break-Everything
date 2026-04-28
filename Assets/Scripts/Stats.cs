@@ -5,6 +5,10 @@ public class Stats : MonoBehaviour
     private const float StrengthHealthIncrease = 0.1f;
     private const float DexterityFireRateIncrease = 0.1f;
     private const float IntelligenceDamageIncrease = 0.1f;
+    private const float MightDamageIncreasePerRank = 0.05f;
+    private const float MaxHealthIncreasePerRank = 0.1f;
+    private const float HasteFireRateIncreasePerRank = 0.05f;
+    private const float MoveSpeedIncreasePerRank = 0.04f;
 
     public float speedMultiplier = 1f;
     public float damageMultiplier = 1f;
@@ -24,6 +28,7 @@ public class Stats : MonoBehaviour
     {
         player = GetComponent<Player>();
         levelSytem = GetComponent<PlayerLevelUp>();
+        ApplyPurchasedPowerUps();
     }
     private void OnEnable()
     {
@@ -68,7 +73,6 @@ public class Stats : MonoBehaviour
     }
     public int GetMaxHealth()
     {
-        int baseHealth = 10;
         return Mathf.RoundToInt((baseHealth + flatHealthBonus) * healthMultiplier);
     }
 
@@ -103,6 +107,19 @@ public class Stats : MonoBehaviour
     public int GetDamage(int baseDamage)
     {
         return Mathf.RoundToInt(baseDamage * damageMultiplier);
+    }
+
+    private void ApplyPurchasedPowerUps()
+    {
+        var mightRank = ShopPowerUpProgress.GetRank("might");
+        var maxHealthRank = ShopPowerUpProgress.GetRank("max_health");
+        var hasteRank = ShopPowerUpProgress.GetRank("haste");
+        var moveSpeedRank = ShopPowerUpProgress.GetRank("move_speed");
+
+        damageMultiplier += mightRank * MightDamageIncreasePerRank;
+        healthMultiplier += maxHealthRank * MaxHealthIncreasePerRank;
+        dexterityMultiplier += hasteRank * HasteFireRateIncreasePerRank;
+        speedMultiplier += moveSpeedRank * MoveSpeedIncreasePerRank;
     }
 
 
