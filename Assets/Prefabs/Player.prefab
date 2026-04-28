@@ -311,8 +311,8 @@ MonoBehaviour:
   chargeKey: 122
   slideMovementSO: {fileID: 11400000, guid: 663f6dc32ecaa9e4e88ecf6145993f89, type: 2}
   chargeMovementSO: {fileID: 11400000, guid: a70904dca67ea5c4c99c12c2679eb9af, type: 2}
+  slideDashMovementSO: {fileID: 11400000, guid: 1965c343d311d004a8c364020b74cdf7, type: 2}
   movementStateMachine: {fileID: 0}
-  slideSound: {fileID: 11400000, guid: 30343b2c3eced0347b0646cd5b0dfd9b, type: 2}
 --- !u!114 &1269611933969825367
 MonoBehaviour:
   m_ObjectHideFlags: 0
