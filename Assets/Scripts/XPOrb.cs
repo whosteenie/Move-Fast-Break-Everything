@@ -15,11 +15,6 @@ public class XPOrb : MagneticPickup {
     [SerializeField] private int tier1Reward = 20;
     [SerializeField] private int tier2Reward = 35;
     [SerializeField] private int tier3Reward = 50;
-    [SerializeField] private Rigidbody2D rb;
-    [SerializeField] private float launchSpeed = 5f;
-    [SerializeField] private float launchDuration = 0.15f;
-    [SerializeField] private float magnetSpeed = 10f;
-    [SerializeField] private float magnetAcceleration = 30f;
     [SerializeField] private SoundDefinition collectSound;
 
     private int RewardAmount => GetRewardAmount(tier);
@@ -68,24 +63,7 @@ public class XPOrb : MagneticPickup {
 
         playerLevelUp.AddXp(RewardAmount);
         SoundManager.Play(collectSound);
-        Destroy(gameObject);
-    }
-
-    private Vector2 GetCurrentPosition() {
-        return rb != null ? rb.position : transform.position;
-    }
-
-    private void MoveOrb(Vector2 delta) {
-        if(rb != null) {
-            rb.MovePosition(rb.position + delta);
-            return;
-        }
-
-        transform.position += (Vector3)delta;
-    }
-
-    private bool IsTouchingPickupCollider(Collider2D otherCollider) {
-        return pickupCollider != null && pickupCollider.Distance(otherCollider).isOverlapped;
+        return true;
     }
 
     private Color GetTierColor(XPOrbTier orbTier) {
