@@ -88,7 +88,9 @@
 }
 
 .shop-menu__coin-counter {
-    min-width: 210px;
+    width: 150px;
+    min-width: 150px;
+    max-width: 150px;
     height: 58px;
     flex-direction: row;
     align-items: center;
@@ -97,14 +99,21 @@
     border-color: var(--menu-accent);
     border-width: 2px;
     border-radius: 4px;
-    padding-left: 14px;
-    padding-right: 18px;
+    padding-left: 8px;
+    padding-right: 10px;
 }
 
 .shop-menu__coin-icon {
-    width: 34px;
-    height: 34px;
-    margin-right: 10px;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    max-width: 28px;
+    min-height: 28px;
+    max-height: 28px;
+    align-self: center;
+    margin-right: 6px;
+    margin-top: 0;
+    margin-bottom: 0;
     -unity-background-scale-mode: scale-to-fit;
 }
 
@@ -113,6 +122,13 @@
     font-size: 32px;
     -unity-font-style: bold;
     -unity-text-align: middle-center;
+    align-self: center;
+    flex-grow: 1;
+    min-width: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 .shop-menu__back-button {
@@ -342,7 +358,10 @@
     max-width: 20px;
     min-height: 20px;
     max-height: 20px;
+    align-self: center;
     margin-right: 6px;
+    margin-top: 0;
+    margin-bottom: 0;
     -unity-background-scale-mode: scale-to-fit;
 }
 
@@ -351,6 +370,11 @@
     font-size: 22px;
     -unity-font-style: bold;
     -unity-text-align: middle-center;
+    align-self: center;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 .shop-menu__buy-button {
