@@ -73,30 +73,16 @@ public class AutoAim : MonoBehaviour
         T[] targets = FindObjectsByType<T>();
 
         foreach (T target in targets)
-        closest = FindClosestTargetOfType<Enemy>(closest, ref minDistance);
-        closest = FindClosestTargetOfType<DestructibleObstacle>(closest, ref minDistance);
-
-        return closest;
-    }
-
-    GameObject FindClosestTargetOfType<T>(GameObject currentClosest, ref float minDistance) where T : MonoBehaviour
-    {
-        T[] targets = FindObjectsByType<T>();
-
-        foreach (T target in targets)
         {
-            float distance = Vector2.Distance(transform.position, target.transform.position);
             float distance = Vector2.Distance(transform.position, target.transform.position);
 
             if (distance < minDistance && distance <= detectionRange)
             {
                 minDistance = distance;
                 currentClosest = target.gameObject;
-                currentClosest = target.gameObject;
             }
         }
 
-        return currentClosest;
         return currentClosest;
     }
 
