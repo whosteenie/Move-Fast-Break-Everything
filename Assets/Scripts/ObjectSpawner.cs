@@ -56,6 +56,8 @@ public class ObjectSpawner : MonoBehaviour
             return;
         }
         
+        float edgePadding = spawnGroup.objectSpacing * 0.5f;
+
         // Caps number of objects spawning to objectCount
         for (int i = 0; i < spawnGroup.objectCount; i++)
         {
@@ -68,8 +70,8 @@ public class ObjectSpawner : MonoBehaviour
             for (int attempt = 0; attempt < spawnGroup.maxPlacementAttempts; attempt++)
             {
                 Vector2 spawnPosition = new(
-                    Random.Range(spawnMinX, spawnMaxX),
-                    Random.Range(spawnMinY, spawnMaxY)
+                    Random.Range(spawnMinX + edgePadding, spawnMaxX - edgePadding),
+                    Random.Range(spawnMinY + edgePadding, spawnMaxY - edgePadding)
                 );
                 
                 if (!IsValidSpawnPosition(spawnGroup, spawnPosition, placedPositions))
