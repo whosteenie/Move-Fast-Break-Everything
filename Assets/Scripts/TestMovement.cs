@@ -4,6 +4,7 @@ public class TestMovement : MonoBehaviour
 {
     private Stats stats;
 
+
     public Rigidbody2D rb;
     UnityEngine.Vector2 movement;
 
@@ -34,6 +35,9 @@ public class TestMovement : MonoBehaviour
 
     public MovementStateMachine movementStateMachine;
 
+    [Header("Audio")]
+    [SerializeField] private SoundDefinition slideSound;
+
     void Update()
     {
         InputHandler();
@@ -41,6 +45,7 @@ public class TestMovement : MonoBehaviour
 
     void InputHandler()
     {
+
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
 
@@ -55,6 +60,7 @@ public class TestMovement : MonoBehaviour
         }
         if (Input.GetKeyDown(dashKey) && !isDashing && dashCooldownTimer <= 0f
         && !movementStateMachine.HasState(MovementStateMachine.State.slideDash) && !movementStateMachine.HasState(MovementStateMachine.State.slideDashDecay))
+
         {
             isDashing = true;
             dashDurationTimer = dashDuration;
@@ -65,6 +71,7 @@ public class TestMovement : MonoBehaviour
         {
             // print("In Slide Key Press");
             movementStateMachine.AddState(slideMovementSO);
+            SoundManager.Play(slideSound);
         }
         if (Input.GetKeyDown(chargeKey) && !(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay) || movementStateMachine.HasState(MovementStateMachine.State.charge) || movementStateMachine.HasState(MovementStateMachine.State.chargeDecay)))
         {
@@ -108,6 +115,7 @@ public class TestMovement : MonoBehaviour
         {
             endPos += SlideDash();
         }  
+
         if (movementStateMachine.HasState(MovementStateMachine.State.slide))
         {
             transform.localScale = new Vector3(.25f, .25f, .25f);
@@ -165,6 +173,7 @@ public class TestMovement : MonoBehaviour
     {
         //Shrink the player
         transform.localScale = new UnityEngine.Vector3(.5f,.5f,.5f);
+        // Debug.Log("In Slide Decay");
         // rb.MovePosition(rb.position + facing*(slideMovementSO.movePower)*Time.fixedDeltaTime);
         return facing.normalized*slideMovementSO.movePower*(chargeMovementSO.strengthScale*stats.damageMultiplier)*Time.fixedDeltaTime;
     }

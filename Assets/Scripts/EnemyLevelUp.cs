@@ -16,7 +16,7 @@ public class EnemyLevelUp : MonoBehaviour
         _currentLevel = 1;
 
 
-        Debug.Log($"Starting at level {_currentLevel}", this);
+        // Debug.Log($"Starting at level {_currentLevel}", this);
     }
 
 
