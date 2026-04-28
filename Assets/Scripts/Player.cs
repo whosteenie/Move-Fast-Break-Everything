@@ -57,7 +57,7 @@ public class Player : MonoBehaviour
     public void UpdateMaxHealth(int newMaxHealth)
     {
         maxHealth = newMaxHealth;
-        currentHealth = maxHealth;
+        CurrentHealth = maxHealth;
 
         if (CurrentHealth > maxHealth)
         {
