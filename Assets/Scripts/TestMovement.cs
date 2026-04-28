@@ -3,11 +3,9 @@ using UnityEngine;
 public class TestMovement : MonoBehaviour
 {
     private Stats stats;
-
+    private Vector2 moveInput;
 
     public Rigidbody2D rb;
-    UnityEngine.Vector2 movement;
-
     UnityEngine.Vector2 facing = UnityEngine.Vector2.right;
 
     public float dashSpeed = 25f;
@@ -23,11 +21,6 @@ public class TestMovement : MonoBehaviour
 
     private UnityEngine.Vector2 endPos;
 
-    // Get rid of this once we implement GameInput or whatever
-    public KeyCode dashKey = KeyCode.Space;
-    public KeyCode slideKey = KeyCode.LeftShift;
-    public KeyCode chargeKey = KeyCode.Z;
-
     // [SerializeField] private MovementSO[] movementArray;
     public MovementSO slideMovementSO;
     public MovementSO chargeMovementSO;
@@ -38,45 +31,8 @@ public class TestMovement : MonoBehaviour
     [Header("Audio")]
     [SerializeField] private SoundDefinition slideSound;
 
-    void Update() {
-        InputHandler();
-    }
-
-    void InputHandler()
+    private void Update()
     {
-
-        movement.x = Input.GetAxisRaw("Horizontal");
-        movement.y = Input.GetAxisRaw("Vertical");
-
-        if (movement != UnityEngine.Vector2.zero)
-        {
-            facing = movement.normalized;
-        }
-        if(Input.GetKeyDown(dashKey) && movementStateMachine.HasState(MovementStateMachine.State.slide) && !movementStateMachine.HasState(MovementStateMachine.State.slideDash) && !movementStateMachine.HasState(MovementStateMachine.State.slideDashDecay))
-        {
-            Debug.Log("Slide Dash Initiated");
-            movementStateMachine.AddComboState(slideDashMovementSO, MovementStateMachine.State.slide, MovementStateMachine.State.dash);
-        }
-        if (Input.GetKeyDown(dashKey) && !isDashing && dashCooldownTimer <= 0f
-        && !movementStateMachine.HasState(MovementStateMachine.State.slideDash) && !movementStateMachine.HasState(MovementStateMachine.State.slideDashDecay))
-
-        {
-            isDashing = true;
-            dashDurationTimer = dashDuration;
-        }
-        if (Input.GetKeyDown(slideKey) && !(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay)))
-        {
-            // print("In Slide Key Press");
-            movementStateMachine.AddState(slideMovementSO);
-            SoundManager.Play(slideSound);
-            SoundManager.Play(slideSound);
-        }
-        if (Input.GetKeyDown(chargeKey) && !(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay) || movementStateMachine.HasState(MovementStateMachine.State.charge) || movementStateMachine.HasState(MovementStateMachine.State.chargeDecay)))
-        {
-            // print("In Slide Key Press");
-            movementStateMachine.AddState(chargeMovementSO);
-        }
-
         if (isDashing)
         {
             dashDurationTimer -= Time.deltaTime;
@@ -96,14 +52,72 @@ public class TestMovement : MonoBehaviour
     {
         stats = GetComponent<Stats>();
     }
+
+    public void SetMoveInput(Vector2 input)
+    {
+        moveInput = input;
+
+        if (moveInput != Vector2.zero)
+        {
+            facing = moveInput.normalized;
+        }
+    }
+
+    public void TryDash()
+    {
+        if (movementStateMachine.HasState(MovementStateMachine.State.slide)
+            && !movementStateMachine.HasState(MovementStateMachine.State.slideDash)
+            && !movementStateMachine.HasState(MovementStateMachine.State.slideDashDecay))
+        {
+            Debug.Log("Slide Dash Initiated");
+            movementStateMachine.AddComboState(slideDashMovementSO, MovementStateMachine.State.slide, MovementStateMachine.State.dash);
+            return;
+        }
+
+        if (isDashing || dashCooldownTimer > 0f
+            || movementStateMachine.HasState(MovementStateMachine.State.slideDash)
+            || movementStateMachine.HasState(MovementStateMachine.State.slideDashDecay))
+        {
+            return;
+        }
+
+        isDashing = true;
+        dashDurationTimer = dashDuration;
+    }
+
+    public void TrySlide()
+    {
+        if (movementStateMachine.HasState(MovementStateMachine.State.slide)
+            || movementStateMachine.HasState(MovementStateMachine.State.slideDecay))
+        {
+            return;
+        }
+
+        movementStateMachine.AddState(slideMovementSO);
+        SoundManager.Play(slideSound);
+        SoundManager.Play(slideSound);
+    }
+
+    public void TryCharge()
+    {
+        if (movementStateMachine.HasState(MovementStateMachine.State.slide)
+            || movementStateMachine.HasState(MovementStateMachine.State.slideDecay)
+            || movementStateMachine.HasState(MovementStateMachine.State.charge)
+            || movementStateMachine.HasState(MovementStateMachine.State.chargeDecay))
+        {
+            return;
+        }
+
+        movementStateMachine.AddState(chargeMovementSO);
+    }
     //__________________________________________________________________________________________________
     void FixedUpdate()
     {
         UnityEngine.Vector2 endPos = new UnityEngine.Vector2(0,0);
         float currentMoveSpeed = (stats != null) ? stats.GetSpeed(baseMoveSpeed) : moveSpeed;
         endPos += rb.position;
-        // rb.MovePosition(rb.position + (movement * moveSpeed) * Time.fixedDeltaTime);
-        endPos += movement * (currentMoveSpeed * Time.fixedDeltaTime);
+        // rb.MovePosition(rb.position + (moveInput * moveSpeed) * Time.fixedDeltaTime);
+        endPos += moveInput * (currentMoveSpeed * Time.fixedDeltaTime);
         if (isDashing)
         {
             // rb.MovePosition(rb.position + facing * dashSpeed * Time.fixedDeltaTime);

@@ -43,6 +43,9 @@ public class GameManager : MonoBehaviour {
 
     public static GameManager Instance { get; private set; }
     public static float CurrentRunTimeSeconds => Instance != null ? Instance._currentRunTime : 0f;
+    public bool IsPaused => _isPaused;
+    public bool IsGameOver => _isGameOver;
+    public bool IsInputBlocked => _isPaused || _isGameOver;
 
     private void Awake() {
         Instance = this;

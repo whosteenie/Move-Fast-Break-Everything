@@ -134,6 +134,8 @@ GameObject:
   - component: {fileID: 4613269872209259729}
   - component: {fileID: 9007521428449226668}
   - component: {fileID: 325345116678476301}
+  - component: {fileID: 2289130739063936607}
+  - component: {fileID: 6432198701152264411}
   - component: {fileID: 1826873285969335579}
   - component: {fileID: 1269611933969825367}
   - component: {fileID: 8550780378805119090}
@@ -288,6 +290,48 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
+--- !u!114 &2289130739063936607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5711766594770397432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
+  m_Actions: {fileID: -944628639613478452, guid: e4a2d0ab0f971e44284c3422bf502dc5, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Player
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
+--- !u!114 &6432198701152264411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5711766594770397432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e884f15356254624a981ffae0476544e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInputController
 --- !u!114 &1826873285969335579
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -306,9 +350,6 @@ MonoBehaviour:
   dashCooldown: 1
   moveSpeed: 5
   baseMoveSpeed: 5
-  dashKey: 101
-  slideKey: 304
-  chargeKey: 122
   slideMovementSO: {fileID: 11400000, guid: 663f6dc32ecaa9e4e88ecf6145993f89, type: 2}
   chargeMovementSO: {fileID: 11400000, guid: a70904dca67ea5c4c99c12c2679eb9af, type: 2}
   slideDashMovementSO: {fileID: 11400000, guid: 1965c343d311d004a8c364020b74cdf7, type: 2}
@@ -363,7 +404,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Stats
   speedMultiplier: 1
-  damageMultiplier: 1
+  rangedDamageMultiplier: 1
+  defense: 0.2
+  thorns: 0.2
+  pirece: 0.2
   baseHealth: 10
   flatHealthBonus: 0
   healthMultiplier: 1
