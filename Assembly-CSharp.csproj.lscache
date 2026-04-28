@@ -50,27 +50,61 @@ TemporaryDependencyNodeTargetIdentifier=netstandard2.1
 /warnaserror+:NU1605
 
 [sourceFiles]
+Assets/Scripts/Audio/
+ SoundCategory.cs
+ SoundDefinition.cs
+ SoundManager.cs
+ UIButtonSoundBinder.cs
 Assets/Scripts/
  AutoAim.cs
+ Boss/
+  BeamAttack.cs
+  BossAttack.cs
+  BossController.cs
+  BossHealthBar.cs
+  CrossBeamAttack.cs
+  RingAttack.cs
+  RingDamage.cs
+  SafeZoneAttack.cs
+  SpinBeamAttack.cs
+  XBeamAttack.cs
  Bullet.cs
  ChunkManager.cs
- DamageTower.cs
+ DestructibleObstacle.cs
  Enemy.cs
  EnemyLevelUp.cs
  EnemySpawner.cs
  EnemyStats.cs
  GameManager.cs
- HealthTower.cs
- LevelTower.cs
+ Jump.cs
  MainMenuManager.cs
+ MainMenuShopView.cs
+ MetaCurrency.cs
  MovementStateMachine.cs
  ObstacleSpawner.cs
+ OptionsMenuView.cs
+ OptionsSliderControl.cs
+ Pickups/
+  CoinPickup.cs
+  FoodPickup.cs
+  MagneticPickup.cs
  Player.cs
+ PlayerHealthBar.cs
  PlayerLevelUp.cs
  ScriptableObjects/MovementSO.cs
- SpeedTower.cs
+ ShopPowerUpDefinition.cs
+ ShopPowerUpProgress.cs
  Stats.cs
  TestMovement.cs
+ Towers/
+  Tower_Agility.cs
+  Tower_Base.cs
+  Tower_Defense.cs
+  Tower_Dex.cs
+  Tower_Health.cs
+  Tower_Level.cs
+  Tower_Strength.cs
+ TowerSpawner.cs
  XPOrb.cs
 Temp/obj/Assembly-CSharp/.NETStandard,Version=v2.1.AssemblyAttributes.cs
 
@@ -432,7 +466,7 @@ Library/ScriptAssemblies/
  Unity.Properties.SourceGenerator.dll
  Unity.SourceGenerators.dll
  Unity.UIToolkit.SourceGenerator.dll
-C:/Users/andre/.vscode/extensions/visualstudiotoolsforunity.vstuc-1.2.1/Analyzers/Microsoft.Unity.Analyzers.dll
+C:/Users/andre/.vscode/extensions/visualstudiotoolsforunity.vstuc-1.2.2/Analyzers/Microsoft.Unity.Analyzers.dll
 
 [analyzerConfigFiles]
 Temp/obj/Assembly-CSharp/Assembly-CSharp.GeneratedMSBuildEditorConfig.editorconfig
