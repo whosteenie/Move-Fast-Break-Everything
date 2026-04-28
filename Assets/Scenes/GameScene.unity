@@ -332,10 +332,10 @@ MonoBehaviour:
   cellSize: 1
   loadRadius: 1
   unloadRadius: 10
-  noiseScale: 30
-  dangerNoiseScale: 30
+  noiseScale: 20
+  dangerNoiseScale: 20
   deathMax: 0.1
-  hazardMax: 0.2
+  hazardMax: 0.15
   earthMax: 0.4
 --- !u!114 &636936950
 MonoBehaviour:
@@ -428,9 +428,10 @@ MonoBehaviour:
   - {fileID: 5539367028798991948, guid: 9e230f857f49d0041812c49ef7ef9bf2, type: 3}
   chunkManager: {fileID: 636936949}
   towerCount: 5
-  towerSpawnChance: 0.25
+  towerSpawnChance: 0.1
   playerSpawnPoint: {x: 0, y: 0}
   towerSpacing: 4
+  obstacleSpacing: 1.5
   playerSpacing: 20
   maxPlacementAttempts: 10
 --- !u!1001 &884647736

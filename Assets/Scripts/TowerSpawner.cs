@@ -8,6 +8,7 @@ public class TowerSpawner : MonoBehaviour
     [SerializeField] private float towerSpawnChance = 0.25f;
     [SerializeField] private Vector2 playerSpawnPoint = Vector2.zero;
     [SerializeField] private float towerSpacing = 4f; // Empty space between towers
+    [SerializeField] private float obstacleSpacing = 1.5f; // Empty space between obstacles
     [SerializeField] private float playerSpacing = 20f; // Empty space around player spawn
     [SerializeField] private int maxPlacementAttempts = 10;
     
@@ -53,7 +54,7 @@ public class TowerSpawner : MonoBehaviour
                     Random.Range(spawnMinY, spawnMaxY)
                 );
                 
-                if (!IsValidSpawnPosition(spawnPosition, placedPositions, placedCount))
+                if (!IsValidSpawnPosition(spawnPosition, placedPositions, placedCount, parent))
                 {
                     continue;
                 }
@@ -67,7 +68,7 @@ public class TowerSpawner : MonoBehaviour
         }
     }
 
-    private bool IsValidSpawnPosition(Vector2 candidatePosition, Vector2[] placedPositions, int placedCount)
+    private bool IsValidSpawnPosition(Vector2 candidatePosition, Vector2[] placedPositions, int placedCount, Transform parent)
     {
         // Towers will only spawn on Earth and Tech terrain
         if (!chunkManager.IsEarthTerrain(candidatePosition) && !chunkManager.IsTechTerrain(candidatePosition))
@@ -83,6 +84,16 @@ public class TowerSpawner : MonoBehaviour
         for (int i = 0; i < placedCount; i++)
         {
             if (Vector2.Distance(candidatePosition, placedPositions[i]) < towerSpacing)
+            {
+                return false;
+            }
+        }
+
+        // Checks if tower spawn is too close to obstacleSpacing
+        Collider2D[] nearbyColliders = Physics2D.OverlapCircleAll(candidatePosition, obstacleSpacing);
+        for (int i = 0; i < nearbyColliders.Length; i++)
+        {
+            if (nearbyColliders[i].transform.IsChildOf(parent))
             {
                 return false;
             }
