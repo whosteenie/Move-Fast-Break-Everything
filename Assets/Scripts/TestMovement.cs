@@ -38,8 +38,7 @@ public class TestMovement : MonoBehaviour
     [Header("Audio")]
     [SerializeField] private SoundDefinition slideSound;
 
-    void Update()
-    {
+    void Update() {
         InputHandler();
     }
 
@@ -65,12 +64,11 @@ public class TestMovement : MonoBehaviour
             isDashing = true;
             dashDurationTimer = dashDuration;
         }
-        if(Input.GetKeyDown(slideKey) && 
-        !(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay)
-        || movementStateMachine.HasState(MovementStateMachine.State.slideDash) || movementStateMachine.HasState(MovementStateMachine.State.slideDashDecay)))
+        if (Input.GetKeyDown(slideKey) && !(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay)))
         {
             // print("In Slide Key Press");
             movementStateMachine.AddState(slideMovementSO);
+            SoundManager.Play(slideSound);
             SoundManager.Play(slideSound);
         }
         if (Input.GetKeyDown(chargeKey) && !(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay) || movementStateMachine.HasState(MovementStateMachine.State.charge) || movementStateMachine.HasState(MovementStateMachine.State.chargeDecay)))
@@ -106,7 +104,7 @@ public class TestMovement : MonoBehaviour
         endPos += rb.position;
         // rb.MovePosition(rb.position + (movement * moveSpeed) * Time.fixedDeltaTime);
         endPos += movement * (currentMoveSpeed * Time.fixedDeltaTime);
-        if (isDashing && !movementStateMachine.HasState(MovementStateMachine.State.slideDash))
+        if (isDashing)
         {
             // rb.MovePosition(rb.position + facing * dashSpeed * Time.fixedDeltaTime);
             endPos += Dash();
@@ -156,8 +154,8 @@ public class TestMovement : MonoBehaviour
         //Unshrink the player
         // Debug.Log("In Slide Decay");
         transform.localScale = new Vector3(.5f,.5f,.5f);
-        rb.MovePosition(rb.position + facing*(slideMovementSO.movePower/2)*Time.fixedDeltaTime);
-        return facing.normalized*(-slideMovementSO.movePower/4)*Time.fixedDeltaTime;
+        rb.MovePosition(rb.position + facing * (slideMovementSO.movePower/2 * Time.fixedDeltaTime));
+        return facing * (-slideMovementSO.movePower/4 * Time.fixedDeltaTime);
     }
 
     private Vector2 Charge()
@@ -166,7 +164,7 @@ public class TestMovement : MonoBehaviour
         transform.localScale = new UnityEngine.Vector3(.75f, .75f, .75f);
         rb.MovePosition(rb.position + facing * slideMovementSO.movePower / 2 * Time.fixedDeltaTime);
         //Moves you backwards a bit which can be used to do chargeswitch tech! EEEE!
-        return facing.normalized*(-slideMovementSO.movePower/1.5f)*Time.fixedDeltaTime;
+        return facing * (-slideMovementSO.movePower/1.5f * Time.fixedDeltaTime);
     }
 
     private Vector2 ChargeDecay()
