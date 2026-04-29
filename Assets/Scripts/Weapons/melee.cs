@@ -13,6 +13,8 @@ public class Melee : MonoBehaviour
 
     private Collider2D hitbox;
 
+    private float pierce=1;
+
     private readonly List<Collider2D> targets = new List<Collider2D>();
 
     void Start()
@@ -50,7 +52,7 @@ public class Melee : MonoBehaviour
             Enemy enemy = target.GetComponentInParent<Enemy>();
             if (enemy != null)
             {
-                enemy.TakeDamage(damage);
+                enemy.TakeDamage(damage,pierce);
                 continue;
             }
 
