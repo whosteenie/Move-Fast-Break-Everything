@@ -4944,9 +4944,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingLayerID: 412345675
+  m_SortingLayer: 5
+  m_SortingOrder: 2000
   m_MaskInteraction: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 0.22352941, g: 0, b: 1, a: 1}
@@ -5267,8 +5267,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Player
   visualSpriteRenderer: {fileID: 2804115349887357000}
   maxHealth: 10
-  invulnerabilityDuration: 1
-  flashInterval: 0.1
+  invulnerabilityDuration: 0.1
+  flashInterval: 0.05
   flashAlpha: 0.35
   hurtSound: {fileID: 11400000, guid: 2ea0d9881c835c04ab6efe298af23aa7, type: 2}
 --- !u!114 &314159265358979323
@@ -5281,10 +5281,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4dbdd913bf664f1bb72d19ced3c71f02, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TerrainDamage
   chunkManager: {fileID: 0}
   player: {fileID: -6438699549702643509}
+  jump: {fileID: 0}
   hazardDamage: 1
   deathDamage: 2
 --- !u!114 &6769700025945905945
@@ -5320,6 +5321,11 @@ MonoBehaviour:
   scale: 0.2
   zOffset: -1
   shadow: {fileID: 8644592963810363188}
+  groundedShadowSortingLayerName: GroundShadow
+  airborneShadowSortingLayerName: AirborneShadow
+  groundedShadowSortOffset: 650
+  airborneShadowSortOffset: 850
+  minimumShadowSortingOrder: 0
   groundedLayer: Grounded
   airborneLayer: Airborne
   spriteTransform: {fileID: 4750889647170226346}
