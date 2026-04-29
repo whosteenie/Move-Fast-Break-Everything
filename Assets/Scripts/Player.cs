@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
     private const int debugHealAmount = 10;
     private bool _isInvulnerable;
     private Coroutine _invulnerabilityRoutine;
+    public bool IsDead { get; private set; }
 
     public event Action<int, int> OnHealthChanged;
 
@@ -55,18 +56,14 @@ public class Player : MonoBehaviour
 
     public void Update()
     {
-        if (!Input.GetKeyDown(KeyCode.Q))
-        {
-            return;
-        }
 
-        Heal(debugHealAmount);
 
     }
 
     public void UpdateMaxHealth(int newMaxHealth)
     {
         maxHealth = newMaxHealth;
+        CurrentHealth = maxHealth;
 
         if (CurrentHealth > maxHealth)
         {
@@ -90,22 +87,31 @@ public class Player : MonoBehaviour
 
 
 
-    public void TakeDamage(int damageTaken)
+    public int TakeDamage(int damageTaken)
     {
         if (_isInvulnerable)
         {
-            return;
+            return 0;
         }
 
-        CurrentHealth -= damageTaken;
+        int finalDamage = damageTaken;
+
+        if (stats != null)
+        {
+            finalDamage = stats.CalculateDamageTaken(damageTaken);
+        }
+        CurrentHealth -= finalDamage;
         CurrentHealth = Mathf.Max(CurrentHealth, 0);
         SoundManager.Play(hurtSound);
-        Debug.Log("Player HP: " + CurrentHealth);
+        Debug.Log($"Player took {finalDamage} damage. HP: {CurrentHealth}");
         NotifyHealthChanged();
+
+        int thornsDamage = stats != null ? stats.GetThornsDamage(damageTaken) : 0;
+
         if (CurrentHealth <= 0)
         {
             Die();
-            return;
+            return finalDamage;
         }
 
         if (_invulnerabilityRoutine != null)
@@ -114,10 +120,12 @@ public class Player : MonoBehaviour
         }
 
         _invulnerabilityRoutine = StartCoroutine(InvulnerabilityFlashRoutine());
+        return finalDamage;
     }
 
     private void Die()
     {
+        IsDead = true;
         RestoreSpriteColors();
         GameManager.Instance.ShowGameOver();
         Destroy(gameObject);

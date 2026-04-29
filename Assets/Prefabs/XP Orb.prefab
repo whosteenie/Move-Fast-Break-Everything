@@ -185,6 +185,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad2ca2bafd7791e4ca729bb3836fd784, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::XPOrb
+  rb: {fileID: 3543371063137826531}
+  pickupCollider: {fileID: 8853686799882276811}
+  launchSpeed: 5
+  launchDuration: 0.15
+  magnetSpeed: 10
+  magnetAcceleration: 30
   tier: 0
   spriteRenderer: {fileID: 7613546048959103778}
   pickupCollider: {fileID: 8853686799882276811}

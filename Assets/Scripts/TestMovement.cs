@@ -3,11 +3,9 @@ using UnityEngine;
 public class TestMovement : MonoBehaviour
 {
     private Stats stats;
-
+    private Vector2 moveInput;
 
     public Rigidbody2D rb;
-    UnityEngine.Vector2 movement;
-
     UnityEngine.Vector2 facing = UnityEngine.Vector2.right;
 
     public float dashSpeed = 25f;
@@ -23,49 +21,21 @@ public class TestMovement : MonoBehaviour
 
     private UnityEngine.Vector2 endPos;
 
-    // Get rid of this once we implement GameInput or whatever
-    public KeyCode dashKey = KeyCode.Space;
-    public KeyCode slideKey = KeyCode.LeftShift;
-    public KeyCode chargeKey = KeyCode.Z;
-
     // [SerializeField] private MovementSO[] movementArray;
     public MovementSO slideMovementSO;
     public MovementSO chargeMovementSO;
+    public MovementSO slideDashMovementSO;
 
     public MovementStateMachine movementStateMachine;
 
+    public ParticleSystem failureParticle;
+
     [Header("Audio")]
     [SerializeField] private SoundDefinition slideSound;
+    [SerializeField] private SoundDefinition dashSound;
 
-    void Update()
+    private void Update()
     {
-
-
-        movement.x = Input.GetAxisRaw("Horizontal");
-        movement.y = Input.GetAxisRaw("Vertical");
-
-        if (movement != UnityEngine.Vector2.zero)
-        {
-            facing = movement.normalized;
-        }
-
-        if (Input.GetKeyDown(dashKey) && !isDashing && dashCooldownTimer <= 0f)
-        {
-            isDashing = true;
-            dashDurationTimer = dashDuration;
-        }
-        if (Input.GetKeyDown(slideKey) && !(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay)))
-        {
-            // print("In Slide Key Press");
-            movementStateMachine.AddState(slideMovementSO);
-            SoundManager.Play(slideSound);
-        }
-        if (Input.GetKeyDown(chargeKey) && !(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay) || movementStateMachine.HasState(MovementStateMachine.State.charge) || movementStateMachine.HasState(MovementStateMachine.State.chargeDecay)))
-        {
-            // print("In Slide Key Press");
-            movementStateMachine.AddState(chargeMovementSO);
-        }
-
         if (isDashing)
         {
             dashDurationTimer -= Time.deltaTime;
@@ -85,19 +55,88 @@ public class TestMovement : MonoBehaviour
     {
         stats = GetComponent<Stats>();
     }
+
+    public void SetMoveInput(Vector2 input)
+    {
+        moveInput = Vector2.ClampMagnitude(input, 1f);
+
+        if (moveInput != Vector2.zero)
+        {
+            facing = moveInput.normalized;
+        }
+    }
+
+    public void TryDash()
+    {
+        if (movementStateMachine.HasState(MovementStateMachine.State.slide)
+            && !movementStateMachine.HasState(MovementStateMachine.State.slideDash)
+            && !movementStateMachine.HasState(MovementStateMachine.State.slideDashDecay))
+        {
+            Debug.Log("Slide Dash Initiated");
+            movementStateMachine.AddComboState(slideDashMovementSO, MovementStateMachine.State.slide, MovementStateMachine.State.dash);
+            return;
+        }
+        else 
+        {
+            MoveFail();
+        }
+
+        if (isDashing || dashCooldownTimer > 0f
+            || movementStateMachine.HasState(MovementStateMachine.State.slideDash)
+            || movementStateMachine.HasState(MovementStateMachine.State.slideDashDecay))
+        {
+            MoveFail();
+            return;
+        }
+        
+
+        isDashing = true;
+        dashDurationTimer = dashDuration;
+    }
+
+    public void TrySlide()
+    {
+        if (movementStateMachine.HasState(MovementStateMachine.State.slide)
+            || movementStateMachine.HasState(MovementStateMachine.State.slideDecay))
+        {
+            MoveFail();
+            return;
+        }
+
+        movementStateMachine.AddState(slideMovementSO);
+        SoundManager.Play(slideSound);
+    }
+
+    public void TryCharge()
+    {
+        if (movementStateMachine.HasState(MovementStateMachine.State.slide)
+            || movementStateMachine.HasState(MovementStateMachine.State.slideDecay)
+            || movementStateMachine.HasState(MovementStateMachine.State.charge)
+            || movementStateMachine.HasState(MovementStateMachine.State.chargeDecay))
+        {
+            MoveFail();
+            return;
+        }
+
+        movementStateMachine.AddState(chargeMovementSO);
+    }
     //__________________________________________________________________________________________________
     void FixedUpdate()
     {
         UnityEngine.Vector2 endPos = new UnityEngine.Vector2(0,0);
         float currentMoveSpeed = (stats != null) ? stats.GetSpeed(baseMoveSpeed) : moveSpeed;
         endPos += rb.position;
-        // rb.MovePosition(rb.position + (movement * moveSpeed) * Time.fixedDeltaTime);
-        endPos += movement * (currentMoveSpeed * Time.fixedDeltaTime);
+        // rb.MovePosition(rb.position + (moveInput * moveSpeed) * Time.fixedDeltaTime);
+        endPos += moveInput * (currentMoveSpeed * Time.fixedDeltaTime);
         if (isDashing)
         {
             // rb.MovePosition(rb.position + facing * dashSpeed * Time.fixedDeltaTime);
-            endPos += facing * (dashSpeed * Time.fixedDeltaTime);
+            endPos += Dash();
         }
+        if (movementStateMachine.HasState(MovementStateMachine.State.slideDash))
+        {
+            endPos += SlideDash();
+        }  
 
         if (movementStateMachine.HasState(MovementStateMachine.State.slide))
         {
@@ -120,13 +159,22 @@ public class TestMovement : MonoBehaviour
         rb.MovePosition(endPos);
     }
 
+    private Vector2 Dash()
+    {
+        failureParticle.startColor = Color.blue;
+        failureParticle.Play();
+        return facing * dashSpeed*(slideDashMovementSO.agilityScale*stats.speedMultiplier * Time.fixedDeltaTime);
+    }
+
     private Vector2 Slide()
     {
         //Shrink the Player
         // Debug.Log("In Slide");
+        failureParticle.startColor = Color.red;
+        failureParticle.Play();
         transform.localScale = new Vector3(.25f, .25f, .25f);
         // rb.MovePosition(rb.position + facing*slideMovementSO.movePower*Time.fixedDeltaTime);
-        return facing * (slideMovementSO.movePower * Time.fixedDeltaTime);
+        return facing.normalized*slideMovementSO.movePower*(slideMovementSO.agilityScale*stats.speedMultiplier)*Time.fixedDeltaTime;
     }
 
     private Vector2 SlideDecay()
@@ -142,6 +190,11 @@ public class TestMovement : MonoBehaviour
     {
         //Bulk the Player
         transform.localScale = new UnityEngine.Vector3(.75f, .75f, .75f);
+
+        //Just for testing play the failure particle
+        failureParticle.startColor = Color.green;
+        failureParticle.Play();
+        
         rb.MovePosition(rb.position + facing * slideMovementSO.movePower / 2 * Time.fixedDeltaTime);
         //Moves you backwards a bit which can be used to do chargeswitch tech! EEEE!
         return facing * (-slideMovementSO.movePower/1.5f * Time.fixedDeltaTime);
@@ -150,10 +203,24 @@ public class TestMovement : MonoBehaviour
     private Vector2 ChargeDecay()
     {
         //Shrink the player
-        transform.localScale = new UnityEngine.Vector3(.5f, .5f, .5f);
+        transform.localScale = new UnityEngine.Vector3(.5f,.5f,.5f);
         // Debug.Log("In Slide Decay");
         // rb.MovePosition(rb.position + facing*(slideMovementSO.movePower)*Time.fixedDeltaTime);
-        return facing * (slideMovementSO.movePower * Time.fixedDeltaTime);
+        return facing.normalized*slideMovementSO.movePower*(chargeMovementSO.strengthScale*stats.damageMultiplier)*Time.fixedDeltaTime;
+    }
+
+    private Vector2 SlideDash()
+    {
+        failureParticle.startColor = Color.purple;
+        failureParticle.Play();
+        Debug.Log("In Slide Dash");
+        return facing.normalized*slideDashMovementSO.movePower*(slideDashMovementSO.agilityScale*stats.speedMultiplier)*Time.fixedDeltaTime;
+    }
+
+    private void MoveFail()
+    {
+        failureParticle.startColor = Color.black;
+        failureParticle.Play();
     }
     //__________________________________________________________________________________________________
 }

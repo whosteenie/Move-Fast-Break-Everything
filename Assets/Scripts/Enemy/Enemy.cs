@@ -15,6 +15,8 @@ public class Enemy : MonoBehaviour
 
 
     public float maxHealth = 10;
+    private float damageCooldown = 1f;
+    private float damageTimer = 0f;
 
     private float currentHealth;
 
@@ -24,7 +26,6 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
-        currentHealth = maxHealth;
         if (stats != null)
         {
             maxHealth = stats.maxHealthStat;
@@ -38,21 +39,26 @@ public class Enemy : MonoBehaviour
     }
 
 
-    public void TakeDamage(float damageTaken)
+    public void TakeDamage(int damageTaken, float pierce)
     {
-        if (damageTaken <= 0)
+
+
+        int finalDamage = damageTaken;
+
+        if (stats != null)
         {
-            return;
+            finalDamage = stats.CalculateDamageTaken(damageTaken, pierce);
         }
 
-        currentHealth -= damageTaken;
-        currentHealth = Mathf.Max(currentHealth, 0);
+        currentHealth -= finalDamage;
         SoundManager.Play(hurtSound);
-        //Debug.Log("Enemy HP: " + currentHealth);
+
         if (currentHealth <= 0)
         {
             Die();
         }
+
+
     }
 
     private void Die()
@@ -156,13 +162,30 @@ public class Enemy : MonoBehaviour
 
     void OnCollisionStay2D(Collision2D collision)
     {
-        float damageMultiplier = (stats != null) ? stats.damageMultiplier : 2f;
+        damageTimer -= Time.deltaTime;
+
+        if (damageTimer > 0f)
+        {
+            return;
+        }
+
         if (collision.gameObject != null && collision.gameObject.CompareTag("Player"))
         {
             Player player = collision.gameObject.GetComponent<Player>();
             if (player != null)
             {
-                player.TakeDamage((int)(baseDamage * damageMultiplier));
+                float damageMultiplier = (stats != null) ? stats.damageMultiplier : 2f;
+                int damage = (int)(baseDamage * damageMultiplier);
+                int finalDamageTaken = player.TakeDamage(damage);
+
+                Stats playerStats = player.GetComponent<Stats>();
+
+                if (playerStats != null && finalDamageTaken > 0)
+                {
+                    int thornsDamage = playerStats.GetThornsDamage(finalDamageTaken);
+                    TakeDamage(thornsDamage, 0f);
+                }
+                damageTimer = damageCooldown;
             }
             //Leads to fun lose screen by accident, all the enemies just fall down.
         }

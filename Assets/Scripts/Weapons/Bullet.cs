@@ -7,40 +7,26 @@ public class Bullet : MonoBehaviour
     public float speed = 10f;
     public float lifetime = 3f;
     public int damage;
-   
+    private float pierce;
+
     private Vector2 moveDirection;
-    private GameObject owner;
-    public WeaponSO weaponSO;
-
-    private Stats stats;
 
 
-
-
-    public void Initialize(Vector2 direction, float bulletSpeed, WeaponSO weapon, GameObject bulletOwner)
-    {
-        weaponSO = weapon;
-        owner = bulletOwner;
-        stats = owner.GetComponent<Stats>();
-
-        moveDirection = direction.normalized;
-        speed = bulletSpeed;
-
-        RotateBullet();
-        Destroy(gameObject, lifetime);
-    }
-
-    void Awake()
-    {
-        stats = GetComponentInParent<Stats>();
-       
-
-    }
 
     void Update()
     {
 
         transform.position += (Vector3)(moveDirection * (speed * Time.deltaTime));
+    }
+    public void SetDirection(Vector2 direction, float bulletSpeed, int damageAmount, float pierceAmount)
+    {
+        moveDirection = direction.normalized;
+        speed = bulletSpeed;
+        damage = damageAmount;
+        pierce = pierceAmount;
+
+        RotateBullet();
+        Destroy(gameObject, lifetime);
     }
 
     void RotateBullet()
@@ -53,38 +39,24 @@ public class Bullet : MonoBehaviour
 
 
 
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (owner == null)
-        {
-            Debug.LogError("OWNER IS NULL on bullet!");
-            return;
-        }
-
-        damage = weaponSO.baseDamage;
-        if (stats != null)
-        {
-            damage = Mathf.RoundToInt(damage * stats.damageMultiplier);
-        }
-        if (collision.gameObject == owner) return;
-
-        Player player = collision.GetComponent<Player>();
         Enemy enemy = collision.GetComponent<Enemy>();
         BossController boss = collision.GetComponent<BossController>();
+        DestructibleObstacle destructibleObstacle = collision.GetComponent<DestructibleObstacle>();
 
-        if (owner.GetComponent<Enemy>() != null && player != null)
+        if (enemy != null)
         {
-            player.TakeDamage(damage);
-            Destroy(gameObject);
-        }
-        else if (owner.GetComponent<Player>() != null && enemy != null)
-        {
-            enemy.TakeDamage(damage);
+            enemy.TakeDamage(damage, pierce);
+            Debug.Log("Bullet hit enemy for " + damage + " damage and" + pierce + "pierce damage");
             Destroy(gameObject);
         } else if (boss != null) {
             boss.TakeDamage(damage);
             Debug.Log("Bullet hit enemy for " + damage + " damage.");
+            Destroy(gameObject);
+        } else if (destructibleObstacle != null) {
+            destructibleObstacle.TakeDamage(damage);
+            Debug.Log("Bullet hit obstacle for " + damage + " damage.");
             Destroy(gameObject);
         }
     }

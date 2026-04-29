@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34d4617e45eda8a4db9496c291253229, type: 3}
   m_Name: XPOrbSound
   m_EditorClassIdentifier: Assembly-CSharp::SoundDefinition
-  clip: {fileID: 8300000, guid: bef0a9df377d13f48ad41921f23d800d, type: 3}
+  clip: {fileID: 8300000, guid: e16e937f303fac24ca5b2b14e3510420, type: 3}
   category: 0
-  baseVolume: 0.1
+  baseVolume: 0.3
   maxSimultaneousVoices: 6
   minReplayDelay: 0.02

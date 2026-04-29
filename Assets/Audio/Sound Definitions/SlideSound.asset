@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SoundDefinition
   clip: {fileID: 8300000, guid: 4d91d3a1a9ff2f544bbb06843dc26d45, type: 3}
   category: 0
-  baseVolume: 0.2
+  baseVolume: 0.1
   maxSimultaneousVoices: 3
   minReplayDelay: 0

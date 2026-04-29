@@ -17,9 +17,9 @@ TagManager:
   - Boss
   - Grounded
   - Airborne
-  - 
-  - 
-  - 
+  - Enemy
+  - PlayerCollider
+  - EnemyCollider
   - 
   - 
   - 
@@ -42,6 +42,24 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: GroundShadow
+    uniqueID: 412345671
+    locked: 0
+  - name: LowGrounded
+    uniqueID: 412345672
+    locked: 0
+  - name: Pickups
+    uniqueID: 412345673
+    locked: 0
+  - name: AirborneShadow
+    uniqueID: 412345674
+    locked: 0
+  - name: Actors
+    uniqueID: 412345675
+    locked: 0
+  - name: WorldUI
+    uniqueID: 412345676
     locked: 0
   m_RenderingLayers:
   - Default

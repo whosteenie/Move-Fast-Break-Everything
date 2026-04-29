@@ -15,14 +15,13 @@ public class EnemyLevelUp : MonoBehaviour
     {
         _currentLevel = 1;
 
-
-        Debug.Log($"Starting at level {_currentLevel}", this);
     }
 
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Z))
+        // TODO: Remove this debug code
+        if (Input.GetKeyDown(KeyCode.V))
         {
             Debug.Log($"Current enemy level at {_currentLevel}", this);
             LevelUp(LevelUpamount);
