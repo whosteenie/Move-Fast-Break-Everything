@@ -4,6 +4,7 @@ public class DestructibleObstacle : MonoBehaviour
 {
     [Header("Stats")]
     [SerializeField] private int maxHealth = 3;
+    [SerializeField] private SoundDefinition hurtSound;
 
     [Header("Drops")]
     [SerializeField] private GameObject coinDropPrefab;
@@ -27,6 +28,7 @@ public class DestructibleObstacle : MonoBehaviour
 
         _currentHealth -= damageTaken;
         _currentHealth = Mathf.Max(_currentHealth, 0);
+        SoundManager.Play(hurtSound);
 
         if (_currentHealth <= 0)
         {
