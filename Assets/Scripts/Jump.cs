@@ -37,7 +37,7 @@ public class Jump : MonoBehaviour
 
     public bool IsJumping => isJumping;
 
-    void Awake()
+    private void Awake()
     {
         spriteBasePosition = spriteTransform.localPosition;
         spriteBaseScale = spriteTransform.localScale;
@@ -47,18 +47,27 @@ public class Jump : MonoBehaviour
         UpdateShadowSorting();
     }
 
-    void Update()
+    private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && !isJumping)
-            StartJump();
-
         if (isJumping)
+        {
             UpdateJump();
-
+        }
+        
         UpdateShadowSorting();
     }
 
-    void StartJump()
+    public void TryJump()
+    {
+        if (isJumping)
+        {
+            return;
+        }
+
+        StartJump();
+    }
+
+    private void StartJump()
     {
         isJumping = true;
         jumpTimer = 0f;
