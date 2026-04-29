@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: -1506503626551985284}
   - component: {fileID: 4007799153845805741}
   - component: {fileID: 5636091246019794619}
+  - component: {fileID: 3716249910023456789}
   m_Layer: 0
   m_Name: Bullet
   m_TagString: Untagged
@@ -183,3 +184,24 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
+--- !u!114 &3716249910023456789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3862674274435588204}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa9db57ddc0b4bb4b0a6f1f8fe1f7a21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::YSortRendererGroup
+  sortAnchor: {fileID: 9046625418497711139}
+  sortAnchorLocalOffset: {x: 0, y: 0, z: 0}
+  sortingLayerName: Pickups
+  sortOrderOffset: 5000
+  minimumSortingOrder: 0
+  sortPrecision: 100
+  renderers:
+  - renderer: {fileID: 8621503674608710641}
+    orderOffset: 0

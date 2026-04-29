@@ -201,9 +201,9 @@ MonoBehaviour:
   tier1Color: {r: 0.09, g: 0.52, b: 0.85, a: 1}
   tier2Color: {r: 0.22, g: 0.82, b: 0.33, a: 1}
   tier3Color: {r: 0.88, g: 0.24, b: 0.24, a: 1}
-  tier1Reward: 20
-  tier2Reward: 35
-  tier3Reward: 50
+  tier1Reward: 7
+  tier2Reward: 13
+  tier3Reward: 20
   collectSound: {fileID: 11400000, guid: 84685752f8aea91468d6668fd4d36184, type: 2}
 --- !u!1 &7048327071737929163
 GameObject:

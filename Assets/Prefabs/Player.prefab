@@ -5268,8 +5268,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Player
   visualSpriteRenderer: {fileID: 2804115349887357000}
   maxHealth: 10
-  invulnerabilityDuration: 1
-  flashInterval: 0.1
+  invulnerabilityDuration: 0.1
+  flashInterval: 0.05
   flashAlpha: 0.35
   hurtSound: {fileID: 11400000, guid: 2ea0d9881c835c04ab6efe298af23aa7, type: 2}
 --- !u!114 &314159265358979323

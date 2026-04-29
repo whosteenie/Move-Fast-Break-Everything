@@ -34,6 +34,21 @@ public class TestMovement : MonoBehaviour
     [SerializeField] private SoundDefinition slideSound;
     [SerializeField] private SoundDefinition dashSound;
 
+    private bool IsSliding => HasMovementState(MovementStateMachine.State.slide);
+    private bool IsSlideDecaying => HasMovementState(MovementStateMachine.State.slideDecay);
+    private bool IsSlidingOrDecaying => IsSliding || IsSlideDecaying;
+    private bool IsSlideDashing => HasMovementState(MovementStateMachine.State.slideDash);
+    private bool IsSlideDashDecaying => HasMovementState(MovementStateMachine.State.slideDashDecay);
+    private bool IsInSlideDashState => IsSlideDashing || IsSlideDashDecaying;
+    private bool IsCharging => HasMovementState(MovementStateMachine.State.charge);
+    private bool IsChargeDecaying => HasMovementState(MovementStateMachine.State.chargeDecay);
+    private bool IsInChargeState => IsCharging || IsChargeDecaying;
+
+    private bool HasMovementState(MovementStateMachine.State state)
+    {
+        return movementStateMachine.HasState(state);
+    }
+
     private void Update()
     {
         if (isDashing)
@@ -68,9 +83,7 @@ public class TestMovement : MonoBehaviour
 
     public void TryDash()
     {
-        if (movementStateMachine.HasState(MovementStateMachine.State.slide)
-            && !movementStateMachine.HasState(MovementStateMachine.State.slideDash)
-            && !movementStateMachine.HasState(MovementStateMachine.State.slideDashDecay))
+        if (IsSliding && !IsInSlideDashState)
         {
             Debug.Log("Slide Dash Initiated");
             movementStateMachine.AddComboState(slideDashMovementSO, MovementStateMachine.State.slide, MovementStateMachine.State.dash);
@@ -81,9 +94,7 @@ public class TestMovement : MonoBehaviour
             MoveFail();
         }
 
-        if (isDashing || dashCooldownTimer > 0f
-            || movementStateMachine.HasState(MovementStateMachine.State.slideDash)
-            || movementStateMachine.HasState(MovementStateMachine.State.slideDashDecay))
+        if (isDashing || dashCooldownTimer > 0f || IsInSlideDashState)
         {
             MoveFail();
             return;
@@ -96,8 +107,7 @@ public class TestMovement : MonoBehaviour
 
     public void TrySlide()
     {
-        if (movementStateMachine.HasState(MovementStateMachine.State.slide)
-            || movementStateMachine.HasState(MovementStateMachine.State.slideDecay))
+        if (IsSlidingOrDecaying)
         {
             MoveFail();
             return;
@@ -109,10 +119,7 @@ public class TestMovement : MonoBehaviour
 
     public void TryCharge()
     {
-        if (movementStateMachine.HasState(MovementStateMachine.State.slide)
-            || movementStateMachine.HasState(MovementStateMachine.State.slideDecay)
-            || movementStateMachine.HasState(MovementStateMachine.State.charge)
-            || movementStateMachine.HasState(MovementStateMachine.State.chargeDecay))
+        if (IsSlidingOrDecaying || IsInChargeState)
         {
             MoveFail();
             return;
@@ -133,25 +140,25 @@ public class TestMovement : MonoBehaviour
             // rb.MovePosition(rb.position + facing * dashSpeed * Time.fixedDeltaTime);
             endPos += Dash();
         }
-        if (movementStateMachine.HasState(MovementStateMachine.State.slideDash))
+        if (IsSlideDashing)
         {
             endPos += SlideDash();
         }  
 
-        if (movementStateMachine.HasState(MovementStateMachine.State.slide))
+        if (IsSliding)
         {
             transform.localScale = new Vector3(.25f, .25f, .25f);
             endPos += Slide();
         }
-        if (movementStateMachine.HasState(MovementStateMachine.State.slideDecay))
+        if (IsSlideDecaying)
         {
             endPos += SlideDecay();
         }
-        if (movementStateMachine.HasState(MovementStateMachine.State.charge) && !(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay)))
+        if (IsCharging && !IsSlidingOrDecaying)
         {
             endPos += Charge();
         }
-        if (movementStateMachine.HasState(MovementStateMachine.State.chargeDecay) && !(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay)))
+        if (IsChargeDecaying && !IsSlidingOrDecaying)
         {
             endPos += ChargeDecay();
         }
@@ -163,7 +170,7 @@ public class TestMovement : MonoBehaviour
     {
         failureParticle.startColor = Color.blue;
         failureParticle.Play();
-        return facing * dashSpeed*(slideDashMovementSO.agilityScale*stats.speedMultiplier * Time.fixedDeltaTime);
+        return facing * (dashSpeed * (slideDashMovementSO.agilityScale*stats.speedMultiplier * Time.fixedDeltaTime));
     }
 
     private Vector2 Slide()
@@ -174,7 +181,7 @@ public class TestMovement : MonoBehaviour
         failureParticle.Play();
         transform.localScale = new Vector3(.25f, .25f, .25f);
         // rb.MovePosition(rb.position + facing*slideMovementSO.movePower*Time.fixedDeltaTime);
-        return facing.normalized*slideMovementSO.movePower*(slideMovementSO.agilityScale*stats.speedMultiplier)*Time.fixedDeltaTime;
+        return facing.normalized * (slideMovementSO.movePower * (slideMovementSO.agilityScale*stats.speedMultiplier) * Time.fixedDeltaTime);
     }
 
     private Vector2 SlideDecay()
@@ -206,7 +213,7 @@ public class TestMovement : MonoBehaviour
         transform.localScale = new UnityEngine.Vector3(.5f,.5f,.5f);
         // Debug.Log("In Slide Decay");
         // rb.MovePosition(rb.position + facing*(slideMovementSO.movePower)*Time.fixedDeltaTime);
-        return facing.normalized*slideMovementSO.movePower*(chargeMovementSO.strengthScale*stats.damageMultiplier)*Time.fixedDeltaTime;
+        return facing.normalized * (slideMovementSO.movePower * (chargeMovementSO.strengthScale*stats.damageMultiplier) * Time.fixedDeltaTime);
     }
 
     private Vector2 SlideDash()
@@ -214,7 +221,7 @@ public class TestMovement : MonoBehaviour
         failureParticle.startColor = Color.purple;
         failureParticle.Play();
         Debug.Log("In Slide Dash");
-        return facing.normalized*slideDashMovementSO.movePower*(slideDashMovementSO.agilityScale*stats.speedMultiplier)*Time.fixedDeltaTime;
+        return facing.normalized * (slideDashMovementSO.movePower * (slideDashMovementSO.agilityScale*stats.speedMultiplier) * Time.fixedDeltaTime);
     }
 
     private void MoveFail()
