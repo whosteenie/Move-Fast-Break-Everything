@@ -37,6 +37,7 @@ public class TestMovement : MonoBehaviour
 
     [Header("Audio")]
     [SerializeField] private SoundDefinition slideSound;
+    [SerializeField] private SoundDefinition dashSound;
 
     void Update() {
         InputHandler();
@@ -63,6 +64,7 @@ public class TestMovement : MonoBehaviour
         {
             isDashing = true;
             dashDurationTimer = dashDuration;
+            SoundManager.Play(dashSound);
         }
         if (Input.GetKeyDown(slideKey) && !(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay)))
         {

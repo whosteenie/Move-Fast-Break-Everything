@@ -315,6 +315,7 @@ MonoBehaviour:
   slideDashMovementSO: {fileID: 11400000, guid: 1965c343d311d004a8c364020b74cdf7, type: 2}
   movementStateMachine: {fileID: 0}
   slideSound: {fileID: 11400000, guid: 30343b2c3eced0347b0646cd5b0dfd9b, type: 2}
+  dashSound: {fileID: 11400000, guid: 267ac273a1ffb164199994d3e7afa04f, type: 2}
 --- !u!114 &1269611933969825367
 MonoBehaviour:
   m_ObjectHideFlags: 0

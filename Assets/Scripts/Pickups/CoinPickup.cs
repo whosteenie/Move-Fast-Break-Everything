@@ -4,6 +4,7 @@ public class CoinPickup : MagneticPickup
 {
     [SerializeField] private int minCoinValue = 1;
     [SerializeField] private int maxCoinValue = 3;
+    [SerializeField] private SoundDefinition collectSound;
 
     protected override bool TryCollect(GameObject playerObject)
     {
@@ -21,6 +22,8 @@ public class CoinPickup : MagneticPickup
         {
             GameManager.Instance.AddRunCoins(coinAmount);
         }
+
+        SoundManager.Play(collectSound);
         return true;
     }
 }
