@@ -49,11 +49,15 @@
                 </ui:VisualElement>
                 <ui:VisualElement class="options-menu__row">
                     <ui:Label text="Charge" class="options-menu__row-label"/>
-                    <ui:Button text="Mouse 1" class="options-menu__binding-button"/>
+                    <ui:Button text="Z" class="options-menu__binding-button"/>
                 </ui:VisualElement>
                 <ui:VisualElement class="options-menu__row">
                     <ui:Label text="Slide" class="options-menu__row-label"/>
-                    <ui:Button text="Left Ctrl" class="options-menu__binding-button"/>
+                    <ui:Button text="C" class="options-menu__binding-button"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="options-menu__row">
+                    <ui:Label text="Interact" class="options-menu__row-label"/>
+                    <ui:Button text="F" class="options-menu__binding-button"/>
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:ScrollView>
