@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34d4617e45eda8a4db9496c291253229, type: 3}
   m_Name: MenuMusic
   m_EditorClassIdentifier: Assembly-CSharp::SoundDefinition
-  clip: {fileID: 0}
+  clip: {fileID: 8300000, guid: fd4e4568e5509a5429d98498541a3bd8, type: 3}
   category: 1
-  baseVolume: 1
+  baseVolume: 0.1
   maxSimultaneousVoices: 1
   minReplayDelay: 0
