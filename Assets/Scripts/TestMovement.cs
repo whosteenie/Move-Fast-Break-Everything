@@ -34,6 +34,8 @@ public class TestMovement : MonoBehaviour
 
     public MovementStateMachine movementStateMachine;
 
+    public ParticleSystem failureParticle;
+
     [Header("Audio")]
     [SerializeField] private SoundDefinition slideSound;
 
@@ -142,6 +144,11 @@ public class TestMovement : MonoBehaviour
     {
         //Bulk the Player
         transform.localScale = new UnityEngine.Vector3(.75f, .75f, .75f);
+
+        //Just for testing play the failure particle
+        failureParticle.startColor = Color.green;
+        failureParticle.Play();
+        
         rb.MovePosition(rb.position + facing * slideMovementSO.movePower / 2 * Time.fixedDeltaTime);
         //Moves you backwards a bit which can be used to do chargeswitch tech! EEEE!
         return facing * (-slideMovementSO.movePower/1.5f * Time.fixedDeltaTime);
