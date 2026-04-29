@@ -105,7 +105,6 @@ public class TestMovement : MonoBehaviour
 
         movementStateMachine.AddState(slideMovementSO);
         SoundManager.Play(slideSound);
-        SoundManager.Play(slideSound);
     }
 
     public void TryCharge()
