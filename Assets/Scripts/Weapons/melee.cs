@@ -20,7 +20,7 @@ public class Melee : MonoBehaviour
         owner = transform.root.gameObject;
         stats = owner.GetComponent<Stats>();
 
-        attackInterval = weaponSO.cooldown;
+        attackInterval = weaponSO.coolDown;
 
         hitbox = GetComponent<Collider2D>();
     }
