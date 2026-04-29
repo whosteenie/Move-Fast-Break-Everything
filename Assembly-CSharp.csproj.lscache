@@ -81,7 +81,7 @@ Assets/Scripts/
  MainMenuShopView.cs
  MetaCurrency.cs
  MovementStateMachine.cs
- ObstacleSpawner.cs
+ ObjectSpawner.cs
  OptionsMenuView.cs
  OptionsSliderControl.cs
  Pickups/
@@ -90,11 +90,13 @@ Assets/Scripts/
   MagneticPickup.cs
  Player.cs
  PlayerHealthBar.cs
+ PlayerInputController.cs
  PlayerLevelUp.cs
  ScriptableObjects/MovementSO.cs
  ShopPowerUpDefinition.cs
  ShopPowerUpProgress.cs
  Stats.cs
+ TerrainDamage.cs
  TestMovement.cs
  Towers/
   Tower_Agility.cs
@@ -104,8 +106,8 @@ Assets/Scripts/
   Tower_Health.cs
   Tower_Level.cs
   Tower_Strength.cs
- TowerSpawner.cs
  XPOrb.cs
+ YSortRendererGroup.cs
 Temp/obj/Assembly-CSharp/.NETStandard,Version=v2.1.AssemblyAttributes.cs
 
 [metadataReferences]

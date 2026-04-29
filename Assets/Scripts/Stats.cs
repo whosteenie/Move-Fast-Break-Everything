@@ -13,13 +13,13 @@ public class Stats : MonoBehaviour
     private const float PierceIncreasePerRank = 0.05f;
     private const float ThornsIncreasePerRank = 0.05f;
 
-    public float speedMultiplier = 0.2f;
-    public float rangedDamageMultiplier = 1f;
+    public float speedMultiplier = 1f;
+    [SerializeField] private float rangedDamageMultiplier = 1f;
     public float damageMultiplier => rangedDamageMultiplier;
 
-    public float defense = .2f;
-    public float thorns = 0.2f;
-    public float pirece = .2f;
+    [SerializeField] private float defense = .2f;
+    [SerializeField] private float thorns = 0.2f;
+    public float pierce = .2f;
 
     public int baseHealth = 10;
     public int flatHealthBonus = 0;
@@ -28,47 +28,17 @@ public class Stats : MonoBehaviour
     public float dexterityMultiplier = 1f;
 
     private Player player;
-    private PlayerLevelUp levelSytem;
+
 
     private void Awake()
     {
         player = GetComponent<Player>();
-        levelSytem = GetComponent<PlayerLevelUp>();
         ApplyPurchasedPowerUps();
     }
 
-    private void OnEnable()
-    {
-        if (levelSytem != null)
-        {
-            levelSytem.OnLevelUp += OnStatChange;
-        }
-    }
 
-    private void OnDisable()
-    {
-        if (levelSytem != null)
-        {
-            levelSytem.OnLevelUp -= OnStatChange;
-        }
-    }
 
-    private void OnStatChange(object sender, System.EventArgs e)
-    {
-        IncreaseSpeed(0.1f);
-        IncreaseRangedDamage(0.1f);
-        IncreaseFlatHealth(2);
-        IncreaseHealthPercent(0.1f);
-        IncreaseDexterity(0.1f);
-        IncreaseDefense(0.5f);
-
-        if (player != null)
-        {
-            player.UpdateMaxHealth(GetMaxHealth());
-        }
-    }
-
-    private void IncreaseFlatHealth(int amount)
+    public void IncreaseFlatHealth(int amount)
     {
         flatHealthBonus += amount;
     }
@@ -100,7 +70,7 @@ public class Stats : MonoBehaviour
 
     public float GetSpeed(float baseSpeed)
     {
-        return baseSpeed * speedMultiplier;
+        return baseSpeed + Mathf.Log(speedMultiplier);
     }
 
     public void IncreaseRangedDamage(float percent)
@@ -133,7 +103,7 @@ public class Stats : MonoBehaviour
         dexterityMultiplier += hasteRank * HasteFireRateIncreasePerRank;
         speedMultiplier += moveSpeedRank * MoveSpeedIncreasePerRank;
         defense += defenseRank * DefenseIncreasePerRank;
-        pirece += pierceRank * PierceIncreasePerRank;
+        pierce += pierceRank * PierceIncreasePerRank;
         thorns += thornsRank * ThornsIncreasePerRank;
     }
 
@@ -145,7 +115,7 @@ public class Stats : MonoBehaviour
 
     public void IncreasePierce(float percent)
     {
-        pirece += percent;
+        pierce += percent;
     }
 
     public void IncreaseThorns(float percent)
@@ -160,7 +130,7 @@ public class Stats : MonoBehaviour
 
     public float GetPierce()
     {
-        return pirece;
+        return pierce;
     }
 
     public void ApplyLevelUpChoice(string choiceId)
@@ -176,9 +146,9 @@ public class Stats : MonoBehaviour
                 Debug.Log($"Health selected. Max Health: {GetMaxHealth()}", this);
                 break;
             case "strength":
-                IncreasePierce(pirece);
-                IncreaseThorns(thorns);
-                Debug.Log($"Strength selected. New pierce at: {pirece}", this);
+                IncreasePierce(0.05f);
+                IncreaseThorns(0.05f);
+                Debug.Log($"Strength selected. New pierce at: {pierce}", this);
                 Debug.Log($"Strength selected. New thorns at: {thorns}", this);
                 break;
             case "dexterity":
@@ -193,7 +163,9 @@ public class Stats : MonoBehaviour
                 break;
             case "intelligence":
                 IncreaseRangedDamage(rangeDamageIncrease);
+                IncreaseSpeed(speedMultiplier);
                 Debug.Log($"Intelligence selected. Ranged Damage Multiplier: {rangedDamageMultiplier}", this);
+                Debug.Log($"Agility selected. Speed Multiplier: {speedMultiplier}", this);
                 break;
             case "defense":
                 IncreaseDefense(0.5f);
