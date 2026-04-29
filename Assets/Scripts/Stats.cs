@@ -9,6 +9,9 @@ public class Stats : MonoBehaviour
     private const float MaxHealthIncreasePerRank = 0.1f;
     private const float HasteFireRateIncreasePerRank = 0.05f;
     private const float MoveSpeedIncreasePerRank = 0.04f;
+    private const float DefenseIncreasePerRank = 0.05f;
+    private const float PierceIncreasePerRank = 0.05f;
+    private const float ThornsIncreasePerRank = 0.05f;
 
     public float speedMultiplier = 0.2f;
     public float rangedDamageMultiplier = 1f;
@@ -121,11 +124,17 @@ public class Stats : MonoBehaviour
         var maxHealthRank = ShopPowerUpProgress.GetRank("max_health");
         var hasteRank = ShopPowerUpProgress.GetRank("haste");
         var moveSpeedRank = ShopPowerUpProgress.GetRank("move_speed");
+        var defenseRank = ShopPowerUpProgress.GetRank("defense");
+        var pierceRank = ShopPowerUpProgress.GetRank("pierce");
+        var thornsRank = ShopPowerUpProgress.GetRank("thorns");
 
         rangedDamageMultiplier += mightRank * MightDamageIncreasePerRank;
         healthMultiplier += maxHealthRank * MaxHealthIncreasePerRank;
         dexterityMultiplier += hasteRank * HasteFireRateIncreasePerRank;
         speedMultiplier += moveSpeedRank * MoveSpeedIncreasePerRank;
+        defense += defenseRank * DefenseIncreasePerRank;
+        pirece += pierceRank * PierceIncreasePerRank;
+        thorns += thornsRank * ThornsIncreasePerRank;
     }
 
     public int CalculateDamageTaken(int incomingDamage)
