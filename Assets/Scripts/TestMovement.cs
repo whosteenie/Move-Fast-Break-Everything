@@ -28,6 +28,8 @@ public class TestMovement : MonoBehaviour
 
     public MovementStateMachine movementStateMachine;
 
+    public ParticleSystem failureParticle;
+
     [Header("Audio")]
     [SerializeField] private SoundDefinition slideSound;
     [SerializeField] private SoundDefinition dashSound;
@@ -74,13 +76,19 @@ public class TestMovement : MonoBehaviour
             movementStateMachine.AddComboState(slideDashMovementSO, MovementStateMachine.State.slide, MovementStateMachine.State.dash);
             return;
         }
+        else 
+        {
+            MoveFail();
+        }
 
         if (isDashing || dashCooldownTimer > 0f
             || movementStateMachine.HasState(MovementStateMachine.State.slideDash)
             || movementStateMachine.HasState(MovementStateMachine.State.slideDashDecay))
         {
+            MoveFail();
             return;
         }
+        
 
         isDashing = true;
         dashDurationTimer = dashDuration;
@@ -91,6 +99,7 @@ public class TestMovement : MonoBehaviour
         if (movementStateMachine.HasState(MovementStateMachine.State.slide)
             || movementStateMachine.HasState(MovementStateMachine.State.slideDecay))
         {
+            MoveFail();
             return;
         }
 
@@ -105,6 +114,7 @@ public class TestMovement : MonoBehaviour
             || movementStateMachine.HasState(MovementStateMachine.State.charge)
             || movementStateMachine.HasState(MovementStateMachine.State.chargeDecay))
         {
+            MoveFail();
             return;
         }
 
@@ -151,6 +161,8 @@ public class TestMovement : MonoBehaviour
 
     private Vector2 Dash()
     {
+        failureParticle.startColor = Color.blue;
+        failureParticle.Play();
         return facing * dashSpeed*(slideDashMovementSO.agilityScale*stats.speedMultiplier * Time.fixedDeltaTime);
     }
 
@@ -158,6 +170,8 @@ public class TestMovement : MonoBehaviour
     {
         //Shrink the Player
         // Debug.Log("In Slide");
+        failureParticle.startColor = Color.red;
+        failureParticle.Play();
         transform.localScale = new Vector3(.25f, .25f, .25f);
         // rb.MovePosition(rb.position + facing*slideMovementSO.movePower*Time.fixedDeltaTime);
         return facing.normalized*slideMovementSO.movePower*(slideMovementSO.agilityScale*stats.speedMultiplier)*Time.fixedDeltaTime;
@@ -176,6 +190,11 @@ public class TestMovement : MonoBehaviour
     {
         //Bulk the Player
         transform.localScale = new UnityEngine.Vector3(.75f, .75f, .75f);
+
+        //Just for testing play the failure particle
+        failureParticle.startColor = Color.green;
+        failureParticle.Play();
+        
         rb.MovePosition(rb.position + facing * slideMovementSO.movePower / 2 * Time.fixedDeltaTime);
         //Moves you backwards a bit which can be used to do chargeswitch tech! EEEE!
         return facing * (-slideMovementSO.movePower/1.5f * Time.fixedDeltaTime);
@@ -192,8 +211,16 @@ public class TestMovement : MonoBehaviour
 
     private Vector2 SlideDash()
     {
+        failureParticle.startColor = Color.purple;
+        failureParticle.Play();
         Debug.Log("In Slide Dash");
         return facing.normalized*slideDashMovementSO.movePower*(slideDashMovementSO.agilityScale*stats.speedMultiplier)*Time.fixedDeltaTime;
+    }
+
+    private void MoveFail()
+    {
+        failureParticle.startColor = Color.black;
+        failureParticle.Play();
     }
     //__________________________________________________________________________________________________
 }
