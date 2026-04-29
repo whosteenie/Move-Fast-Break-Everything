@@ -81,8 +81,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 412345671
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 3625043607559282579, guid: 19fb86013d8c24d6cb8410c0aadf30fa, type: 3}
@@ -187,24 +187,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::XPOrb
   rb: {fileID: 3543371063137826531}
   pickupCollider: {fileID: 8853686799882276811}
+  visualRenderer: {fileID: 7613546048959103778}
   launchSpeed: 5
   launchDuration: 0.15
   magnetSpeed: 10
   magnetAcceleration: 30
+  groundedSortingLayerName: GroundShadow
+  groundedSortingOrder: 0
+  activeSortingLayerName: Pickups
+  activeSortingOrder: 800
   tier: 0
   spriteRenderer: {fileID: 7613546048959103778}
-  pickupCollider: {fileID: 8853686799882276811}
   tier1Color: {r: 0.09, g: 0.52, b: 0.85, a: 1}
   tier2Color: {r: 0.22, g: 0.82, b: 0.33, a: 1}
   tier3Color: {r: 0.88, g: 0.24, b: 0.24, a: 1}
   tier1Reward: 20
   tier2Reward: 35
   tier3Reward: 50
-  rb: {fileID: 3543371063137826531}
-  launchSpeed: 5
-  launchDuration: 0.15
-  magnetSpeed: 10
-  magnetAcceleration: 30
   collectSound: {fileID: 11400000, guid: 84685752f8aea91468d6668fd4d36184, type: 2}
 --- !u!1 &7048327071737929163
 GameObject:
