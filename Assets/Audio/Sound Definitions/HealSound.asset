@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 34d4617e45eda8a4db9496c291253229, type: 3}
-  m_Name: XPOrbSound
+  m_Name: HealSound
   m_EditorClassIdentifier: Assembly-CSharp::SoundDefinition
-  clip: {fileID: 8300000, guid: e16e937f303fac24ca5b2b14e3510420, type: 3}
+  clip: {fileID: 8300000, guid: e00748857264ae4418bc720ed490e571, type: 3}
   category: 0
   baseVolume: 0.3
   maxSimultaneousVoices: 6

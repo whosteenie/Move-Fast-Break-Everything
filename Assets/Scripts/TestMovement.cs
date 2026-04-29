@@ -30,6 +30,7 @@ public class TestMovement : MonoBehaviour
 
     [Header("Audio")]
     [SerializeField] private SoundDefinition slideSound;
+    [SerializeField] private SoundDefinition dashSound;
 
     private void Update()
     {
