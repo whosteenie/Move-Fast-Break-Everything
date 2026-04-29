@@ -41,43 +41,6 @@ public class TestMovement : MonoBehaviour
     [SerializeField] private SoundDefinition slideSound;
 
     void Update() {
-        InputHandler();
-    }
-
-    void InputHandler()
-    {
-
-        movement.x = Input.GetAxisRaw("Horizontal");
-        movement.y = Input.GetAxisRaw("Vertical");
-
-        if (movement != UnityEngine.Vector2.zero)
-        {
-            facing = movement.normalized;
-        }
-        if(Input.GetKeyDown(dashKey) && movementStateMachine.HasState(MovementStateMachine.State.slide) && !movementStateMachine.HasState(MovementStateMachine.State.slideDash) && !movementStateMachine.HasState(MovementStateMachine.State.slideDashDecay))
-        {
-            Debug.Log("Slide Dash Initiated");
-            movementStateMachine.AddComboState(slideDashMovementSO, MovementStateMachine.State.slide, MovementStateMachine.State.dash);
-        }
-        if (Input.GetKeyDown(dashKey) && !isDashing && dashCooldownTimer <= 0f
-        && !movementStateMachine.HasState(MovementStateMachine.State.slideDash) && !movementStateMachine.HasState(MovementStateMachine.State.slideDashDecay))
-
-        {
-            isDashing = true;
-            dashDurationTimer = dashDuration;
-        }
-        if (Input.GetKeyDown(slideKey) && !(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay)))
-        {
-            // print("In Slide Key Press");
-            movementStateMachine.AddState(slideMovementSO);
-            SoundManager.Play(slideSound);
-            SoundManager.Play(slideSound);
-        }
-        if (Input.GetKeyDown(chargeKey) && !(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay) || movementStateMachine.HasState(MovementStateMachine.State.charge) || movementStateMachine.HasState(MovementStateMachine.State.chargeDecay)))
-        {
-            // print("In Slide Key Press");
-            movementStateMachine.AddState(chargeMovementSO);
-        }
 
         if (isDashing)
         {
@@ -91,6 +54,65 @@ public class TestMovement : MonoBehaviour
         else if (dashCooldownTimer > 0f)
         {
             dashCooldownTimer -= Time.deltaTime;
+        }
+
+        InputHandler();
+    }
+
+    void InputHandler()
+    {
+
+        movement.x = Input.GetAxisRaw("Horizontal");
+        movement.y = Input.GetAxisRaw("Vertical");
+
+        if (movement != UnityEngine.Vector2.zero)
+        {
+            facing = movement.normalized;
+        }
+
+        if(Input.GetKeyDown(dashKey) && movementStateMachine.HasState(MovementStateMachine.State.slide) && !movementStateMachine.HasState(MovementStateMachine.State.slideDash) && !movementStateMachine.HasState(MovementStateMachine.State.slideDashDecay))
+        {
+            Debug.Log("Slide Dash Initiated");
+            movementStateMachine.AddComboState(slideDashMovementSO, MovementStateMachine.State.slide, MovementStateMachine.State.dash);
+        }
+        else if (Input.GetKeyDown(dashKey))
+        {
+            MoveFail();
+        }
+
+        if (Input.GetKeyDown(dashKey) && !isDashing && dashCooldownTimer <= 0f
+        && !movementStateMachine.HasState(MovementStateMachine.State.slideDash) && !movementStateMachine.HasState(MovementStateMachine.State.slideDashDecay))
+
+        {
+            isDashing = true;
+            dashDurationTimer = dashDuration;
+        }
+        else if (Input.GetKeyDown(dashKey))
+        {
+            MoveFail();
+        }
+
+        if (Input.GetKeyDown(slideKey) && !(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay)))
+        {
+            // print("In Slide Key Press");
+            movementStateMachine.AddState(slideMovementSO);
+            SoundManager.Play(slideSound);
+            SoundManager.Play(slideSound);
+        }
+        else if (Input.GetKeyDown(slideKey))
+        {
+            MoveFail();
+        }
+
+
+        if (Input.GetKeyDown(chargeKey) && !(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay) || movementStateMachine.HasState(MovementStateMachine.State.charge) || movementStateMachine.HasState(MovementStateMachine.State.chargeDecay)))
+        {
+            // print("In Slide Key Press");
+            movementStateMachine.AddState(chargeMovementSO);
+        }
+        else if (Input.GetKeyDown(chargeKey))
+        {
+            MoveFail();
         }
     }
 
@@ -139,6 +161,8 @@ public class TestMovement : MonoBehaviour
 
     private Vector2 Dash()
     {
+        failureParticle.startColor = Color.blue;
+        failureParticle.Play();
         return facing * dashSpeed*(slideDashMovementSO.agilityScale*stats.speedMultiplier * Time.fixedDeltaTime);
     }
 
@@ -146,6 +170,8 @@ public class TestMovement : MonoBehaviour
     {
         //Shrink the Player
         // Debug.Log("In Slide");
+        failureParticle.startColor = Color.red;
+        failureParticle.Play();
         transform.localScale = new Vector3(.25f, .25f, .25f);
         // rb.MovePosition(rb.position + facing*slideMovementSO.movePower*Time.fixedDeltaTime);
         return facing.normalized*slideMovementSO.movePower*(slideMovementSO.agilityScale*stats.speedMultiplier)*Time.fixedDeltaTime;
@@ -185,8 +211,16 @@ public class TestMovement : MonoBehaviour
 
     private Vector2 SlideDash()
     {
+        failureParticle.startColor = Color.purple;
+        failureParticle.Play();
         Debug.Log("In Slide Dash");
         return facing.normalized*slideDashMovementSO.movePower*(slideDashMovementSO.agilityScale*stats.speedMultiplier)*Time.fixedDeltaTime;
+    }
+
+    private void MoveFail()
+    {
+        failureParticle.startColor = Color.black;
+        failureParticle.Play();
     }
     //__________________________________________________________________________________________________
 }
