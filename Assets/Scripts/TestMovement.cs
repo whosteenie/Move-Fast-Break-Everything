@@ -163,7 +163,7 @@ public class TestMovement : MonoBehaviour
     {
         failureParticle.startColor = Color.blue;
         failureParticle.Play();
-        return facing * dashSpeed * (slideDashMovementSO.agilityScale * stats.GetSpeed(.02f) * Time.fixedDeltaTime);
+        return facing * (dashSpeed * (slideDashMovementSO.agilityScale * stats.GetSpeed(.02f) * Time.fixedDeltaTime));
     }
 
     private Vector2 Slide()
@@ -174,7 +174,7 @@ public class TestMovement : MonoBehaviour
         failureParticle.Play();
         transform.localScale = new Vector3(.25f, .25f, .25f);
         // rb.MovePosition(rb.position + facing*slideMovementSO.movePower*Time.fixedDeltaTime);
-        return facing.normalized * slideMovementSO.movePower * (slideMovementSO.agilityScale * stats.GetSpeed(.02f)) * Time.fixedDeltaTime;
+        return facing.normalized * (slideMovementSO.movePower * (slideMovementSO.agilityScale * stats.GetSpeed(.02f)) * Time.fixedDeltaTime);
     }
 
     private Vector2 SlideDecay()
@@ -206,7 +206,7 @@ public class TestMovement : MonoBehaviour
         transform.localScale = new UnityEngine.Vector3(.5f, .5f, .5f);
         // Debug.Log("In Slide Decay");
         // rb.MovePosition(rb.position + facing*(slideMovementSO.movePower)*Time.fixedDeltaTime);
-        return facing.normalized * slideMovementSO.movePower * (chargeMovementSO.strengthScale * stats.damageMultiplier) * Time.fixedDeltaTime;
+        return facing.normalized * (slideMovementSO.movePower * (chargeMovementSO.strengthScale * stats.damageMultiplier) * Time.fixedDeltaTime);
     }
 
     private Vector2 SlideDash()
@@ -214,7 +214,7 @@ public class TestMovement : MonoBehaviour
         failureParticle.startColor = Color.purple;
         failureParticle.Play();
         Debug.Log("In Slide Dash");
-        return facing.normalized * slideDashMovementSO.movePower * (slideDashMovementSO.agilityScale * stats.GetSpeed(.02f)) * Time.fixedDeltaTime;
+        return facing.normalized * (slideDashMovementSO.movePower * (slideDashMovementSO.agilityScale * stats.GetSpeed(.02f)) * Time.fixedDeltaTime);
     }
 
     private void MoveFail()
