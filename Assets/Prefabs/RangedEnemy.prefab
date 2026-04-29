@@ -123,15 +123,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6e631899bbe18c4f9289ec4dd17318f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AutoAim
-  bulletPrefab: {fileID: 3862674274435588204, guid: ca8cd73260e47a24388e27816b46ffe7, type: 3}
+  bulletPrefab: {fileID: -1506503626551985284, guid: ca8cd73260e47a24388e27816b46ffe7, type: 3}
   firePoint: {fileID: 2400437723224038995}
   fireRate: 2
   bulletSpeed: 10
+  shootSound: {fileID: 0}
   detectionRange: 10
   targetRefreshRate: 0.3
-  baseDamege: 1
+  targetTeam: 0
+  owner: {fileID: 1443466476714610113}
+  baseDamage: 1
   dis: 10
-  tag: Player
 --- !u!4 &8754503555645506187 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8607304971326464833, guid: 11d95817b12e84a4082ed1ed31c29769, type: 3}

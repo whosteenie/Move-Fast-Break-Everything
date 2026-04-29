@@ -3,9 +3,14 @@ using UnityEngine;
 
 public class AutoAim : MonoBehaviour
 {
+    public enum TargetTeam
+    {
+        Player,
+        Enemy
+    }
 
     [Header("Shooting")]
-    public GameObject bulletPrefab;
+    public Bullet bulletPrefab;
     public Transform firePoint;
     public float fireRate = 2f;
     public float bulletSpeed = 10f;
@@ -14,10 +19,13 @@ public class AutoAim : MonoBehaviour
     [Header("Targeting")]
     public float detectionRange = 10f;
     public float targetRefreshRate = 0.3f;
+    [SerializeField] private TargetTeam targetTeam = TargetTeam.Enemy;
+    [SerializeField] private GameObject owner;
 
     private GameObject currentTarget;
 
     private Stats stats;
+    private Collider2D[] ownerColliders;
     public int baseDamage = 1;
 
     void Start()
@@ -29,6 +37,7 @@ public class AutoAim : MonoBehaviour
     void Awake()
     {
         stats = GetComponentInParent<Stats>();
+        ownerColliders = owner.GetComponentsInChildren<Collider2D>(true);
     }
 
     IEnumerator UpdateTargetRoutine()
@@ -60,12 +69,31 @@ public class AutoAim : MonoBehaviour
     float dis = 10f;
     GameObject FindClosestEnemy()
     {
+        return targetTeam == TargetTeam.Player
+            ? FindClosestPlayerTarget()
+            : FindClosestEnemyTarget();
+    }
+
+    GameObject FindClosestEnemyTarget()
+    {
         GameObject closest = null;
         float minDistance = dis;
         closest = FindClosestTargetOfType<Enemy>(closest, ref minDistance);
         closest = FindClosestTargetOfType<DestructibleObstacle>(closest, ref minDistance);
-
         return closest;
+    }
+
+    private GameObject FindClosestPlayerTarget()
+    {
+        var player = FindAnyObjectByType<Player>();
+
+        if (player == null)
+        {
+            return null;
+        }
+
+        var distance = Vector2.Distance(transform.position, player.transform.position);
+        return distance <= detectionRange && distance < dis ? player.gameObject : null;
     }
 
     GameObject FindClosestTargetOfType<T>(GameObject currentClosest, ref float minDistance) where T : MonoBehaviour
@@ -74,6 +102,11 @@ public class AutoAim : MonoBehaviour
 
         foreach (T target in targets)
         {
+            if (owner != null && target.gameObject == owner)
+            {
+                continue;
+            }
+
             float distance = Vector2.Distance(transform.position, target.transform.position);
 
             if (distance < minDistance && distance <= detectionRange)
@@ -88,20 +121,18 @@ public class AutoAim : MonoBehaviour
 
     void Shoot(Vector2 direction)
     {
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
+        Bullet bulletInstance = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
         SoundManager.Play(shootSound);
-
-        Bullet bulletScript = bullet.GetComponent<Bullet>();
         
         // int finalDamage = Mathf.RoundToInt(baseDamage * stats.rangedDamageMultiplier);
 
         // Debug.Log("Multiplier: " + stats.rangedDamageMultiplier + " Final Damage: " + finalDamage);
 
-        if (bulletScript != null)
+        if (bulletInstance != null)
         {
             int finalDamage = stats != null ? stats.GetDamage(baseDamage) : baseDamage;
             float pierce = stats != null ? stats.GetPierce() : 0f;
-            bulletScript.SetDirection(direction, bulletSpeed, finalDamage, pierce);
+            bulletInstance.SetDirection(direction, bulletSpeed, finalDamage, pierce, owner, targetTeam, ownerColliders);
         }
     }
 
