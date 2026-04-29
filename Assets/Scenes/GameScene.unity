@@ -731,6 +731,22 @@ PrefabInstance:
       propertyPath: movementStateMachine
       value: 
       objectReference: {fileID: 1828502760}
+    - target: {fileID: 2956268541207477328, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 3.85
+      objectReference: {fileID: 0}
+    - target: {fileID: 2956268541207477328, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.47
+      objectReference: {fileID: 0}
+    - target: {fileID: 2956268541207477328, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2.6722963
+      objectReference: {fileID: 0}
+    - target: {fileID: 2956268541207477328, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5327108225811942733, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
       propertyPath: m_Enabled
       value: 1
