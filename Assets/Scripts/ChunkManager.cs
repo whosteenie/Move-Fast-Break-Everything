@@ -16,26 +16,25 @@ public class ChunkManager : MonoBehaviour
     [SerializeField] private GameObject floorHazardPrefab;
     [SerializeField] private GameObject floorEarthPrefab;
     [SerializeField] private GameObject floorTechPrefab;
-    [SerializeField] private ObstacleSpawner obstacleSpawner;
-    [SerializeField] private TowerSpawner towerSpawner;
+    [SerializeField] private ObjectSpawner objectSpawner;
     [SerializeField] private float chunkSize = 20f;
     [SerializeField] private float cellSize = 1f;
     [SerializeField] private int loadRadius = 1; // How many chunks away from player are loaded
-    [SerializeField] private int unloadRadius = 10; // How many chunks away from player until unloaded
-    [SerializeField] private float noiseScale = 30f; // Harmless terrain scale. Higher = Wider zones; Lower = Tighter zones
-    [SerializeField] private float dangerNoiseScale = 30f; // Danger terrain scale. Higher = Wider zones; Lower = Tighter zones
+    [SerializeField] private int terrainUnloadRadius = 1; // How many chunks away from player until terrain is unloaded
+    [SerializeField] private int objectUnloadRadius = 20; // How many chunks away from player until objects are unloaded
+    [SerializeField] private float noiseScale = 20f; // Harmless terrain scale. Higher = Wider zones; Lower = Tighter zones
+    [SerializeField] private float dangerNoiseScale = 20f; // Danger terrain scale. Higher = Wider zones; Lower = Tighter zones
     [SerializeField] private float deathMax = 0.1f;
-    [SerializeField] private float hazardMax = 0.2f;
-    [SerializeField] private float earthMax = 0.5f;
+    [SerializeField] private float hazardMax = 0.18f;
+    [SerializeField] private float earthMax = 0.4f;
+    [SerializeField] private float safeSpawnRadius = 4f;
     
-    // Currently, our terrain and objects unload at the same time.
-    /* TODO: If performance starts hurting, split terrain/object unloading (terrain can be unloaded
-       just outside camera, while objects stick around longer for game balance) */
-    
-    private readonly Dictionary<Vector2Int, GameObject> loadedChunks = new();
+    private readonly Dictionary<Vector2Int, GameObject> loadedTerrainChunks = new();
+    private readonly Dictionary<Vector2Int, GameObject> loadedObjectChunks = new();
     private Vector2Int currentPlayerChunk;
     private Vector2 noiseOffset;
     private Vector2 dangerNoiseOffset;
+    private Vector2 playerSpawnPoint;
     
     private void Start()
     {
@@ -50,6 +49,8 @@ public class ChunkManager : MonoBehaviour
             Random.Range(-10000f, 10000f)
         );
         
+        playerSpawnPoint = player.position;
+
         currentPlayerChunk = Vector2Int.zero;
         UpdateLoadedChunks();
     }
@@ -82,7 +83,7 @@ public class ChunkManager : MonoBehaviour
         );
     }
     
-    // Loads chunks close to the player and destroys chunks that are too far away 
+    // Loads chunks close to the player and destroys terrain/objects that are too far away
     private void UpdateLoadedChunks()
     {
         // Checks X and Y around player and loads missing chunk 
@@ -92,51 +93,90 @@ public class ChunkManager : MonoBehaviour
             {
                 Vector2Int chunkCoordinate = currentPlayerChunk + new Vector2Int(x, y);
                 
-                if (!loadedChunks.ContainsKey(chunkCoordinate))
+                if (!loadedTerrainChunks.ContainsKey(chunkCoordinate))
                 {
-                    LoadChunk(chunkCoordinate);
+                    LoadTerrainChunk(chunkCoordinate);
+                }
+                
+                if (!loadedObjectChunks.ContainsKey(chunkCoordinate))
+                {
+                    LoadObjectChunk(chunkCoordinate);
                 }
             }
         }
+        
+        List<Vector2Int> terrainChunksToUnload = new();
+        List<Vector2Int> objectChunksToUnload = new();
 
-        List<Vector2Int> chunksToUnload = new();
-
-        // Checks X and Y around player and marks for removal if chunk is too far
-        foreach (Vector2Int chunkCoordinate in loadedChunks.Keys) 
+        // Checks X and Y around player and marks terrain for removal if chunk is too far
+        foreach (Vector2Int chunkCoordinate in loadedTerrainChunks.Keys)
         {
             int xDistance = Mathf.Abs(chunkCoordinate.x - currentPlayerChunk.x);
             int yDistance = Mathf.Abs(chunkCoordinate.y - currentPlayerChunk.y);
             
-            if (xDistance > unloadRadius || yDistance > unloadRadius)
+            if (xDistance > terrainUnloadRadius || yDistance > terrainUnloadRadius)
             {
-                chunksToUnload.Add(chunkCoordinate);
+                terrainChunksToUnload.Add(chunkCoordinate);
+            }
+        }
+
+        // Checks X and Y around player and marks objects for removal if chunk is too far
+        foreach (Vector2Int chunkCoordinate in loadedObjectChunks.Keys)
+        {
+            int xDistance = Mathf.Abs(chunkCoordinate.x - currentPlayerChunk.x);
+            int yDistance = Mathf.Abs(chunkCoordinate.y - currentPlayerChunk.y);
+            
+            if (xDistance > objectUnloadRadius || yDistance > objectUnloadRadius)
+            {
+                objectChunksToUnload.Add(chunkCoordinate);
             }
         }
         
-        foreach (Vector2Int chunkCoordinate in chunksToUnload)
+        foreach (Vector2Int chunkCoordinate in terrainChunksToUnload)
         {
-            UnloadChunk(chunkCoordinate);
+            UnloadTerrainChunk(chunkCoordinate);
+        }
+
+        foreach (Vector2Int chunkCoordinate in objectChunksToUnload)
+        {
+            UnloadObjectChunk(chunkCoordinate);
         }
     }
 
-    private void LoadChunk(Vector2Int chunkCoordinate)
+    private void LoadTerrainChunk(Vector2Int chunkCoordinate)
     {
         Vector3 chunkCenter = GetChunkCenter(chunkCoordinate);
-        GameObject chunkObject = new GameObject();
-        chunkObject.transform.SetParent(transform);
-        chunkObject.transform.position = chunkCenter;
+        GameObject terrainChunkObject = new GameObject();
+        terrainChunkObject.name = $"Terrain Chunk {chunkCoordinate}";
+        terrainChunkObject.transform.SetParent(transform);
+        terrainChunkObject.transform.position = chunkCenter;
         
-        loadedChunks.Add(chunkCoordinate, chunkObject);
-        CreateChunkCells(chunkObject.transform, chunkCenter);
+        loadedTerrainChunks.Add(chunkCoordinate, terrainChunkObject);
+        CreateChunkCells(terrainChunkObject.transform, chunkCenter);
+    }
+
+    private void LoadObjectChunk(Vector2Int chunkCoordinate)
+    {
+        Vector3 chunkCenter = GetChunkCenter(chunkCoordinate);
+        GameObject objectChunkObject = new GameObject();
+        objectChunkObject.name = $"Object Chunk {chunkCoordinate}";
+        objectChunkObject.transform.SetParent(transform);
+        objectChunkObject.transform.position = chunkCenter;
         
-        obstacleSpawner.GenerateChunk(chunkObject.transform, chunkCenter, chunkSize);
-        towerSpawner.GenerateChunk(chunkObject.transform, chunkCenter, chunkSize);
+        loadedObjectChunks.Add(chunkCoordinate, objectChunkObject);
+        objectSpawner.GenerateChunk(objectChunkObject.transform, chunkCenter, chunkSize);
+    }
+
+    private void UnloadTerrainChunk(Vector2Int chunkCoordinate)
+    {
+        Destroy(loadedTerrainChunks[chunkCoordinate]);
+        loadedTerrainChunks.Remove(chunkCoordinate);
     }
     
-    private void UnloadChunk(Vector2Int chunkCoordinate)
+    private void UnloadObjectChunk(Vector2Int chunkCoordinate)
     {
-        Destroy(loadedChunks[chunkCoordinate]);
-        loadedChunks.Remove(chunkCoordinate); 
+        Destroy(loadedObjectChunks[chunkCoordinate]);
+        loadedObjectChunks.Remove(chunkCoordinate);
     }
 
     private Vector3 GetChunkCenter(Vector2Int chunkCoordinate)
@@ -173,7 +213,7 @@ public class ChunkManager : MonoBehaviour
                 
                 TerrainType terrainType = GetTerrainType(cellPosition);
                 GameObject floorPrefab = GetFloorPrefab(terrainType);
-                
+
                 Instantiate(floorPrefab, cellPosition, Quaternion.identity, chunkParent);
             }
         }
@@ -190,6 +230,11 @@ public class ChunkManager : MonoBehaviour
     private TerrainType GetTerrainType(Vector2 worldPosition)
     {
         TerrainType baseTerrainType = GetBaseTerrainType(worldPosition);
+        if (Vector2.Distance(worldPosition, playerSpawnPoint) < safeSpawnRadius)
+        {
+            return baseTerrainType;
+        }
+        
         TerrainType? dangerTerrainType = GetDangerTerrainType(worldPosition);
         
         if (dangerTerrainType.HasValue)

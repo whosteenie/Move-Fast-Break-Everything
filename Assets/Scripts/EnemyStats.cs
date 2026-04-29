@@ -92,5 +92,4 @@ public class EnemyStats : MonoBehaviour
 
         return Mathf.Max(1, Mathf.RoundToInt(reducedDamage));
     }
-
 }
