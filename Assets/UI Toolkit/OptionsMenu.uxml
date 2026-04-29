@@ -25,39 +25,39 @@
             <ui:VisualElement name="options-content-controls" class="options-menu__content" style="display: none;">
                 <ui:VisualElement class="options-menu__row options-menu__row--first">
                     <ui:Label text="Up" class="options-menu__row-label"/>
-                    <ui:Button text="W" class="options-menu__binding-button"/>
+                    <ui:Button name="options-binding-move-up" text="W" class="options-menu__binding-button"/>
                 </ui:VisualElement>
                 <ui:VisualElement class="options-menu__row">
                     <ui:Label text="Down" class="options-menu__row-label"/>
-                    <ui:Button text="S" class="options-menu__binding-button"/>
+                    <ui:Button name="options-binding-move-down" text="S" class="options-menu__binding-button"/>
                 </ui:VisualElement>
                 <ui:VisualElement class="options-menu__row">
                     <ui:Label text="Left" class="options-menu__row-label"/>
-                    <ui:Button text="A" class="options-menu__binding-button"/>
+                    <ui:Button name="options-binding-move-left" text="A" class="options-menu__binding-button"/>
                 </ui:VisualElement>
                 <ui:VisualElement class="options-menu__row">
                     <ui:Label text="Right" class="options-menu__row-label"/>
-                    <ui:Button text="D" class="options-menu__binding-button"/>
+                    <ui:Button name="options-binding-move-right" text="D" class="options-menu__binding-button"/>
                 </ui:VisualElement>
                 <ui:VisualElement class="options-menu__row">
                     <ui:Label text="Jump" class="options-menu__row-label"/>
-                    <ui:Button text="Space" class="options-menu__binding-button"/>
+                    <ui:Button name="options-binding-jump" text="Space" class="options-menu__binding-button"/>
                 </ui:VisualElement>
                 <ui:VisualElement class="options-menu__row">
                     <ui:Label text="Dash" class="options-menu__row-label"/>
-                    <ui:Button text="Left Shift" class="options-menu__binding-button"/>
+                    <ui:Button name="options-binding-dash" text="Left Shift" class="options-menu__binding-button"/>
                 </ui:VisualElement>
                 <ui:VisualElement class="options-menu__row">
                     <ui:Label text="Charge" class="options-menu__row-label"/>
-                    <ui:Button text="Z" class="options-menu__binding-button"/>
+                    <ui:Button name="options-binding-charge" text="Z" class="options-menu__binding-button"/>
                 </ui:VisualElement>
                 <ui:VisualElement class="options-menu__row">
                     <ui:Label text="Slide" class="options-menu__row-label"/>
-                    <ui:Button text="C" class="options-menu__binding-button"/>
+                    <ui:Button name="options-binding-slide" text="C" class="options-menu__binding-button"/>
                 </ui:VisualElement>
                 <ui:VisualElement class="options-menu__row">
                     <ui:Label text="Interact" class="options-menu__row-label"/>
-                    <ui:Button text="F" class="options-menu__binding-button"/>
+                    <ui:Button name="options-binding-interact" text="F" class="options-menu__binding-button"/>
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:ScrollView>
