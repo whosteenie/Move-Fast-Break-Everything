@@ -55,6 +55,7 @@ public class SoundManager : MonoBehaviour
 
         _instance = this;
         DontDestroyOnLoad(gameObject);
+        EnsureAudioSourcesConfigured();
 
         LoadSavedVolumes();
         EnsureAudioSources();
@@ -65,6 +66,72 @@ public class SoundManager : MonoBehaviour
         }
 
         ApplyMusicVolume();
+    }
+
+    private void EnsureAudioSourcesConfigured()
+    {
+        var attachedSources = GetComponents<AudioSource>();
+
+        if (sfxSource == null && attachedSources.Length > 0)
+        {
+            sfxSource = attachedSources[0];
+        }
+
+        if (musicSource == null)
+        {
+            if (attachedSources.Length > 1)
+            {
+                musicSource = attachedSources[1];
+            }
+            else if (sfxSource != null && attachedSources.Length == 1)
+            {
+                musicSource = CreateAttachedAudioSource("MusicSource");
+            }
+        }
+
+        if (sfxSource == null)
+        {
+            sfxSource = CreateAttachedAudioSource("SfxSource");
+        }
+
+        if (musicSource == null)
+        {
+            musicSource = CreateAttachedAudioSource("MusicSource");
+        }
+
+        ConfigureSfxSource(sfxSource);
+        ConfigureMusicSource(musicSource);
+    }
+
+    private AudioSource CreateAttachedAudioSource(string sourceName)
+    {
+        var sourceObject = new GameObject(sourceName);
+        sourceObject.transform.SetParent(transform, false);
+        return sourceObject.AddComponent<AudioSource>();
+    }
+
+    private static void ConfigureSfxSource(AudioSource source)
+    {
+        if (source == null)
+        {
+            return;
+        }
+
+        source.playOnAwake = false;
+        source.loop = false;
+        source.spatialBlend = 0f;
+    }
+
+    private static void ConfigureMusicSource(AudioSource source)
+    {
+        if (source == null)
+        {
+            return;
+        }
+
+        source.playOnAwake = false;
+        source.loop = true;
+        source.spatialBlend = 0f;
     }
 
     public static void Play(SoundDefinition sound)
@@ -265,9 +332,7 @@ public class SoundManager : MonoBehaviour
         sourceObject.transform.SetParent(transform, false);
 
         var newSource = sourceObject.AddComponent<AudioSource>();
-        newSource.playOnAwake = false;
-        newSource.loop = false;
-        newSource.spatialBlend = 0f;
+        ConfigureSfxSource(newSource);
 
         _sfxSourcePool.Add(newSource);
         return newSource;
