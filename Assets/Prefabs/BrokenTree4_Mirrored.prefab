@@ -79,6 +79,7 @@ GameObject:
   - component: {fileID: 7254310988291782036}
   - component: {fileID: 4861496404516698642}
   - component: {fileID: 3798750084866292324}
+  - component: {fileID: 5071439206801123456}
   m_Layer: 8
   m_Name: BrokenTree4_Mirrored
   m_TagString: Untagged
@@ -149,7 +150,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -2755646233369475339, guid: 0efab9be7cabacb4baa182262b34aea8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -237,3 +238,24 @@ PolygonCollider2D:
       - {x: 0.12546113, y: 0.069379635}
       - {x: 0.079850085, y: 0.06985375}
   m_UseDelaunayMesh: 1
+--- !u!114 &5071439206801123456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6860932909762194913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa9db57ddc0b4bb4b0a6f1f8fe1f7a21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::YSortRendererGroup
+  sortAnchor: {fileID: 7254310988291782036}
+  sortAnchorLocalOffset: {x: 0, y: -0.18, z: 0}
+  sortingLayerName: LowGrounded
+  sortOrderOffset: 700
+  minimumSortingOrder: 0
+  sortPrecision: 100
+  renderers:
+  - renderer: {fileID: 4861496404516698642}
+    orderOffset: 0

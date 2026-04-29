@@ -20,7 +20,8 @@ public class EnemyLevelUp : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Z))
+        // TODO: Remove this debug code
+        if (Input.GetKeyDown(KeyCode.V))
         {
             Debug.Log($"Current enemy level at {_currentLevel}", this);
             LevelUp(LevelUpamount);

@@ -263,3 +263,4 @@ MonoBehaviour:
   magnetSpeed: 10
   magnetAcceleration: 30
   healAmount: 5
+  healSound: {fileID: 11400000, guid: 81d942702a11f8249b019ba473249345, type: 2}

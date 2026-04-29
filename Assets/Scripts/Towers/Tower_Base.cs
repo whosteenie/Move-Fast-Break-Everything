@@ -2,18 +2,27 @@ using UnityEngine;
 
 public abstract class Tower_Base : MonoBehaviour
 {
+    private static Tower_Base currentInteractable;
+
     protected bool playerInRange = false;
     protected Stats currentStats;
 
-    protected virtual void Update()
+    public static void TryInteractCurrent()
     {
-        if (playerInRange && Input.GetKeyDown(KeyCode.E))
+        if (currentInteractable != null)
         {
-            if (currentStats != null)
-            {
-                ApplyEffect(currentStats);
-            }
+            currentInteractable.TryInteract();
         }
+    }
+
+    private void TryInteract()
+    {
+        if (!playerInRange || currentStats == null)
+        {
+            return;
+        }
+
+        ApplyEffect(currentStats);
     }
 
     protected abstract void ApplyEffect(Stats stats);
@@ -24,15 +33,28 @@ public abstract class Tower_Base : MonoBehaviour
         {
             playerInRange = true;
             currentStats = collision.GetComponent<Stats>();
+            currentInteractable = this;
         }
     }
 
-    protected virtual void OntriggerExit2D(Collider2D collision)
+    protected virtual void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
             playerInRange = false;
             currentStats = null;
+            if (currentInteractable == this)
+            {
+                currentInteractable = null;
+            }
+        }
+    }
+
+    protected virtual void OnDisable()
+    {
+        if (currentInteractable == this)
+        {
+            currentInteractable = null;
         }
     }
 }

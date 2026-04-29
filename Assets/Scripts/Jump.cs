@@ -10,6 +10,11 @@ public class Jump : MonoBehaviour
 
     [Header("Shadow")]
     public Transform shadow;
+    [SerializeField] private string groundedShadowSortingLayerName = "GroundShadow";
+    [SerializeField] private string airborneShadowSortingLayerName = "AirborneShadow";
+    [SerializeField] private int groundedShadowSortOffset = 650;
+    [SerializeField] private int airborneShadowSortOffset = 850;
+    [SerializeField] private int minimumShadowSortingOrder;
 
     [Header("Layers")]
     public string groundedLayer = "Grounded";
@@ -27,24 +32,42 @@ public class Jump : MonoBehaviour
     private Vector3 spriteBasePosition;
     private Vector3 spriteBaseScale;
     private float spriteBaseZ;
+    private SpriteRenderer shadowRenderer;
+    private YSortRendererGroup sortGroup;
 
-    void Awake()
+    public bool IsJumping => isJumping;
+
+    private void Awake()
     {
         spriteBasePosition = spriteTransform.localPosition;
         spriteBaseScale = spriteTransform.localScale;
         spriteBaseZ = spriteTransform.position.z;
+        shadowRenderer = shadow != null ? shadow.GetComponent<SpriteRenderer>() : null;
+        sortGroup = GetComponent<YSortRendererGroup>();
+        UpdateShadowSorting();
     }
 
-    void Update()
+    private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && !isJumping)
-            StartJump();
-
         if (isJumping)
+        {
             UpdateJump();
+        }
+        
+        UpdateShadowSorting();
     }
 
-    void StartJump()
+    public void TryJump()
+    {
+        if (isJumping)
+        {
+            return;
+        }
+
+        StartJump();
+    }
+
+    private void StartJump()
     {
         isJumping = true;
         jumpTimer = 0f;
@@ -105,5 +128,26 @@ public class Jump : MonoBehaviour
     void SetLayer(string layerName)
     {
         gameObject.layer = LayerMask.NameToLayer(layerName);
+    }
+
+    private void UpdateShadowSorting()
+    {
+        if (shadowRenderer == null)
+        {
+            return;
+        }
+
+        var sortOrder = groundedShadowSortOffset;
+        if (isJumping && sortGroup != null)
+        {
+            sortOrder = sortGroup.BaseSortingOrder - 1;
+        }
+        else if (isJumping)
+        {
+            sortOrder = airborneShadowSortOffset;
+        }
+
+        shadowRenderer.sortingLayerName = isJumping ? airborneShadowSortingLayerName : groundedShadowSortingLayerName;
+        shadowRenderer.sortingOrder = Mathf.Max(minimumShadowSortingOrder, sortOrder);
     }
 }
