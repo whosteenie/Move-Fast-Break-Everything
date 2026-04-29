@@ -7,7 +7,7 @@ public class AutoAim : MonoBehaviour
     [Header("Shooting")]
     public GameObject bulletPrefab;
     public Transform firePoint;
-    public float fireRate = 2f;
+    public float fireRate;
     public float bulletSpeed = 10f;
     [SerializeField] private SoundDefinition shootSound;
 
@@ -25,6 +25,7 @@ public class AutoAim : MonoBehaviour
     {
         StartCoroutine(UpdateTargetRoutine());
         StartCoroutine(ShootRoutine());
+        fireRate = weaponSO.coolDown;
     }
 
     void Awake()
