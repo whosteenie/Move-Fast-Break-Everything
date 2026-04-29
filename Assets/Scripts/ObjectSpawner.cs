@@ -51,19 +51,14 @@ public class ObjectSpawner : MonoBehaviour
        several chances to find a valid spot */
     private void GenerateObjects(SpawnGroup spawnGroup, float spawnMinX, float spawnMaxX, float spawnMinY, float spawnMaxY, Transform parent, List<Vector2> placedPositions)
     {
-        if (Random.value > spawnGroup.spawnChance)
-        {
-            return;
-        }
-        
         float edgePadding = spawnGroup.objectSpacing * 0.5f;
 
         // Caps number of objects spawning to objectCount
         for (int i = 0; i < spawnGroup.objectCount; i++)
         {
-            if (i > 0 && Random.value > spawnGroup.spawnChance)
+            if (Random.value > spawnGroup.spawnChance)
             {
-                break;
+                continue;
             }
             
             // Give each object several chances to find a valid spot

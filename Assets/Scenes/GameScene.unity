@@ -403,7 +403,7 @@ MonoBehaviour:
     - {fileID: 7777900955581189186, guid: 9550ea7b69289a64a89fa8930adcc4ff, type: 3}
     - {fileID: 4775551448602699699, guid: 26d97c43d0b9b2245a041fce69b6de4b, type: 3}
     - {fileID: 5539367028798991948, guid: 9e230f857f49d0041812c49ef7ef9bf2, type: 3}
-    objectCount: 5
+    objectCount: 3
     spawnChance: 0.1
     playerSpawnPoint: {x: 0, y: 0}
     objectSpacing: 4
@@ -415,7 +415,7 @@ MonoBehaviour:
     spawnOnDeath: 0
   - prefabs:
     - {fileID: 5046122262590631306, guid: 4a220988e5aab5f4fb33d30eaac72dde, type: 3}
-    objectCount: 5
+    objectCount: 3
     spawnChance: 0.1
     playerSpawnPoint: {x: 0, y: 0}
     objectSpacing: 4
