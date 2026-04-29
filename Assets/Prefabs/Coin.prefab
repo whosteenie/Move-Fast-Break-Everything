@@ -179,6 +179,7 @@ MonoBehaviour:
   magnetAcceleration: 30
   minCoinValue: 1
   maxCoinValue: 5
+  collectSound: {fileID: 11400000, guid: abdef92b9d935bd4e8cafff04e0008ce, type: 2}
 --- !u!1 &2719918259538856016
 GameObject:
   m_ObjectHideFlags: 0
