@@ -2,11 +2,19 @@ using UnityEngine;
 
 public class PlayerPickupMagnet : MonoBehaviour
 {
+    private const string MagnetPowerUpId = "magnet";
+
     [SerializeField] private CircleCollider2D magnetCollider;
     [SerializeField] private Transform magnetTarget;
-    [SerializeField] private float pickupRadius = 2f;
+    [SerializeField, Min(0f)] private float basePickupRadius = 2f;
+    [SerializeField, Min(0f)] private float radiusIncreasePerRank = 0.25f;
 
-    public float PickupRadius => pickupRadius;
+    public float PickupRadius => magnetCollider != null ? magnetCollider.radius : basePickupRadius;
+
+    private void Start()
+    {
+        ApplyPurchasedPowerUps();
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -20,13 +28,17 @@ public class PlayerPickupMagnet : MonoBehaviour
 
     public void SetPickupRadius(float radius)
     {
-        pickupRadius = Mathf.Max(0f, radius);
-        ApplyPickupRadius();
+        if (magnetCollider == null)
+        {
+            return;
+        }
+
+        magnetCollider.radius = Mathf.Max(0f, radius);
     }
 
     public void AddPickupRadius(float amount)
     {
-        SetPickupRadius(pickupRadius + amount);
+        SetPickupRadius(PickupRadius + amount);
     }
 
     private void TriggerPickupMagnet(Collider2D other)
@@ -45,13 +57,9 @@ public class PlayerPickupMagnet : MonoBehaviour
         pickup.TryStartMagnetSequence(magnetTarget);
     }
 
-    private void ApplyPickupRadius()
+    private void ApplyPurchasedPowerUps()
     {
-        if (magnetCollider == null)
-        {
-            return;
-        }
-
-        magnetCollider.radius = Mathf.Max(0f, pickupRadius);
+        var magnetRank = ShopPowerUpProgress.GetRank(MagnetPowerUpId);
+        SetPickupRadius(basePickupRadius * (1f + magnetRank * radiusIncreasePerRank));
     }
 }

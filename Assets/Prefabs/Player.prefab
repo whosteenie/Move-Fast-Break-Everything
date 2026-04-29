@@ -5323,7 +5323,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerPickupMagnet
   magnetCollider: {fileID: 7307718978563041254}
   magnetTarget: {fileID: 7013742933698887600}
-  pickupRadius: 2
+  basePickupRadius: 2
+  radiusIncreasePerRank: 0.25
 --- !u!114 &314159265358979323
 MonoBehaviour:
   m_ObjectHideFlags: 0
