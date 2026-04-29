@@ -30,6 +30,7 @@ public class PlayerLevelUp : MonoBehaviour
 
     private void Update()
     {
+        // TODO: Remove this debug code
         if (!Input.GetKeyDown(KeyCode.X))
         {
             return;

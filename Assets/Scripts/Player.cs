@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
     private const int debugHealAmount = 10;
     private bool _isInvulnerable;
     private Coroutine _invulnerabilityRoutine;
+    public bool IsDead { get; private set; }
 
     public event Action<int, int> OnHealthChanged;
 
@@ -119,6 +120,7 @@ public class Player : MonoBehaviour
 
     private void Die()
     {
+        IsDead = true;
         RestoreSpriteColors();
         GameManager.Instance.ShowGameOver();
         Destroy(gameObject);

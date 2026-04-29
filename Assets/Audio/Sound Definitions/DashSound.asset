@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 34d4617e45eda8a4db9496c291253229, type: 3}
-  m_Name: XPOrbSound
+  m_Name: DashSound
   m_EditorClassIdentifier: Assembly-CSharp::SoundDefinition
-  clip: {fileID: 8300000, guid: e16e937f303fac24ca5b2b14e3510420, type: 3}
+  clip: {fileID: 8300000, guid: a465f4e2a2f3a354f927f77994a68a08, type: 3}
   category: 0
-  baseVolume: 0.3
-  maxSimultaneousVoices: 6
-  minReplayDelay: 0.02
+  baseVolume: 0.5
+  maxSimultaneousVoices: 3
+  minReplayDelay: 0
