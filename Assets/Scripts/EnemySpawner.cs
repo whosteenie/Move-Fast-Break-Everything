@@ -3,12 +3,19 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
+    [System.Serializable]
+    private struct SpawnPhase
+    {
+        public float startTimeSeconds;
+        public int maxEnemies;
+        public float spawnInterval;
+    }
+    
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private Transform player;
-    [SerializeField] private float spawnInterval = 3f;
-    [SerializeField] private int maxEnemies = 10; 
-    [SerializeField] private float spawnDistance = 12f; // With current setup, 12f is just outside camera view
+    [SerializeField] private float spawnDistance = 18f; // With current setup, 18f is just outside camera view
     [SerializeField] private float respawnDistance = 40f;
+    [SerializeField] private SpawnPhase[] spawnPhases;
     
     private readonly List<GameObject> activeEnemies = new();
     private float spawnTimer;
@@ -21,23 +28,22 @@ public class EnemySpawner : MonoBehaviour
         }
 
         UpdateActiveEnemies();
+        GetSpawnPhase(out int currentMaxEnemies, out float currentSpawnInterval);
         
-        // TODO: This should gradually increase as the game progresses instead of staying a flat amount
-        if (activeEnemies.Count >= maxEnemies)
+        if (activeEnemies.Count >= currentMaxEnemies)
         {
             return;
         }
         
         spawnTimer -= Time.deltaTime;
         
-        // TODO: This should also shrink as the game progresses to up intensity during play
         if (spawnTimer > 0f)
         {
             return;
         }
         
         SpawnEnemy();
-        spawnTimer = spawnInterval;
+        spawnTimer = currentSpawnInterval;
     }
 
     private void SpawnEnemy()
@@ -73,5 +79,25 @@ public class EnemySpawner : MonoBehaviour
                 enemyObject.transform.position = GetSpawn();
             }
         }
+    }
+    
+    // Picks the active spawn phase based on current run time
+    private void GetSpawnPhase(out int currentMaxEnemies, out float currentSpawnInterval)
+    {
+        SpawnPhase currentPhase = spawnPhases[0];
+        float runTimeSeconds = GameManager.CurrentRunTimeSeconds;
+        
+        for (int i = 1; i < spawnPhases.Length; i++)
+        {
+            if (runTimeSeconds < spawnPhases[i].startTimeSeconds)
+            {
+                break;
+            }
+            
+            currentPhase = spawnPhases[i];
+        }
+        
+        currentMaxEnemies = currentPhase.maxEnemies;
+        currentSpawnInterval = currentPhase.spawnInterval;
     }
 }

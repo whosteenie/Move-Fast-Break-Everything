@@ -7,6 +7,7 @@ public class Bullet : MonoBehaviour
     public float speed = 10f;
     public float lifetime = 3f;
     public int damage;
+    private float pierce;
 
     private Vector2 moveDirection;
 
@@ -17,11 +18,12 @@ public class Bullet : MonoBehaviour
 
         transform.position += (Vector3)(moveDirection * (speed * Time.deltaTime));
     }
-    public void SetDirection(Vector2 direction, float bulletSpeed, int damageAmount)
+    public void SetDirection(Vector2 direction, float bulletSpeed, int damageAmount, float pierceAmount)
     {
         moveDirection = direction.normalized;
         speed = bulletSpeed;
         damage = damageAmount;
+        pierce = pierceAmount;
 
         RotateBullet();
         Destroy(gameObject, lifetime);
@@ -41,15 +43,20 @@ public class Bullet : MonoBehaviour
     {
         Enemy enemy = collision.GetComponent<Enemy>();
         BossController boss = collision.GetComponent<BossController>();
+        DestructibleObstacle destructibleObstacle = collision.GetComponent<DestructibleObstacle>();
 
         if (enemy != null)
         {
-            enemy.TakeDamage(damage);
-            Debug.Log("Bullet hit enemy for " + damage + " damage.");
+            enemy.TakeDamage(damage, pierce);
+            Debug.Log("Bullet hit enemy for " + damage + " damage and" + pierce + "pierce damage");
             Destroy(gameObject);
         } else if (boss != null) {
             boss.TakeDamage(damage);
             Debug.Log("Bullet hit enemy for " + damage + " damage.");
+            Destroy(gameObject);
+        } else if (destructibleObstacle != null) {
+            destructibleObstacle.TakeDamage(damage);
+            Debug.Log("Bullet hit obstacle for " + damage + " damage.");
             Destroy(gameObject);
         }
     }

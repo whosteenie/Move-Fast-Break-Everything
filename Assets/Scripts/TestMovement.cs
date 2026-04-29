@@ -31,6 +31,7 @@ public class TestMovement : MonoBehaviour
     // [SerializeField] private MovementSO[] movementArray;
     public MovementSO slideMovementSO;
     public MovementSO chargeMovementSO;
+    public MovementSO slideDashMovementSO;
 
     public MovementStateMachine movementStateMachine;
 
@@ -39,9 +40,12 @@ public class TestMovement : MonoBehaviour
     [Header("Audio")]
     [SerializeField] private SoundDefinition slideSound;
 
-    void Update()
-    {
+    void Update() {
+        InputHandler();
+    }
 
+    void InputHandler()
+    {
 
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
@@ -50,8 +54,14 @@ public class TestMovement : MonoBehaviour
         {
             facing = movement.normalized;
         }
+        if(Input.GetKeyDown(dashKey) && movementStateMachine.HasState(MovementStateMachine.State.slide) && !movementStateMachine.HasState(MovementStateMachine.State.slideDash) && !movementStateMachine.HasState(MovementStateMachine.State.slideDashDecay))
+        {
+            Debug.Log("Slide Dash Initiated");
+            movementStateMachine.AddComboState(slideDashMovementSO, MovementStateMachine.State.slide, MovementStateMachine.State.dash);
+        }
+        if (Input.GetKeyDown(dashKey) && !isDashing && dashCooldownTimer <= 0f
+        && !movementStateMachine.HasState(MovementStateMachine.State.slideDash) && !movementStateMachine.HasState(MovementStateMachine.State.slideDashDecay))
 
-        if (Input.GetKeyDown(dashKey) && !isDashing && dashCooldownTimer <= 0f)
         {
             isDashing = true;
             dashDurationTimer = dashDuration;
@@ -60,6 +70,7 @@ public class TestMovement : MonoBehaviour
         {
             // print("In Slide Key Press");
             movementStateMachine.AddState(slideMovementSO);
+            SoundManager.Play(slideSound);
             SoundManager.Play(slideSound);
         }
         if (Input.GetKeyDown(chargeKey) && !(movementStateMachine.HasState(MovementStateMachine.State.slide) || movementStateMachine.HasState(MovementStateMachine.State.slideDecay) || movementStateMachine.HasState(MovementStateMachine.State.charge) || movementStateMachine.HasState(MovementStateMachine.State.chargeDecay)))
@@ -98,8 +109,12 @@ public class TestMovement : MonoBehaviour
         if (isDashing)
         {
             // rb.MovePosition(rb.position + facing * dashSpeed * Time.fixedDeltaTime);
-            endPos += facing * (dashSpeed * Time.fixedDeltaTime);
+            endPos += Dash();
         }
+        if (movementStateMachine.HasState(MovementStateMachine.State.slideDash))
+        {
+            endPos += SlideDash();
+        }  
 
         if (movementStateMachine.HasState(MovementStateMachine.State.slide))
         {
@@ -122,13 +137,18 @@ public class TestMovement : MonoBehaviour
         rb.MovePosition(endPos);
     }
 
+    private Vector2 Dash()
+    {
+        return facing * dashSpeed*(slideDashMovementSO.agilityScale*stats.speedMultiplier * Time.fixedDeltaTime);
+    }
+
     private Vector2 Slide()
     {
         //Shrink the Player
         // Debug.Log("In Slide");
         transform.localScale = new Vector3(.25f, .25f, .25f);
         // rb.MovePosition(rb.position + facing*slideMovementSO.movePower*Time.fixedDeltaTime);
-        return facing * (slideMovementSO.movePower * Time.fixedDeltaTime);
+        return facing.normalized*slideMovementSO.movePower*(slideMovementSO.agilityScale*stats.speedMultiplier)*Time.fixedDeltaTime;
     }
 
     private Vector2 SlideDecay()
@@ -157,10 +177,16 @@ public class TestMovement : MonoBehaviour
     private Vector2 ChargeDecay()
     {
         //Shrink the player
-        transform.localScale = new UnityEngine.Vector3(.5f, .5f, .5f);
+        transform.localScale = new UnityEngine.Vector3(.5f,.5f,.5f);
         // Debug.Log("In Slide Decay");
         // rb.MovePosition(rb.position + facing*(slideMovementSO.movePower)*Time.fixedDeltaTime);
-        return facing * (slideMovementSO.movePower * Time.fixedDeltaTime);
+        return facing.normalized*slideMovementSO.movePower*(chargeMovementSO.strengthScale*stats.damageMultiplier)*Time.fixedDeltaTime;
+    }
+
+    private Vector2 SlideDash()
+    {
+        Debug.Log("In Slide Dash");
+        return facing.normalized*slideDashMovementSO.movePower*(slideDashMovementSO.agilityScale*stats.speedMultiplier)*Time.fixedDeltaTime;
     }
     //__________________________________________________________________________________________________
 }

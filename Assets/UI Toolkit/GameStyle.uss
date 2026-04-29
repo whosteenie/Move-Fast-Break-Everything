@@ -4,6 +4,33 @@
     padding-top: 16px;
 }
 
+.run-coin-root {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    min-width: 90px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.55);
+    border-radius: 6px;
+    padding: 6px 12px 6px 10px;
+}
+
+.run-coin-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.run-coin-label {
+    color: rgb(255, 244, 201);
+    font-size: 22px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-left;
+}
+
 .run-timer-container {
     width: 120px;
 }
@@ -81,6 +108,60 @@
     align-items: center;
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.7);
+}
+
+.pause-root {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(4, 6, 10, 0.92);
+}
+
+.pause-panel {
+    width: 360px;
+    padding: 24px;
+    align-items: center;
+    background-color: rgb(73, 79, 112);
+    border-color: rgb(239, 191, 99);
+    border-width: 2px;
+    border-radius: 4px;
+}
+
+.pause-title {
+    margin-bottom: 24px;
+    color: rgb(255, 255, 255);
+    font-size: 36px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+}
+
+.pause-button {
+    width: 100%;
+    height: 54px;
+    margin-top: 12px;
+    color: rgb(255, 255, 255);
+    font-size: 22px;
+    -unity-font-style: bold;
+    background-color: rgb(139, 136, 66);
+    border-color: rgb(236, 181, 83);
+    border-width: 2px;
+    border-radius: 3px;
+}
+
+.pause-button--primary {
+    margin-top: 0;
+    color: rgb(255, 255, 255);
+    background-color: rgb(168, 158, 78);
+    border-color: rgb(255, 238, 145);
+}
+
+.pause-button--danger {
+    background-color: rgb(163, 38, 29);
+    border-color: rgb(239, 191, 99);
 }
 
 .level-up-title {

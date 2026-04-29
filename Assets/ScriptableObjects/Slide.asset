@@ -14,8 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MovementSO
   moveName: Slide
   moveState: 2
+  baseMoveTimeLength: 0.25
   moveTimeLength: 0.25
   movePower: 15
+  healthScale: 0
+  defenseScale: 0
+  strengthScale: 0
+  agilityScale: 0.5
+  dexterityScale: 0.5
+  luckScale: 0
   hasDecay: 1
   decayState: 3
+  baseDecayTimeLength: 0.25
   decayTimeLength: 0.25
