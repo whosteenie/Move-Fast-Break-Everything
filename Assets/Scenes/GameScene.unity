@@ -615,7 +615,7 @@ MonoBehaviour:
   mightPowerUp: {fileID: 11400000, guid: eeab9669df0b7024ab50bb8da4d316e1, type: 2}
   hastePowerUp: {fileID: 11400000, guid: 419a0c5e1ae414941bec945316209c8f, type: 2}
   moveSpeedPowerUp: {fileID: 11400000, guid: 4fe087cff3f60ba4096509bdf18c344a, type: 2}
-  defensePowerUp: {fileID: 0}
+  defensePowerUp: {fileID: 11400000, guid: 2035b745d4f32874ab882ebd40406a19, type: 2}
   piercePowerUp: {fileID: 0}
   thornsPowerUp: {fileID: 0}
 --- !u!114 &1828502760
