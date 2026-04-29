@@ -11,9 +11,11 @@ public class EnemyStats : MonoBehaviour
 
     [Header("Scaling Multipliers")]
     public float speedMult = 1f;
+
     public float damageMult = 1f;
     public float healthMult = 1f;
     public float defenseMult = 1f;
+    //hopefuly i got it roight
 
     [Header("Level Scaling")]
     public float speedIncreasePerLvl = 0.5f;
