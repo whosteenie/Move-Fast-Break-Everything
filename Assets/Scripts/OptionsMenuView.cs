@@ -1,3 +1,4 @@
+using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
@@ -13,6 +14,15 @@ public sealed class OptionsMenuView {
     private const string MusicSliderHostName = "options-music-slider-host";
     private const string SliderControlClassName = "options-menu__slider";
     private const string WasdCompositeName = "WASD";
+    private const string MoveUpPrefKey = "controls.move.up";
+    private const string MoveDownPrefKey = "controls.move.down";
+    private const string MoveLeftPrefKey = "controls.move.left";
+    private const string MoveRightPrefKey = "controls.move.right";
+    private const string JumpPrefKey = "controls.jump";
+    private const string DashPrefKey = "controls.dash";
+    private const string ChargePrefKey = "controls.charge";
+    private const string SlidePrefKey = "controls.slide";
+    private const string InteractPrefKey = "controls.interact";
 
     public VisualElement Root { get; }
     public static bool IsCapturingBindingInput { get; private set; }
@@ -75,6 +85,8 @@ public sealed class OptionsMenuView {
         }
 
         BindControlButtons();
+        LoadSavedBindings();
+        SaveCurrentBindings();
         RefreshBindingLabels();
         ShowSoundsTab();
         Hide();
@@ -195,6 +207,7 @@ public sealed class OptionsMenuView {
         _activeButton = null;
         _wasActionEnabled = false;
         IsCapturingBindingInput = false;
+        SaveCurrentBindings();
         RefreshBindingLabels();
     }
 
@@ -216,6 +229,59 @@ public sealed class OptionsMenuView {
         SetButtonLabel(_chargeButton, "Charge", GetActionBindingIndex("Charge"), "Z");
         SetButtonLabel(_slideButton, "Slide", GetActionBindingIndex("Slide"), "C");
         SetButtonLabel(_interactButton, "Interact", GetActionBindingIndex("Interact"), "F");
+    }
+
+    private void LoadSavedBindings() {
+        ApplySavedBinding("Move", GetMoveBindingIndex("up"), MoveUpPrefKey);
+        ApplySavedBinding("Move", GetMoveBindingIndex("down"), MoveDownPrefKey);
+        ApplySavedBinding("Move", GetMoveBindingIndex("left"), MoveLeftPrefKey);
+        ApplySavedBinding("Move", GetMoveBindingIndex("right"), MoveRightPrefKey);
+        ApplySavedBinding("Jump", GetActionBindingIndex("Jump"), JumpPrefKey);
+        ApplySavedBinding("Dash", GetActionBindingIndex("Dash"), DashPrefKey);
+        ApplySavedBinding("Charge", GetActionBindingIndex("Charge"), ChargePrefKey);
+        ApplySavedBinding("Slide", GetActionBindingIndex("Slide"), SlidePrefKey);
+        ApplySavedBinding("Interact", GetActionBindingIndex("Interact"), InteractPrefKey);
+    }
+
+    private void SaveCurrentBindings() {
+        SaveBinding("Move", GetMoveBindingIndex("up"), MoveUpPrefKey);
+        SaveBinding("Move", GetMoveBindingIndex("down"), MoveDownPrefKey);
+        SaveBinding("Move", GetMoveBindingIndex("left"), MoveLeftPrefKey);
+        SaveBinding("Move", GetMoveBindingIndex("right"), MoveRightPrefKey);
+        SaveBinding("Jump", GetActionBindingIndex("Jump"), JumpPrefKey);
+        SaveBinding("Dash", GetActionBindingIndex("Dash"), DashPrefKey);
+        SaveBinding("Charge", GetActionBindingIndex("Charge"), ChargePrefKey);
+        SaveBinding("Slide", GetActionBindingIndex("Slide"), SlidePrefKey);
+        SaveBinding("Interact", GetActionBindingIndex("Interact"), InteractPrefKey);
+        PlayerPrefs.Save();
+    }
+
+    private void ApplySavedBinding(string actionName, int bindingIndex, string prefKey) {
+        if(_actions == null || bindingIndex < 0 || !PlayerPrefs.HasKey(prefKey)) {
+            return;
+        }
+
+        var action = _actions.FindAction(actionName, throwIfNotFound: false);
+        if(action == null) {
+            return;
+        }
+
+        action.ApplyBindingOverride(bindingIndex, PlayerPrefs.GetString(prefKey));
+    }
+
+    private void SaveBinding(string actionName, int bindingIndex, string prefKey) {
+        if(_actions == null || bindingIndex < 0) {
+            return;
+        }
+
+        var action = _actions.FindAction(actionName, throwIfNotFound: false);
+        if(action == null) {
+            return;
+        }
+
+        var binding = action.bindings[bindingIndex];
+        var pathToSave = string.IsNullOrEmpty(binding.overridePath) ? binding.path : binding.overridePath;
+        PlayerPrefs.SetString(prefKey, pathToSave);
     }
 
     private void SetButtonLabel(Button button, string actionName, int bindingIndex, string fallbackLabel) {
