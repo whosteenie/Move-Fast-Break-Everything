@@ -317,10 +317,7 @@ public class GameManager : MonoBehaviour
     {
         EnablePlayerAbility(choiceId);
 
-        if (randomOptions.Contains(choiceId))
-        {
-            randomOptions.Remove(choiceId);
-        }
+     
 
         if (_playerLevelUp == null)
         {
@@ -351,22 +348,31 @@ public class GameManager : MonoBehaviour
         {
             case "autofire":
                 {
+                    Debug.Log("hello");
                     var comp = player.GetComponent<AutoAim>();
                     if (comp != null) comp.enabled = true;
+                    randomOptions.Remove(choiceId);
                     break;
                 }
 
             case "melee":
                 {
-                    var comp = player.GetComponent<Melee>();
-                    if (comp != null) comp.enabled = true;
+                    var comp = player.GetComponentInChildren<Melee>();
+                    randomOptions.Remove(choiceId);
+                    comp.gameObject.SetActive(true); 
+                    comp.enabled = true;
+                    Debug.Log("Melee enabled and activated");
+                   
                     break;
                 }
 
             case "orbit":
                 {
                     var comp = player.GetComponent<Circle>();
-                    if (comp != null) comp.enabled = true;
+                    randomOptions.Remove(choiceId);
+                    comp.gameObject.SetActive(true);
+                    comp.enabled = true;
+                    Debug.Log("Orbit enabled and activated");
                     break;
                 }
         }

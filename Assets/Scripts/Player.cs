@@ -43,13 +43,15 @@ public class Player : MonoBehaviour
         CurrentHealth = maxHealth;
         EnsureHealthBar();
         NotifyHealthChanged();
-        GetComponent<AutoAim>().enabled = true;
-        GetComponentInChildren<Melee>().enabled = false;
-        GetComponent<Circle>().enabled = false;
     }
 
     private void Awake()
     {
+        GetComponent<AutoAim>().enabled = true;
+        GetComponentInChildren<Melee>().enabled = false;
+        GetComponent<Circle>().enabled = false;
+      
+
         stats = GetComponent<Stats>();
         if (visualSpriteRenderer != null)
         {

@@ -25,6 +25,8 @@ public class Melee : MonoBehaviour
         attackInterval = weaponSO.coolDown;
 
         hitbox = GetComponent<Collider2D>();
+
+        Debug.Log("Melee running");
     }
 
     void Update()

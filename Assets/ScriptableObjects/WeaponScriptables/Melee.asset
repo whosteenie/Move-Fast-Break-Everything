@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 609d4bb425d15b84ca377cfd01a86e69, type: 3}
   m_Name: Melee
   m_EditorClassIdentifier: Assembly-CSharp::WeaponSO
-  fireRate: 2
-  cooldown: 0.6
+  coolDown: 0.1
   bulletSpeed: 10
   baseDamage: 10
   bulletPrefab: {fileID: 895139326062678127, guid: e01566ec73646374ca39b3456749914d, type: 3}
