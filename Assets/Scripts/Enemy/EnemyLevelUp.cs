@@ -25,7 +25,7 @@ public class EnemyLevelUp : MonoBehaviour
         }
     }
 
-    private void Oestroy()
+    private void OnDestroy()
     {
         if (GameManager.Instance != null)
         {
