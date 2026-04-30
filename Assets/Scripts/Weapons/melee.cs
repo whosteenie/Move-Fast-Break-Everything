@@ -16,6 +16,7 @@ public class Melee : MonoBehaviour
     private float pierce=1;
 
     private readonly List<Collider2D> targets = new List<Collider2D>();
+    int damage;
 
     void Start()
     {
@@ -25,6 +26,15 @@ public class Melee : MonoBehaviour
         attackInterval = weaponSO.coolDown;
 
         hitbox = GetComponent<Collider2D>();
+
+        Debug.Log("Melee running");
+        damage = weaponSO.baseDamage;
+    }
+    public void IncreaseDamage(int amount)
+    {
+        
+        damage+=amount;
+        Debug.Log("Damage increased by " + damage);
     }
 
     void Update()
@@ -40,7 +50,7 @@ public class Melee : MonoBehaviour
 
     void PerformAttack()
     {
-        int damage = weaponSO.baseDamage;
+        
 
         if (stats != null)
             damage = Mathf.RoundToInt(damage * stats.damageMultiplier);

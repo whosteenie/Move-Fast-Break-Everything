@@ -371,7 +371,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   enemyPrefabs:
   - {fileID: 1874990315484048395, guid: 11d95817b12e84a4082ed1ed31c29769, type: 3}
-  - {fileID: 1443466476714610113, guid: 0e93e345cfaea7441a616a542ef2341e, type: 3}
   player: {fileID: 1092388853012045805}
   spawnDistance: 18
   respawnDistance: 40
@@ -449,6 +448,17 @@ MonoBehaviour:
     spawnOnTech: 0
     spawnOnHazard: 0
     spawnOnDeath: 0
+--- !u!114 &1085196100 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3480304899369043550, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
+  m_PrefabInstance: {fileID: 1092388853012045804}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4fee15351462c749b8ddcac37b0ad0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::melee
 --- !u!1 &1269148358
 GameObject:
   m_ObjectHideFlags: 0
@@ -626,6 +636,8 @@ MonoBehaviour:
   defensePowerUp: {fileID: 11400000, guid: 2035b745d4f32874ab882ebd40406a19, type: 2}
   piercePowerUp: {fileID: 0}
   thornsPowerUp: {fileID: 0}
+  enemyLevelInterval: 30
+  player: {fileID: 234831455}
 --- !u!114 &1828502760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -745,10 +757,26 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1269611933969825367, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
+      propertyPath: baseDamage
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 1826873285969335579, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
       propertyPath: movementStateMachine
       value: 
       objectReference: {fileID: 1828502760}
+    - target: {fileID: 2436123147083778664, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
+      propertyPath: melee
+      value: 
+      objectReference: {fileID: 1085196100}
+    - target: {fileID: 2436123147083778664, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
+      propertyPath: circle
+      value: 
+      objectReference: {fileID: 1092388853012045821}
+    - target: {fileID: 2702402296363920014, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2956268541207477328, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
       propertyPath: m_LocalScale.x
       value: 3.85
@@ -821,7 +849,8 @@ PrefabInstance:
       propertyPath: m_Constraints
       value: 4
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2702402296363920014, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -841,7 +870,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 234831455}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7315d9d719308f547b9fd326599f987d, type: 3}
   m_Name: 

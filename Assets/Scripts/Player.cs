@@ -1,6 +1,7 @@
-using System.Collections;
 using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class Player : MonoBehaviour
 {
@@ -12,9 +13,9 @@ public class Player : MonoBehaviour
     private PlayerHealthBar _healthBar;
     public int maxHealth = 10;
 
-    
-   
 
+
+    private Melee melee;
 
     [SerializeField] private float invulnerabilityDuration = 1f;
     [SerializeField] private float flashInterval = 0.1f;
@@ -46,6 +47,16 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
+        GetComponent<AutoAim>().enabled = true;
+        melee = GetComponentInChildren<Melee>();
+        GetComponent<Circle>().enabled = false;
+
+        if (melee != null)
+        {
+            melee.enabled = false;
+            melee.gameObject.SetActive(false); 
+        }
+
         stats = GetComponent<Stats>();
         if (visualSpriteRenderer != null)
         {
