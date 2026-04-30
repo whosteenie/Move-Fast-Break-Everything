@@ -44,10 +44,16 @@ public class EnemySpawner : MonoBehaviour
         
         SpawnEnemy();
         spawnTimer = currentSpawnInterval;
+        
     }
 
     private void SpawnEnemy()
     {
+        if (enemyPrefabs == null || enemyPrefabs.Length == 0)
+        {
+            Debug.LogError("No enemy prefabs assigned!");
+            return;
+        }
         Vector3 spawnPosition = GetSpawn();
 
         
