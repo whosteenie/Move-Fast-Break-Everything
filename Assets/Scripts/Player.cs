@@ -1,6 +1,7 @@
-using System.Collections;
 using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class Player : MonoBehaviour
 {
@@ -42,6 +43,9 @@ public class Player : MonoBehaviour
         CurrentHealth = maxHealth;
         EnsureHealthBar();
         NotifyHealthChanged();
+        GetComponent<AutoAim>().enabled = true;
+        GetComponentInChildren<Melee>().enabled = false;
+        GetComponent<Circle>().enabled = false;
     }
 
     private void Awake()

@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
@@ -28,6 +29,17 @@ public class GameManager : MonoBehaviour
     private const string RetryButtonName = "retry-button";
     private const string GameOverQuitButtonName = "quit-button";
 
+    //for weapon
+    [SerializeField] private GameObject player;
+    private const string RandomButtonName = "random-button";
+    private readonly string[] randomOptions = new string[]
+    {
+        "autofire",
+        "melee",
+        "orbit"
+    };
+    private string _currentRandomChoice;
+
     private Label _runTimerLabel;
     private Label _runCoinLabel;
     private Image _runCoinIcon;
@@ -45,6 +57,8 @@ public class GameManager : MonoBehaviour
     private bool _isPaused;
     private int currentEnemyLevel = 1;
     private int previousEnemyLevel = 1;
+
+    private Button _randomButton;
 
     public static GameManager Instance { get; private set; }
     public static float CurrentRunTimeSeconds => Instance != null ? Instance._currentRunTime : 0f;
@@ -94,6 +108,7 @@ public class GameManager : MonoBehaviour
         _levelUpRoot = root.Q<VisualElement>(LevelUpRootName);
         _pauseRoot = root.Q<VisualElement>(PauseRootName);
         _gameOverRoot = root.Q<VisualElement>(GameOverRootName);
+        _randomButton = root.Q<Button>(RandomButtonName);
 
         var strengthButton = root.Q<Button>(StrengthButtonName);
         var dexterityButton = root.Q<Button>(DexterityButtonName);
@@ -104,6 +119,9 @@ public class GameManager : MonoBehaviour
         var retryButton = root.Q<Button>(RetryButtonName);
         var gameOverQuitButton = root.Q<Button>(GameOverQuitButtonName);
         var optionsCloseButton = root.Q<Button>(OptionsMenuView.CloseButtonName);
+        var randomButton = root.Q<Button>(RandomButtonName);
+
+        if (randomButton != null) randomButton.clicked += () => ResolveLevelUpChoice(_currentRandomChoice);
 
         if (strengthButton != null) strengthButton.clicked += () => ResolveLevelUpChoice("strength");
         if (dexterityButton != null) dexterityButton.clicked += () => ResolveLevelUpChoice("dexterity");
@@ -215,10 +233,30 @@ public class GameManager : MonoBehaviour
         {
             _levelUpRoot.style.display = DisplayStyle.Flex;
         }
+        FourthOption();
     }
+
+    private void FourthOption()
+    {
+       
+        var root = uiDocument.rootVisualElement;
+        var randomButton = root.Q<Button>(RandomButtonName);
+        if (randomButton == null) return;
+
+        int index = UnityEngine.Random.Range(0, randomOptions.Length);
+        _currentRandomChoice = randomOptions[index];
+
+        randomButton.text = _currentRandomChoice;
+
+        // Show the button if it was hidden
+        randomButton.style.display = DisplayStyle.Flex;
+    }
+    
 
     private void ResolveLevelUpChoice(string choiceId)
     {
+        EnablePlayerAbility(choiceId);
+
         if (_playerLevelUp == null)
         {
             return;
@@ -233,8 +271,39 @@ public class GameManager : MonoBehaviour
         {
             _levelUpRoot.style.display = DisplayStyle.None;
         }
+        if (_randomButton != null)
+        {
+            _randomButton.style.display = DisplayStyle.None;
+        }
         Time.timeScale = 1f;
         _playerLevelUp.ResolveLevelUpChoice();
+    }
+    private void EnablePlayerAbility(string choiceId)
+    {
+
+        switch (choiceId)
+        {
+            case "autofire":
+                {
+                    var comp = player.GetComponent<AutoAim>();
+                    if (comp != null) comp.enabled = true;
+                    break;
+                }
+
+            case "melee":
+                {
+                    var comp = player.GetComponent<Melee>();
+                    if (comp != null) comp.enabled = true;
+                    break;
+                }
+
+            case "orbit":
+                {
+                    var comp = player.GetComponent<Circle>();
+                    if (comp != null) comp.enabled = true;
+                    break;
+                }
+        }
     }
 
     private void RefreshLevelProgressBar()

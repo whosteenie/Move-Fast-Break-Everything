@@ -618,6 +618,8 @@ MonoBehaviour:
   runCoinSprite: {fileID: 4994948417755550580, guid: 90e374de09503b1439bc13bc4575e623, type: 3}
   gameMusic: {fileID: 11400000, guid: 2261cb4120a032643bc7c200637298e9, type: 2}
   levelUpSound: {fileID: 11400000, guid: aa91232242783e845aebaa2be93aabb3, type: 2}
+  enemyLevelInterval: 30
+  player: {fileID: 234831455}
 --- !u!114 &1828502760
 MonoBehaviour:
   m_ObjectHideFlags: 0
