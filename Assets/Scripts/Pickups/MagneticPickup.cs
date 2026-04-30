@@ -19,7 +19,7 @@ public abstract class MagneticPickup : MonoBehaviour
     private float _launchTimer;
     private float _currentMagnetSpeed;
     private bool _isMagnetized;
-    private bool _hasTriggeredPickupRange;
+    private bool _hasStartedMagnet;
     private bool _isCollected;
 
     protected Transform MagnetTarget => _magnetTarget;
@@ -66,7 +66,7 @@ public abstract class MagneticPickup : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (_isCollected || !collision.CompareTag("Player"))
+        if (_isCollected || collision.isTrigger || !collision.CompareTag("Player"))
         {
             return;
         }
@@ -74,18 +74,20 @@ public abstract class MagneticPickup : MonoBehaviour
         if (IsTouchingPickupCollider(collision))
         {
             Collect(collision.gameObject);
-            return;
         }
+    }
 
-        if (_hasTriggeredPickupRange)
+    protected abstract bool TryCollect(GameObject playerObject);
+
+    public void TryStartMagnetSequence(Transform playerTransform)
+    {
+        if (_isCollected || _hasStartedMagnet || playerTransform == null)
         {
             return;
         }
 
-        StartMagnetSequence(collision.transform);
+        StartMagnetSequence(playerTransform);
     }
-
-    protected abstract bool TryCollect(GameObject playerObject);
 
     private void Collect(GameObject playerObject)
     {
@@ -101,7 +103,7 @@ public abstract class MagneticPickup : MonoBehaviour
     private void StartMagnetSequence(Transform playerTransform)
     {
         _magnetTarget = playerTransform;
-        _hasTriggeredPickupRange = true;
+        _hasStartedMagnet = true;
         _isMagnetized = true;
         _launchTimer = launchDuration;
         _currentMagnetSpeed = 0f;
@@ -165,7 +167,7 @@ public abstract class MagneticPickup : MonoBehaviour
             return;
         }
 
-        var isActive = _hasTriggeredPickupRange && !_isCollected;
+        var isActive = _hasStartedMagnet && !_isCollected;
         visualRenderer.sortingLayerName = isActive ? activeSortingLayerName : groundedSortingLayerName;
         visualRenderer.sortingOrder = isActive ? activeSortingOrder : groundedSortingOrder;
     }

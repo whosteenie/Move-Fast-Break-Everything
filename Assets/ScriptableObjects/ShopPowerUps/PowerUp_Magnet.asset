@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ShopPowerUpDefinition
   powerUpId: magnet
   displayName: Magnet
-  description: Expands pickup attraction range.
-  icon: {fileID: 0}
+  description: Increases pickup attraction range by 25% per rank.
+  icon: {fileID: 4877825377717948546, guid: 4bbb6225890b51e45b40107f4bb47e67, type: 3}
   baseCost: 150
   costIncreasePerRank: 90
   maxRank: 4
