@@ -19,7 +19,7 @@ public class Stats : MonoBehaviour
 
     public float defense = .2f;
     public float thorns = 0.2f;
-    public float pirece = .2f;
+    public float pirece = .1f;
 
     public int baseHealth = 10;
     public int flatHealthBonus = 0;

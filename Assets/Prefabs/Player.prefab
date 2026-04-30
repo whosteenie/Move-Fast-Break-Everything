@@ -4944,8 +4944,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 412345675
-  m_SortingLayer: 5
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 2000
   m_MaskInteraction: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
@@ -5130,8 +5130,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 0.5
+  m_Offset: {x: 0.015312195, y: 0}
+  m_Radius: 0.392812
 --- !u!58 &7307718978563041254
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -5247,14 +5247,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6e631899bbe18c4f9289ec4dd17318f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AutoAim
+  weaponSO: {fileID: 0}
   bulletPrefab: {fileID: 3862674274435588204, guid: ca8cd73260e47a24388e27816b46ffe7, type: 3}
   firePoint: {fileID: 3551539267116345053}
   fireRate: 2
   bulletSpeed: 10
   shootSound: {fileID: 11400000, guid: 1e8c5d55452df354f980a2e7b2fb07e7, type: 2}
-  detectionRange: 10
   targetRefreshRate: 0.3
   baseDamage: 4
+  tag: 
   dis: 10
 --- !u!114 &8550780378805119090
 MonoBehaviour:
@@ -5310,6 +5311,7 @@ MonoBehaviour:
   flashInterval: 0.05
   flashAlpha: 0.35
   hurtSound: {fileID: 11400000, guid: 2ea0d9881c835c04ab6efe298af23aa7, type: 2}
+  bleedInterval: 5
 --- !u!114 &7307718978563041255
 MonoBehaviour:
   m_ObjectHideFlags: 0

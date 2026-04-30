@@ -172,7 +172,9 @@ public class TestMovement : MonoBehaviour
     {
         failureParticle.startColor = Color.blue;
         failureParticle.Play();
-        return facing * (dashSpeed * (slideDashMovementSO.agilityScale*stats.speedMultiplier * Time.fixedDeltaTime));
+        Debug.Log("DashAmount");
+        Debug.Log(dashSpeed * (slideDashMovementSO.agilityScale*stats.speedMultiplier * Time.fixedDeltaTime));
+        return facing * (dashSpeed + (slideDashMovementSO.agilityScale*stats.speedMultiplier)) * Time.fixedDeltaTime;
     }
 
     private Vector2 Slide()
@@ -183,7 +185,7 @@ public class TestMovement : MonoBehaviour
         failureParticle.Play();
         transform.localScale = new Vector3(.25f, .25f, .25f);
         // rb.MovePosition(rb.position + facing*slideMovementSO.movePower*Time.fixedDeltaTime);
-        return facing.normalized * (slideMovementSO.movePower * (slideMovementSO.agilityScale*stats.speedMultiplier) * Time.fixedDeltaTime);
+        return facing.normalized * (slideMovementSO.movePower + (slideMovementSO.agilityScale*stats.speedMultiplier) + (slideMovementSO.dexterityScale*stats.dexterityMultiplier)) * Time.fixedDeltaTime;
     }
 
     private Vector2 SlideDecay()
@@ -215,7 +217,7 @@ public class TestMovement : MonoBehaviour
         transform.localScale = new UnityEngine.Vector3(.5f,.5f,.5f);
         // Debug.Log("In Slide Decay");
         // rb.MovePosition(rb.position + facing*(slideMovementSO.movePower)*Time.fixedDeltaTime);
-        return facing.normalized * (slideMovementSO.movePower * (chargeMovementSO.strengthScale*stats.damageMultiplier) * Time.fixedDeltaTime);
+        return facing.normalized * (slideMovementSO.movePower + (chargeMovementSO.strengthScale*stats.damageMultiplier)) * Time.fixedDeltaTime;
     }
 
     private Vector2 SlideDash()
@@ -223,7 +225,7 @@ public class TestMovement : MonoBehaviour
         failureParticle.startColor = Color.purple;
         failureParticle.Play();
         Debug.Log("In Slide Dash");
-        return facing.normalized * (slideDashMovementSO.movePower * (slideDashMovementSO.agilityScale*stats.speedMultiplier) * Time.fixedDeltaTime);
+        return facing.normalized * (slideDashMovementSO.movePower + (slideDashMovementSO.agilityScale*stats.speedMultiplier))* Time.fixedDeltaTime;
     }
 
     private void MoveFail()
@@ -232,4 +234,22 @@ public class TestMovement : MonoBehaviour
         failureParticle.Play();
     }
     //__________________________________________________________________________________________________
+
+    void OnCollisionStay2D(Collision2D collision)
+    {
+        if (movementStateMachine.HasState(MovementStateMachine.State.chargeDecay))
+        {
+            int damage = (stats != null) ? stats.GetDamage(1) : 1;
+            float pierce = stats != null ? stats.GetPierce() : 0f;
+            if (collision.gameObject != null && collision.gameObject.CompareTag("Enemy"))
+            {
+                Enemy player = collision.gameObject.GetComponent<Enemy>();
+                if (player != null)
+                {
+                    player.TakeDamage(damage, pierce);
+                    Debug.Log("Charging Into Enemy");
+                }
+            }
+        }
+    }
 }
