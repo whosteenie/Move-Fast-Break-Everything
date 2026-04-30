@@ -8,8 +8,13 @@ public class Player : MonoBehaviour
     [SerializeField] private SpriteRenderer visualSpriteRenderer;
     private Color _originalColor;
 
+
     private PlayerHealthBar _healthBar;
     public int maxHealth = 10;
+
+    
+   
+
 
     [SerializeField] private float invulnerabilityDuration = 1f;
     [SerializeField] private float flashInterval = 0.1f;
