@@ -189,9 +189,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoodPickup
   rb: {fileID: 5874246572259815132}
   pickupCollider: {fileID: 8128633714680220592}
+  visualRenderer: {fileID: 4623751033147920683}
   launchSpeed: 5
   launchDuration: 0.15
   magnetSpeed: 10
   magnetAcceleration: 30
+  groundedSortingLayerName: GroundShadow
+  groundedSortingOrder: 0
+  activeSortingLayerName: Pickups
+  activeSortingOrder: 800
   healAmount: 5
   healSound: {fileID: 11400000, guid: 81d942702a11f8249b019ba473249345, type: 2}

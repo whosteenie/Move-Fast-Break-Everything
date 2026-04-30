@@ -172,10 +172,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CoinPickup
   rb: {fileID: 6703090766192250173}
   pickupCollider: {fileID: 3634703366986256259}
+  visualRenderer: {fileID: 4607724282402298743}
   launchSpeed: 5
   launchDuration: 0.15
   magnetSpeed: 10
   magnetAcceleration: 30
+  groundedSortingLayerName: GroundShadow
+  groundedSortingOrder: 0
+  activeSortingLayerName: Pickups
+  activeSortingOrder: 800
   minCoinValue: 1
   maxCoinValue: 5
   collectSound: {fileID: 11400000, guid: abdef92b9d935bd4e8cafff04e0008ce, type: 2}
