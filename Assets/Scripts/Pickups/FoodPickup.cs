@@ -3,6 +3,7 @@ using UnityEngine;
 public class FoodPickup : MagneticPickup
 {
     [SerializeField] private int healAmount = 1;
+    [SerializeField] private SoundDefinition healSound;
 
     protected override bool TryCollect(GameObject playerObject)
     {
@@ -13,6 +14,7 @@ public class FoodPickup : MagneticPickup
         }
 
         player.Heal(Mathf.Max(0, healAmount));
+        SoundManager.Play(healSound);
         return true;
     }
 }

@@ -48,6 +48,9 @@ public class GameManager : MonoBehaviour
 
     public static GameManager Instance { get; private set; }
     public static float CurrentRunTimeSeconds => Instance != null ? Instance._currentRunTime : 0f;
+    public bool IsPaused => _isPaused;
+    public bool IsGameOver => _isGameOver;
+    public bool IsInputBlocked => _isPaused || _isGameOver;
     public static int CurrentEnemyLevel => Instance != null ? Instance.currentEnemyLevel : 1;
 
     private void Awake()
@@ -156,22 +159,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        if (_optionsMenuView != null && _optionsMenuView.Root.style.display == DisplayStyle.Flex)
-        {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                ClosePauseOptions();
-            }
-
-            return;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            TogglePause();
-        }
-
-        if (_isPaused)
+        if (IsPauseOptionsOpen() || _isPaused)
         {
             return;
         }
@@ -191,6 +179,22 @@ public class GameManager : MonoBehaviour
         {
             _runTimerLabel.text = FormatRunTime(_currentRunTime);
         }
+    }
+
+    public void HandlePauseInput()
+    {
+        if (_isGameOver)
+        {
+            return;
+        }
+
+        if (IsPauseOptionsOpen())
+        {
+            ClosePauseOptions();
+            return;
+        }
+
+        TogglePause();
     }
 
     private void HandleXpChanged(object sender, EventArgs e)
@@ -333,6 +337,11 @@ public class GameManager : MonoBehaviour
         {
             _pauseRoot.style.display = DisplayStyle.Flex;
         }
+    }
+
+    private bool IsPauseOptionsOpen()
+    {
+        return _optionsMenuView != null && _optionsMenuView.Root.style.display == DisplayStyle.Flex;
     }
 
     public void AddRunCoins(int amount)

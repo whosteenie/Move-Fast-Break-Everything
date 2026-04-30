@@ -12,19 +12,13 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float minXpOrbSpacing = 0.35f;
 
     private Transform playerLocation;
-
-
-
-
-    private int currentHealth;
+    private float currentHealth;
 
     // public int damageMultiplier;
     //damage mult will be increased when enemy levls up using similar level up system to player, but for now just a base damage
 
-
     private void Start()
     {
-
         if (stats != null)
         {
             currentHealth = stats.GetMaxHealth();
@@ -33,15 +27,12 @@ public class Enemy : MonoBehaviour
         {
             currentHealth = 10;
         }
-
-
     }
     private void Awake()
     {
         stats = GetComponent<EnemyStats>();
     }
-
-
+    
     public void TakeDamage(int damageTaken, float pierce)
     {
         int finalDamage = damageTaken;
@@ -52,13 +43,13 @@ public class Enemy : MonoBehaviour
         }
         if (finalDamage <= 0)
         {
-            return;
+            finalDamage = stats.CalculateDamageTaken(damageTaken, pierce);
         }
 
         currentHealth -= finalDamage;
         currentHealth = Mathf.Max(currentHealth, 0);
         SoundManager.Play(hurtSound);
-        //Debug.Log("Enemy HP: " + currentHealth);
+
         if (currentHealth <= 0)
         {
             Die();
