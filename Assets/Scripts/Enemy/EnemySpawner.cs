@@ -11,7 +11,7 @@ public class EnemySpawner : MonoBehaviour
         public float spawnInterval;
     }
     
-    [SerializeField] private GameObject enemyPrefab;
+    [SerializeField] private GameObject[] enemyPrefabs;
     [SerializeField] private Transform player;
     [SerializeField] private float spawnDistance = 18f; // With current setup, 18f is just outside camera view
     [SerializeField] private float respawnDistance = 40f;
@@ -49,7 +49,12 @@ public class EnemySpawner : MonoBehaviour
     private void SpawnEnemy()
     {
         Vector3 spawnPosition = GetSpawn();
-        activeEnemies.Add(Instantiate(enemyPrefab, spawnPosition, Quaternion.identity, transform));
+        
+        if(enemyPrefabs[1])
+        GameObject randEnemy = enemyPrefabs[Random.Range(0, enemyPrefabs.Length)];
+
+        GameObject enemy = Instantiate(randEnemy, spawnPosition, Quaternion.identity, transform);
+        activeEnemies.Add(enemy);
     }
     
     // Picks random position around player at a set distance
