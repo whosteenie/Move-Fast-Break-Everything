@@ -12,6 +12,8 @@ public class XPOrb : MagneticPickup {
     [SerializeField] private Color tier1Color = new(0.09f, 0.52f, 0.85f, 1f);
     [SerializeField] private Color tier2Color = new(0.22f, 0.82f, 0.33f, 1f);
     [SerializeField] private Color tier3Color = new(0.88f, 0.24f, 0.24f, 1f);
+    [SerializeField] private int tier2At = 6;
+    [SerializeField] private int tier3At = 12;
     [SerializeField] private int tier1BaseReward = 5;
     [SerializeField] private int tier2Multiplier = 4;
     [SerializeField] private int tier3Multiplier = 12;
@@ -54,6 +56,20 @@ public class XPOrb : MagneticPickup {
     public void SetTier(XPOrbTier newTier) {
         tier = newTier;
         ApplyTierVisuals();
+    }
+
+    public void InitTier(int enemyLevel) {
+        if(enemyLevel >= tier3At) {
+            SetTier(XPOrbTier.Tier3);
+            return;
+        }
+
+        if(enemyLevel >= tier2At) {
+            SetTier(XPOrbTier.Tier2);
+            return;
+        }
+
+        SetTier(XPOrbTier.Tier1);
     }
 
     public static int GetRewardAmount(XPOrbTier orbTier, int tier1BaseReward, int tier2Multiplier, int tier3Multiplier) {

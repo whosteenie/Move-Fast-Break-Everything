@@ -10,8 +10,6 @@ public class Enemy : MonoBehaviour
     [SerializeField] private int maxXpOrbDrops = 2;
     [SerializeField] private float xpDropRadius = 0.6f;
     [SerializeField] private float minXpOrbSpacing = 0.35f;
-    [SerializeField] private int tier2EnemyLevelBreakpoint = 6;
-    [SerializeField] private int tier3EnemyLevelBreakpoint = 12;
     [Header("Movement")]
     [SerializeField] private float separationRadius = 1.1f;
     [SerializeField] private float separationStrength = 1.5f;
@@ -95,8 +93,7 @@ public class Enemy : MonoBehaviour
 
         int dropCount = Random.Range(minXpOrbDrops, maxXpOrbDrops + 1);
         Vector3 deathPosition = transform.position;
-        
-        var dropTier = GetDropTierForCurrentEnemyLevel();
+        int enemyLevel = GameManager.CurrentEnemyLevel;
         Vector3[] placedPositions = new Vector3[dropCount];
 
         for (int i = 0; i < dropCount; i++)
@@ -107,21 +104,9 @@ public class Enemy : MonoBehaviour
             var spawnedOrb = orbObject.GetComponent<XPOrb>();
             if (spawnedOrb != null)
             {
-                spawnedOrb.SetTier(dropTier);
+                spawnedOrb.InitTier(enemyLevel);
             }
         }
-    }
-
-    private XPOrb.XPOrbTier GetDropTierForCurrentEnemyLevel()
-    {
-        var currentEnemyLevel = GameManager.CurrentEnemyLevel;
-
-        if (currentEnemyLevel >= tier3EnemyLevelBreakpoint)
-        {
-            return XPOrb.XPOrbTier.Tier3;
-        }
-
-        return currentEnemyLevel >= tier2EnemyLevelBreakpoint ? XPOrb.XPOrbTier.Tier2 : XPOrb.XPOrbTier.Tier1;
     }
 
     private Vector3 FindXpOrbSpawnPosition(Vector3 center, Vector3[] placedPositions, int placedCount)
