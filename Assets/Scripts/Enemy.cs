@@ -10,9 +10,20 @@ public class Enemy : MonoBehaviour
     [SerializeField] private int maxXpOrbDrops = 2;
     [SerializeField] private float xpDropRadius = 0.6f;
     [SerializeField] private float minXpOrbSpacing = 0.35f;
+    [SerializeField] private int tier2EnemyLevelBreakpoint = 6;
+    [SerializeField] private int tier3EnemyLevelBreakpoint = 12;
+    [Header("Movement")]
+    [SerializeField] private float separationRadius = 1.1f;
+    [SerializeField] private float separationStrength = 1.5f;
+    [SerializeField] private float steeringSmoothness = 8f;
+    [SerializeField] private LayerMask enemyLayerMask = ~0;
 
     private Transform playerLocation;
     private float currentHealth;
+    private Rigidbody2D _rb;
+    private readonly Collider2D[] _nearbyEnemyResults = new Collider2D[16];
+    private ContactFilter2D _enemyContactFilter;
+    private Vector2 _currentMoveDirection = Vector2.zero;
 
     // public int damageMultiplier;
     //damage mult will be increased when enemy levls up using similar level up system to player, but for now just a base damage
@@ -31,6 +42,13 @@ public class Enemy : MonoBehaviour
     private void Awake()
     {
         stats = GetComponent<EnemyStats>();
+        _rb = GetComponent<Rigidbody2D>();
+        _enemyContactFilter = new ContactFilter2D
+        {
+            useLayerMask = true,
+            layerMask = enemyLayerMask,
+            useTriggers = true
+        };
     }
     
     public void TakeDamage(int damageTaken, float pierce)
@@ -69,16 +87,41 @@ public class Enemy : MonoBehaviour
             return;
         }
 
+        var orbTemplate = xpOrbPrefab.GetComponent<XPOrb>();
+        if (orbTemplate == null)
+        {
+            return;
+        }
+
         int dropCount = Random.Range(minXpOrbDrops, maxXpOrbDrops + 1);
         Vector3 deathPosition = transform.position;
+        
+        var dropTier = GetDropTierForCurrentEnemyLevel();
         Vector3[] placedPositions = new Vector3[dropCount];
 
         for (int i = 0; i < dropCount; i++)
         {
             Vector3 spawnPosition = FindXpOrbSpawnPosition(deathPosition, placedPositions, i);
             placedPositions[i] = spawnPosition;
-            Instantiate(xpOrbPrefab, spawnPosition, xpOrbPrefab.transform.rotation);
+            var orbObject = Instantiate(xpOrbPrefab, spawnPosition, xpOrbPrefab.transform.rotation);
+            var spawnedOrb = orbObject.GetComponent<XPOrb>();
+            if (spawnedOrb != null)
+            {
+                spawnedOrb.SetTier(dropTier);
+            }
         }
+    }
+
+    private XPOrb.XPOrbTier GetDropTierForCurrentEnemyLevel()
+    {
+        var currentEnemyLevel = GameManager.CurrentEnemyLevel;
+
+        if (currentEnemyLevel >= tier3EnemyLevelBreakpoint)
+        {
+            return XPOrb.XPOrbTier.Tier3;
+        }
+
+        return currentEnemyLevel >= tier2EnemyLevelBreakpoint ? XPOrb.XPOrbTier.Tier2 : XPOrb.XPOrbTier.Tier1;
     }
 
     private Vector3 FindXpOrbSpawnPosition(Vector3 center, Vector3[] placedPositions, int placedCount)
@@ -124,30 +167,83 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        //Seems a bit jank maybe fix this at some point
-        //Currently it grabs the player by finding it's movement script, but considering it's called test movement
-        //Doesn't exactly seem likely to stick around for long
-        //So might want to replace with a method that finds the player in a more abstract way.
         float speed = (stats != null) ? stats.GetSpeed() : moveSpeed;
-        TestMovement player = FindAnyObjectByType<TestMovement>();
 
-        if (player != null)
+        if (playerLocation == null)
         {
-            //Small note, for some reason the enemy is in front of the trees because it teleports to z 0
-            playerLocation = FindAnyObjectByType<TestMovement>().transform;
-            Vector3 newPosition = Vector3.MoveTowards(transform.localPosition, playerLocation.localPosition, speed * Time.fixedDeltaTime);
-
-            //Replaced with rigidbody to stay more consistent
-            //Maybe delete the collider if the physics is too annoying, and maybe constrain rotation
-            //transform.localPosition = newPosition;
-
-            Rigidbody2D rb = GetComponent<Rigidbody2D>();
-            rb.MovePosition(newPosition);
-
-            //Attempt to keep the position behind trees.
-            //It failed preserved for future attempts
-            // transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -1);
+            var player = FindAnyObjectByType<TestMovement>();
+            if (player != null)
+            {
+                playerLocation = player.transform;
+            }
         }
+
+        if (playerLocation == null || _rb == null)
+        {
+            return;
+        }
+
+        // This keeps enemies moving toward the player by default.
+        var chaseDirection = ((Vector2)playerLocation.position - _rb.position).normalized;
+        // Nearby enemies add a small push so the group spreads out instead of stacking.
+        var separationDirection = GetSeparationDirection();
+        var targetMoveDirection = chaseDirection + separationDirection * separationStrength;
+
+        if (targetMoveDirection.sqrMagnitude > 0.0001f)
+        {
+            targetMoveDirection.Normalize();
+        }
+        else
+        {
+            targetMoveDirection = chaseDirection;
+        }
+
+        // Smooth steering cuts down on visible jitter when neighbors keep shifting around.
+        _currentMoveDirection = Vector2.Lerp(_currentMoveDirection, targetMoveDirection, steeringSmoothness * Time.fixedDeltaTime);
+
+        if (_currentMoveDirection.sqrMagnitude > 0.0001f)
+        {
+            _currentMoveDirection.Normalize();
+        }
+        else
+        {
+            _currentMoveDirection = chaseDirection;
+        }
+
+        var newPosition = _rb.position + _currentMoveDirection * (speed * Time.fixedDeltaTime);
+
+        _rb.MovePosition(newPosition);
+    }
+
+    private Vector2 GetSeparationDirection()
+    {
+        var separation = Vector2.zero;
+        var nearbyEnemyCount = Physics2D.OverlapCircle(transform.position, separationRadius, _enemyContactFilter, _nearbyEnemyResults);
+
+        for (var i = 0; i < nearbyEnemyCount; i++)
+        {
+            var nearbyEnemy = _nearbyEnemyResults[i];
+            var otherEnemy = nearbyEnemy.GetComponent<Enemy>();
+
+            if (otherEnemy == null || otherEnemy == this || nearbyEnemy.attachedRigidbody == _rb)
+            {
+                continue;
+            }
+
+            var offset = _rb.position - (Vector2)nearbyEnemy.transform.position;
+            var distance = offset.magnitude;
+
+            if (distance <= 0.01f)
+            {
+                continue;
+            }
+
+            // Enemies closer to this one push harder than enemies near the edge of the radius.
+            var distancePercent = 1f - Mathf.Clamp01(distance / separationRadius);
+            separation += offset.normalized * distancePercent;
+        }
+
+        return separation;
     }
 
     void OnCollisionStay2D(Collision2D collision)

@@ -28,6 +28,7 @@ public abstract class MagneticPickup : MonoBehaviour
     protected virtual void Awake()
     {
         CacheReferences();
+        SetIdlePhysicsState();
         ApplySorting();
     }
 
@@ -105,6 +106,7 @@ public abstract class MagneticPickup : MonoBehaviour
         _isMagnetized = true;
         _launchTimer = launchDuration;
         _currentMagnetSpeed = 0f;
+        SetActivePhysicsState();
 
         var launchDirection = GetCurrentPosition() - (Vector2)playerTransform.position;
         if (launchDirection.sqrMagnitude < 0.0001f)
@@ -156,6 +158,28 @@ public abstract class MagneticPickup : MonoBehaviour
         {
             visualRenderer = GetComponent<SpriteRenderer>();
         }
+    }
+
+    private void SetIdlePhysicsState()
+    {
+        if (rb == null)
+        {
+            return;
+        }
+
+        rb.linearVelocity = Vector2.zero;
+        rb.angularVelocity = 0f;
+        rb.bodyType = RigidbodyType2D.Static;
+    }
+
+    private void SetActivePhysicsState()
+    {
+        if (rb == null)
+        {
+            return;
+        }
+
+        rb.bodyType = RigidbodyType2D.Kinematic;
     }
 
     private void ApplySorting()
