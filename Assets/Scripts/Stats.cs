@@ -100,7 +100,7 @@ public class Stats : MonoBehaviour
 
     public float GetSpeed(float baseSpeed)
     {
-        return baseSpeed * speedMultiplier;
+        return baseSpeed + Mathf.Log(speedMultiplier);
     }
 
     public void IncreaseRangedDamage(float percent)
