@@ -1,11 +1,13 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private UIDocument uiDocument;
+    [SerializeField] private InputActionAsset playerInputActions;
     [SerializeField] private Sprite runCoinSprite;
     [SerializeField] private SoundDefinition gameMusic;
     [SerializeField] private SoundDefinition levelUpSound;
@@ -120,7 +122,8 @@ public class GameManager : MonoBehaviour
 
         var root = uiDocument.rootVisualElement;
         var optionsRoot = root.Q<VisualElement>(OptionsMenuView.RootName);
-        _optionsMenuView = optionsRoot != null ? new OptionsMenuView(optionsRoot) : null;
+        var playerInput = FindAnyObjectByType<PlayerInput>();
+        _optionsMenuView = optionsRoot != null ? new OptionsMenuView(optionsRoot, playerInputActions, playerInput != null ? playerInput.actions : null) : null;
         SoundManager.Play(gameMusic);
         _runTimerLabel = root.Q<Label>(RunTimerLabelName);
         _runCoinLabel = root.Q<Label>(RunCoinLabelName);

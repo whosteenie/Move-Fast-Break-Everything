@@ -73,7 +73,7 @@ public class PlayerInputController : MonoBehaviour
 
     private void OnPause(InputValue value)
     {
-        if (!value.isPressed)
+        if (!value.isPressed || OptionsMenuView.IsCapturingBindingInput)
         {
             return;
         }
