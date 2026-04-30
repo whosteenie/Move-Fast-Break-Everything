@@ -11,13 +11,24 @@ public class CircleBullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (!canTakeDamage)
+        {
+            return;
+        }
+
         Enemy enemy = collision.GetComponent<Enemy>();
+        DestructibleObstacle obstacle = collision.GetComponentInParent<DestructibleObstacle>();
 
         if (enemy != null)
         {
             enemy.TakeDamage(weaponSO.baseDamage,pierce);
+            StartCoroutineCooldown();
         }
-        StartCoroutineCooldown();
+        else if (obstacle != null)
+        {
+            obstacle.TakeDamage(weaponSO.baseDamage);
+            StartCoroutineCooldown();
+        }
     }
     private IEnumerator StartCoroutineCooldown()
     {
