@@ -570,6 +570,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenuManager
   playSceneName: GameScene
+  playerInputActions: {fileID: -944628639613478452, guid: e4a2d0ab0f971e44284c3422bf502dc5, type: 3}
   shopCoinSprite: {fileID: 4994948417755550580, guid: 90e374de09503b1439bc13bc4575e623, type: 3}
   shopPowerUps:
   - {fileID: 11400000, guid: eeab9669df0b7024ab50bb8da4d316e1, type: 2}
@@ -579,6 +580,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2035b745d4f32874ab882ebd40406a19, type: 2}
   - {fileID: 11400000, guid: f0fdf219e829ab4499fd7c6361600f12, type: 2}
   - {fileID: 11400000, guid: 5455c4f73c7b9de42a83c55c5e796782, type: 2}
+  - {fileID: 11400000, guid: b24c69dc5b9d0f94aae303fdbdeecf19, type: 2}
   menuMusic: {fileID: 11400000, guid: 0f3c0d403bcecae40a66dd2134db2c59, type: 2}
 --- !u!114 &1811845666
 MonoBehaviour:

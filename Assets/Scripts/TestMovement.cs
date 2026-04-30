@@ -87,6 +87,7 @@ public class TestMovement : MonoBehaviour
         {
             Debug.Log("Slide Dash Initiated");
             movementStateMachine.AddComboState(slideDashMovementSO, MovementStateMachine.State.slide, MovementStateMachine.State.dash);
+            SoundManager.Play(dashSound);
             return;
         }
         else 
@@ -103,6 +104,7 @@ public class TestMovement : MonoBehaviour
 
         isDashing = true;
         dashDurationTimer = dashDuration;
+        SoundManager.Play(dashSound);
     }
 
     public void TrySlide()
