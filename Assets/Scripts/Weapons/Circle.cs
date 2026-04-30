@@ -14,8 +14,7 @@ public class Circle : MonoBehaviour
     public void Start()
     {
         AddWeapon();
-        AddWeapon();
-        AddWeapon();
+
     
 
     }

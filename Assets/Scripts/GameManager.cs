@@ -357,7 +357,7 @@ public class GameManager : MonoBehaviour
 
             case "melee":
                 {
-                    var comp = player.GetComponentInChildren<Melee>();
+                    var comp = player.GetComponentInChildren<Melee>(true);
                     randomOptions.Remove(choiceId);
                     comp.gameObject.SetActive(true); 
                     comp.enabled = true;
