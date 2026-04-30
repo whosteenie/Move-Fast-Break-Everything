@@ -9,8 +9,14 @@ public class Bullet : MonoBehaviour
     public int damage;
     private float pierce;
 
+    private GameObject owner;
+    public WeaponSO weaponSO;
     private Vector2 moveDirection;
 
+    private Stats stats;
+    void Awake(){
+        stats = GetComponentInParent<Stats>();
+    }
 
 
     void Update()
@@ -36,30 +42,39 @@ public class Bullet : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, 0, angle - 90);
 
     }
-
-
-
-    private void OnTriggerEnter2D(Collider2D collision)
+    public void SetOwner(GameObject bulletOwner)
     {
-        Enemy enemy = collision.GetComponent<Enemy>();
-        BossController boss = collision.GetComponent<BossController>();
-        DestructibleObstacle destructibleObstacle = collision.GetComponent<DestructibleObstacle>();
+        owner = bulletOwner;
+    }
 
-        if (enemy != null)
+
+   private void OnTriggerEnter2D(Collider2D collision)
+    {
+
+        if (owner == null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        if (collision.gameObject == owner) return;
+
+        Player player = collision.GetComponent<Player>();
+        Enemy enemy = collision.GetComponent<Enemy>();
+
+        if (owner.GetComponent<Enemy>() != null && player != null)
+        {
+            player.TakeDamage(damage);
+            Destroy(gameObject);
+        }
+        else if (owner.GetComponent<Player>() != null && enemy != null)
         {
             enemy.TakeDamage(damage, pierce);
-            Debug.Log("Bullet hit enemy for " + damage + " damage and" + pierce + "pierce damage");
-            Destroy(gameObject);
-        } else if (boss != null) {
-            boss.TakeDamage(damage);
-            Debug.Log("Bullet hit enemy for " + damage + " damage.");
-            Destroy(gameObject);
-        } else if (destructibleObstacle != null) {
-            destructibleObstacle.TakeDamage(damage);
-            Debug.Log("Bullet hit obstacle for " + damage + " damage.");
             Destroy(gameObject);
         }
     }
+
+
 
 
 }
