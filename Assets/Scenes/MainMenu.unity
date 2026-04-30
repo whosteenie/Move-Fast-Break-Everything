@@ -570,6 +570,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenuManager
   playSceneName: GameScene
+  playerInputActions: {fileID: -944628639613478452, guid: e4a2d0ab0f971e44284c3422bf502dc5, type: 3}
   shopCoinSprite: {fileID: 4994948417755550580, guid: 90e374de09503b1439bc13bc4575e623, type: 3}
   shopPowerUps:
   - {fileID: 11400000, guid: eeab9669df0b7024ab50bb8da4d316e1, type: 2}

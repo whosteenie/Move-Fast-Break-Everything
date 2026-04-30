@@ -371,6 +371,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   enemyPrefabs:
   - {fileID: 1874990315484048395, guid: 11d95817b12e84a4082ed1ed31c29769, type: 3}
+  - {fileID: 1443466476714610113, guid: 0e93e345cfaea7441a616a542ef2341e, type: 3}
   player: {fileID: 1092388853012045805}
   spawnDistance: 18
   respawnDistance: 40
@@ -614,11 +615,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   uiDocument: {fileID: 1828502758}
+  playerInputActions: {fileID: -944628639613478452, guid: e4a2d0ab0f971e44284c3422bf502dc5, type: 3}
   runCoinSprite: {fileID: 4994948417755550580, guid: 90e374de09503b1439bc13bc4575e623, type: 3}
   gameMusic: {fileID: 11400000, guid: 2261cb4120a032643bc7c200637298e9, type: 2}
   levelUpSound: {fileID: 11400000, guid: aa91232242783e845aebaa2be93aabb3, type: 2}
-  enemyLevelInterval: 30
-  player: {fileID: 234831455}
+  maxHealthPowerUp: {fileID: 11400000, guid: 5eeb730ec0cbcd34cbfb0741bb3be058, type: 2}
+  mightPowerUp: {fileID: 11400000, guid: eeab9669df0b7024ab50bb8da4d316e1, type: 2}
+  hastePowerUp: {fileID: 11400000, guid: 419a0c5e1ae414941bec945316209c8f, type: 2}
+  moveSpeedPowerUp: {fileID: 11400000, guid: 4fe087cff3f60ba4096509bdf18c344a, type: 2}
+  defensePowerUp: {fileID: 11400000, guid: 2035b745d4f32874ab882ebd40406a19, type: 2}
+  piercePowerUp: {fileID: 0}
+  thornsPowerUp: {fileID: 0}
 --- !u!114 &1828502760
 MonoBehaviour:
   m_ObjectHideFlags: 0
