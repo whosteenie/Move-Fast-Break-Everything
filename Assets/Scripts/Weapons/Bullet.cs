@@ -62,6 +62,7 @@ public class Bullet : MonoBehaviour
 
         Player player = collision.GetComponent<Player>();
         Enemy enemy = collision.GetComponent<Enemy>();
+        DestructibleObstacle obstacle = collision.GetComponentInParent<DestructibleObstacle>();
 
         if (owner.GetComponent<Enemy>() != null && player != null && collision.isTrigger && collision.GetComponent<PlayerPickupMagnet>() != null)
             return;
@@ -74,6 +75,11 @@ public class Bullet : MonoBehaviour
         else if (owner.GetComponent<Player>() != null && enemy != null)
         {
             enemy.TakeDamage(damage, pierce);
+            Destroy(gameObject);
+        }
+        else if (owner.GetComponent<Player>() != null && obstacle != null)
+        {
+            obstacle.TakeDamage(damage);
             Destroy(gameObject);
         }
     }
