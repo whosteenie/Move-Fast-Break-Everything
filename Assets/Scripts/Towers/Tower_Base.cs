@@ -7,6 +7,14 @@ public abstract class Tower_Base : MonoBehaviour
     protected bool playerInRange = false;
     protected Stats currentStats;
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Tower_Base.TryInteractCurrent();
+        }
+    }
+
     public static void TryInteractCurrent()
     {
         if (currentInteractable != null)
