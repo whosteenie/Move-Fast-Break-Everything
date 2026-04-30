@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
@@ -32,9 +33,8 @@ public class GameManager : MonoBehaviour
     //for weapon
     [SerializeField] private GameObject player;
     private const string RandomButtonName = "random-button";
-    private readonly string[] randomOptions = new string[]
+    private List<string> randomOptions = new List<string>()
     {
-        "autofire",
         "melee",
         "orbit"
     };
@@ -243,7 +243,13 @@ public class GameManager : MonoBehaviour
         var randomButton = root.Q<Button>(RandomButtonName);
         if (randomButton == null) return;
 
-        int index = UnityEngine.Random.Range(0, randomOptions.Length);
+        if (randomOptions.Count == 0)
+        {
+            randomButton.style.display = DisplayStyle.None;
+            return;
+        }
+
+        int index = UnityEngine.Random.Range(0, randomOptions.Count);
         _currentRandomChoice = randomOptions[index];
 
         randomButton.text = _currentRandomChoice;
@@ -256,6 +262,11 @@ public class GameManager : MonoBehaviour
     private void ResolveLevelUpChoice(string choiceId)
     {
         EnablePlayerAbility(choiceId);
+
+        if (randomOptions.Contains(choiceId))
+        {
+            randomOptions.Remove(choiceId);
+        }
 
         if (_playerLevelUp == null)
         {
@@ -274,6 +285,7 @@ public class GameManager : MonoBehaviour
         if (_randomButton != null)
         {
             _randomButton.style.display = DisplayStyle.None;
+            
         }
         Time.timeScale = 1f;
         _playerLevelUp.ResolveLevelUpChoice();
