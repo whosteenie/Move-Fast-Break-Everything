@@ -16,9 +16,9 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float steeringSmoothness = 8f;
     [SerializeField] private LayerMask enemyLayerMask = ~0;
 
-    private Transform playerLocation;
     private float currentHealth;
     private Rigidbody2D _rb;
+    private static Transform _cachedPlayer;
     private readonly Collider2D[] _nearbyEnemyResults = new Collider2D[16];
     private ContactFilter2D _enemyContactFilter;
     private Vector2 _currentMoveDirection = Vector2.zero;
@@ -41,6 +41,10 @@ public class Enemy : MonoBehaviour
     {
         stats = GetComponent<EnemyStats>();
         _rb = GetComponent<Rigidbody2D>();
+        if (_cachedPlayer == null)
+        {
+            _cachedPlayer = FindAnyObjectByType<TestMovement>().transform;
+        }
         _enemyContactFilter = new ContactFilter2D
         {
             useLayerMask = true,
@@ -154,22 +158,8 @@ public class Enemy : MonoBehaviour
     {
         float speed = (stats != null) ? stats.GetSpeed() : moveSpeed;
 
-        if (playerLocation == null)
-        {
-            var player = FindAnyObjectByType<TestMovement>();
-            if (player != null)
-            {
-                playerLocation = player.transform;
-            }
-        }
-
-        if (playerLocation == null || _rb == null)
-        {
-            return;
-        }
-
         // This keeps enemies moving toward the player by default.
-        var chaseDirection = ((Vector2)playerLocation.position - _rb.position).normalized;
+        var chaseDirection = ((Vector2)_cachedPlayer.position - _rb.position).normalized;
         // Nearby enemies add a small push so the group spreads out instead of stacking.
         var separationDirection = GetSeparationDirection();
         var targetMoveDirection = chaseDirection + separationDirection * separationStrength;
