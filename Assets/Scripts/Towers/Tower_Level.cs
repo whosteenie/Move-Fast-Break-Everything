@@ -1,16 +1,38 @@
 using UnityEngine;
-
-public class LevelTower : MonoBehaviour
+public class Tower_Level : Tower_Base
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    [Header("Stat Bonuses")]
+    [SerializeField] private float speedIncrease = 0.1f;
+    [SerializeField] private float damageIncrease = 0.1f;
+    [SerializeField] private int flatHealthIncrease = 2;
+    [SerializeField] private float healthPercentIncrease = 0.1f;
+    [SerializeField] private float dexterityIncrease = 0.1f;
+    [SerializeField] private float defenseIncrease = 0.5f;
 
-    // Update is called once per frame
-    void Update()
+
+    protected override void ApplyEffect(Stats stats)
     {
-        
+
+        stats.IncreaseSpeed(speedIncrease);
+
+        stats.IncreaseRangedDamage(damageIncrease);
+
+        stats.IncreaseFlatHealth(flatHealthIncrease);
+
+        stats.IncreaseHealthPercent(healthPercentIncrease);
+
+        stats.IncreaseDexterity(dexterityIncrease);
+
+        stats.IncreaseDefense(defenseIncrease);
+
+        Player player = stats.GetComponent<Player>();
+
+        if (player != null)
+        {
+            player.UpdateMaxHealth(stats.GetMaxHealth());
+        }
+
+        Debug.Log("All stats increased!");
+        Destroy(gameObject);
     }
 }

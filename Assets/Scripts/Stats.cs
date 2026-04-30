@@ -68,7 +68,7 @@ public class Stats : MonoBehaviour
         }
     }
 
-    private void IncreaseFlatHealth(int amount)
+    public void IncreaseFlatHealth(int amount)
     {
         flatHealthBonus += amount;
     }
@@ -100,7 +100,7 @@ public class Stats : MonoBehaviour
 
     public float GetSpeed(float baseSpeed)
     {
-        return baseSpeed * speedMultiplier;
+        return baseSpeed + Mathf.Log(speedMultiplier);
     }
 
     public void IncreaseRangedDamage(float percent)
@@ -193,6 +193,7 @@ public class Stats : MonoBehaviour
                 break;
             case "intelligence":
                 IncreaseRangedDamage(rangeDamageIncrease);
+                IncreaseSpeed(speedMultiplier);
                 Debug.Log($"Intelligence selected. Ranged Damage Multiplier: {rangedDamageMultiplier}", this);
                 break;
             case "defense":
