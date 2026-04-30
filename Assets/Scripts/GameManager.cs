@@ -9,6 +9,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Sprite runCoinSprite;
     [SerializeField] private SoundDefinition gameMusic;
     [SerializeField] private SoundDefinition levelUpSound;
+    [SerializeField] private ShopPowerUpDefinition maxHealthPowerUp;
+    [SerializeField] private ShopPowerUpDefinition mightPowerUp;
+    [SerializeField] private ShopPowerUpDefinition hastePowerUp;
+    [SerializeField] private ShopPowerUpDefinition moveSpeedPowerUp;
+    [SerializeField] private ShopPowerUpDefinition defensePowerUp;
+    [SerializeField] private ShopPowerUpDefinition piercePowerUp;
+    [SerializeField] private ShopPowerUpDefinition thornsPowerUp;
     [SerializeField] private float enemyLevelInterval = 30f;
 
     private const string RunTimerLabelName = "run-timer-label";
@@ -21,6 +28,20 @@ public class GameManager : MonoBehaviour
     private const string DexterityButtonName = "dexterity-button";
     private const string IntelligenceButtonName = "intelligence-button";
     private const string PauseRootName = "pause-root";
+    private const string PauseStatHealthLabelName = "pause-stat-health-label";
+    private const string PauseStatDamageLabelName = "pause-stat-damage-label";
+    private const string PauseStatFireRateLabelName = "pause-stat-fire-rate-label";
+    private const string PauseStatMoveSpeedLabelName = "pause-stat-move-speed-label";
+    private const string PauseStatDefenseLabelName = "pause-stat-defense-label";
+    private const string PauseStatPierceLabelName = "pause-stat-pierce-label";
+    private const string PauseStatThornsLabelName = "pause-stat-thorns-label";
+    private const string PauseStatHealthIconName = "pause-stat-health-icon";
+    private const string PauseStatDamageIconName = "pause-stat-damage-icon";
+    private const string PauseStatFireRateIconName = "pause-stat-fire-rate-icon";
+    private const string PauseStatMoveSpeedIconName = "pause-stat-move-speed-icon";
+    private const string PauseStatDefenseIconName = "pause-stat-defense-icon";
+    private const string PauseStatPierceIconName = "pause-stat-pierce-icon";
+    private const string PauseStatThornsIconName = "pause-stat-thorns-icon";
     private const string ResumeButtonName = "resume-button";
     private const string PauseOptionsButtonName = "pause-options-button";
     private const string PauseQuitButtonName = "pause-quit-button";
@@ -35,6 +56,20 @@ public class GameManager : MonoBehaviour
     private VisualElement _levelUpRoot;
     private PlayerLevelUp _playerLevelUp;
     private Stats _playerStats;
+    private Label _pauseStatHealthLabel;
+    private Label _pauseStatDamageLabel;
+    private Label _pauseStatFireRateLabel;
+    private Label _pauseStatMoveSpeedLabel;
+    private Label _pauseStatDefenseLabel;
+    private Label _pauseStatPierceLabel;
+    private Label _pauseStatThornsLabel;
+    private Image _pauseStatHealthIcon;
+    private Image _pauseStatDamageIcon;
+    private Image _pauseStatFireRateIcon;
+    private Image _pauseStatMoveSpeedIcon;
+    private Image _pauseStatDefenseIcon;
+    private Image _pauseStatPierceIcon;
+    private Image _pauseStatThornsIcon;
     private VisualElement _pauseRoot;
     private VisualElement _gameOverRoot;
     private OptionsMenuView _optionsMenuView;
@@ -93,6 +128,20 @@ public class GameManager : MonoBehaviour
         _levelProgressFill = root.Q<VisualElement>(LevelProgressFillName);
         _levelUpRoot = root.Q<VisualElement>(LevelUpRootName);
         _pauseRoot = root.Q<VisualElement>(PauseRootName);
+        _pauseStatHealthLabel = root.Q<Label>(PauseStatHealthLabelName);
+        _pauseStatDamageLabel = root.Q<Label>(PauseStatDamageLabelName);
+        _pauseStatFireRateLabel = root.Q<Label>(PauseStatFireRateLabelName);
+        _pauseStatMoveSpeedLabel = root.Q<Label>(PauseStatMoveSpeedLabelName);
+        _pauseStatDefenseLabel = root.Q<Label>(PauseStatDefenseLabelName);
+        _pauseStatPierceLabel = root.Q<Label>(PauseStatPierceLabelName);
+        _pauseStatThornsLabel = root.Q<Label>(PauseStatThornsLabelName);
+        _pauseStatHealthIcon = root.Q<Image>(PauseStatHealthIconName);
+        _pauseStatDamageIcon = root.Q<Image>(PauseStatDamageIconName);
+        _pauseStatFireRateIcon = root.Q<Image>(PauseStatFireRateIconName);
+        _pauseStatMoveSpeedIcon = root.Q<Image>(PauseStatMoveSpeedIconName);
+        _pauseStatDefenseIcon = root.Q<Image>(PauseStatDefenseIconName);
+        _pauseStatPierceIcon = root.Q<Image>(PauseStatPierceIconName);
+        _pauseStatThornsIcon = root.Q<Image>(PauseStatThornsIconName);
         _gameOverRoot = root.Q<VisualElement>(GameOverRootName);
 
         var strengthButton = root.Q<Button>(StrengthButtonName);
@@ -150,6 +199,8 @@ public class GameManager : MonoBehaviour
         }
 
         RefreshLevelProgressBar();
+        RefreshPauseStatIcons();
+        RefreshPauseStatsCard();
     }
 
     private void Update()
@@ -294,6 +345,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        RefreshPauseStatsCard();
         _isPaused = true;
         Time.timeScale = 0f;
         _pauseRoot.style.display = DisplayStyle.Flex;
@@ -374,6 +426,76 @@ public class GameManager : MonoBehaviour
         var seconds = totalSeconds % 60;
 
         return $"{minutes:00}:{seconds:00}";
+    }
+
+    private void RefreshPauseStatsCard()
+    {
+        if (_playerStats == null)
+        {
+            _playerStats = FindAnyObjectByType<Stats>();
+        }
+
+        if (_playerStats == null)
+        {
+            SetPauseStatLabels("--");
+            return;
+        }
+
+        SetLabelText(_pauseStatHealthLabel, _playerStats.GetMaxHealth().ToString());
+        SetLabelText(_pauseStatDamageLabel, FormatMultiplier(_playerStats.rangedDamageMultiplier));
+        SetLabelText(_pauseStatFireRateLabel, FormatMultiplier(_playerStats.dexterityMultiplier));
+        SetLabelText(_pauseStatMoveSpeedLabel, FormatMultiplier(_playerStats.speedMultiplier));
+        SetLabelText(_pauseStatDefenseLabel, FormatPercent(_playerStats.defense));
+        SetLabelText(_pauseStatPierceLabel, FormatPercent(_playerStats.GetPierce()));
+        SetLabelText(_pauseStatThornsLabel, FormatPercent(_playerStats.thorns));
+    }
+
+    private void RefreshPauseStatIcons()
+    {
+        SetStatIcon(_pauseStatHealthIcon, maxHealthPowerUp);
+        SetStatIcon(_pauseStatDamageIcon, mightPowerUp);
+        SetStatIcon(_pauseStatFireRateIcon, hastePowerUp);
+        SetStatIcon(_pauseStatMoveSpeedIcon, moveSpeedPowerUp);
+        SetStatIcon(_pauseStatDefenseIcon, defensePowerUp);
+        SetStatIcon(_pauseStatPierceIcon, piercePowerUp);
+        SetStatIcon(_pauseStatThornsIcon, thornsPowerUp);
+    }
+
+    private static void SetStatIcon(Image iconElement, ShopPowerUpDefinition powerUp)
+    {
+        if (iconElement != null)
+        {
+            iconElement.sprite = powerUp != null ? powerUp.Icon : null;
+        }
+    }
+
+    private void SetPauseStatLabels(string value)
+    {
+        SetLabelText(_pauseStatHealthLabel, value);
+        SetLabelText(_pauseStatDamageLabel, value);
+        SetLabelText(_pauseStatFireRateLabel, value);
+        SetLabelText(_pauseStatMoveSpeedLabel, value);
+        SetLabelText(_pauseStatDefenseLabel, value);
+        SetLabelText(_pauseStatPierceLabel, value);
+        SetLabelText(_pauseStatThornsLabel, value);
+    }
+
+    private static void SetLabelText(Label label, string value)
+    {
+        if (label != null)
+        {
+            label.text = value;
+        }
+    }
+
+    private static string FormatMultiplier(float value)
+    {
+        return $"x{value:0.00}";
+    }
+
+    private static string FormatPercent(float value)
+    {
+        return $"{value * 100f:0}%";
     }
 
     private void RefreshRunCoinDisplay()
