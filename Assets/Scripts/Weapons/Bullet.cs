@@ -14,6 +14,7 @@ public class Bullet : MonoBehaviour
     private Vector2 moveDirection;
 
     private Stats stats;
+
     void Awake(){
         stats = GetComponentInParent<Stats>();
     }
@@ -48,7 +49,7 @@ public class Bullet : MonoBehaviour
     }
 
 
-   private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
 
         if (owner == null)
@@ -62,6 +63,9 @@ public class Bullet : MonoBehaviour
         Player player = collision.GetComponent<Player>();
         Enemy enemy = collision.GetComponent<Enemy>();
 
+        if (owner.GetComponent<Enemy>() != null && player != null && collision.isTrigger && collision.GetComponent<PlayerPickupMagnet>() != null)
+            return;
+
         if (owner.GetComponent<Enemy>() != null && player != null)
         {
             player.TakeDamage(damage);
@@ -73,8 +77,5 @@ public class Bullet : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
-
-
 
 }
