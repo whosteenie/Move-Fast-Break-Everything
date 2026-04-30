@@ -60,6 +60,13 @@ public class Melee : MonoBehaviour
             if (boss != null)
             {
                 boss.TakeDamage(damage);
+                continue;
+            }
+
+            DestructibleObstacle obstacle = target.GetComponentInParent<DestructibleObstacle>();
+            if (obstacle != null)
+            {
+                obstacle.TakeDamage(damage);
             }
         }
     }
