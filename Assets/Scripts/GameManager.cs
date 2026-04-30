@@ -4,12 +4,14 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
-public class GameManager : MonoBehaviour {
+public class GameManager : MonoBehaviour
+{
     [SerializeField] private UIDocument uiDocument;
     [SerializeField] private InputActionAsset playerInputActions;
     [SerializeField] private Sprite runCoinSprite;
     [SerializeField] private SoundDefinition gameMusic;
     [SerializeField] private SoundDefinition levelUpSound;
+    [SerializeField] private float enemyLevelInterval = 30f;
 
     private const string RunTimerLabelName = "run-timer-label";
     private const string RunCoinRootName = "run-coin-root";
@@ -38,26 +40,33 @@ public class GameManager : MonoBehaviour {
     private VisualElement _pauseRoot;
     private VisualElement _gameOverRoot;
     private OptionsMenuView _optionsMenuView;
+    public event EventHandler OnEnemyLevelChanged;
     private float _currentRunTime;
     private int _currentRunCoins;
     private bool _isGameOver;
     private bool _isPaused;
+    private int currentEnemyLevel = 1;
+    private int previousEnemyLevel = 1;
 
     public static GameManager Instance { get; private set; }
     public static float CurrentRunTimeSeconds => Instance != null ? Instance._currentRunTime : 0f;
     public bool IsPaused => _isPaused;
     public bool IsGameOver => _isGameOver;
     public bool IsInputBlocked => _isPaused || _isGameOver;
+    public static int CurrentEnemyLevel => Instance != null ? Instance.currentEnemyLevel : 1;
 
-    private void Awake() {
+    private void Awake()
+    {
         Instance = this;
 
-        if(uiDocument == null) {
+        if (uiDocument == null)
+        {
             uiDocument = GetComponent<UIDocument>();
         }
     }
 
-    private void OnDestroy() {
+    private void OnDestroy()
+    {
         Time.timeScale = 1f;
 
         if (_playerLevelUp != null)
@@ -66,13 +75,15 @@ public class GameManager : MonoBehaviour {
             _playerLevelUp.OnLevelUp -= HandleLevelUp;
         }
 
-        if(Instance == this) {
+        if (Instance == this)
+        {
             Instance = null;
         }
     }
 
-    private void Start() {
-        if(uiDocument == null) return;
+    private void Start()
+    {
+        if (uiDocument == null) return;
 
         var root = uiDocument.rootVisualElement;
         var optionsRoot = root.Q<VisualElement>(OptionsMenuView.RootName);
@@ -144,8 +155,10 @@ public class GameManager : MonoBehaviour {
         RefreshLevelProgressBar();
     }
 
-    private void Update() {
-        if(_isGameOver) {
+    private void Update()
+    {
+        if (_isGameOver)
+        {
             return;
         }
 
@@ -155,8 +168,18 @@ public class GameManager : MonoBehaviour {
         }
 
         _currentRunTime += Time.deltaTime;
+        currentEnemyLevel = Mathf.FloorToInt(_currentRunTime / enemyLevelInterval) + 1;
 
-        if(_runTimerLabel != null) {
+        if (currentEnemyLevel > previousEnemyLevel)
+        {
+            previousEnemyLevel = currentEnemyLevel;
+            Debug.Log("Enemy level increased to: " + currentEnemyLevel);
+
+            OnEnemyLevelChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        if (_runTimerLabel != null)
+        {
             _runTimerLabel.text = FormatRunTime(_currentRunTime);
         }
     }
@@ -234,8 +257,9 @@ public class GameManager : MonoBehaviour {
         _levelProgressFill.style.width = Length.Percent(progress * 100f);
     }
 
-    public void ShowGameOver() {
-        if(_isGameOver) return;
+    public void ShowGameOver()
+    {
+        if (_isGameOver) return;
 
         _isGameOver = true;
         _isPaused = false;
@@ -334,17 +358,20 @@ public class GameManager : MonoBehaviour {
         RefreshRunCoinDisplay();
     }
 
-    private static void RetryRun() {
+    private static void RetryRun()
+    {
         Time.timeScale = 1f;
         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
     }
 
-    private static void QuitToMenu() {
+    private static void QuitToMenu()
+    {
         Time.timeScale = 1f;
         SceneManager.LoadSceneAsync("MainMenu");
     }
 
-    private static string FormatRunTime(float runTimeSeconds) {
+    private static string FormatRunTime(float runTimeSeconds)
+    {
         var totalSeconds = Mathf.FloorToInt(runTimeSeconds);
         var minutes = totalSeconds / 60;
         var seconds = totalSeconds % 60;
