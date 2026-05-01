@@ -8,7 +8,7 @@ public class Stats : MonoBehaviour
     private const float MightDamageIncreasePerRank = 0.05f;
     private const float MaxHealthIncreasePerRank = 0.1f;
     private const float HasteFireRateIncreasePerRank = 0.05f;
-    private const float MoveSpeedIncreasePerRank = 0.04f;
+    private const float MoveSpeedIncreasePerRank = 0.004f;
     private const float DefenseIncreasePerRank = 0.05f;
     private const float PierceIncreasePerRank = 0.05f;
     private const float ThornsIncreasePerRank = 0.05f;
