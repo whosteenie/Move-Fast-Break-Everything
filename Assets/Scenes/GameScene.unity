@@ -355,7 +355,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 435433820}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_RenderMode: 0
   m_Camera: {fileID: 0}
@@ -847,6 +847,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3083587648009333056, guid: 50c2bcf7e1007fd49a89077bc7f9e891, type: 3}
+      propertyPath: TreeCanvas
+      value: 
+      objectReference: {fileID: 435433823}
     - target: {fileID: 4861496404516698642, guid: 50c2bcf7e1007fd49a89077bc7f9e891, type: 3}
       propertyPath: m_SortingOrder
       value: 149
@@ -1362,12 +1366,20 @@ PrefabInstance:
       value: -0.45
       objectReference: {fileID: 0}
     - target: {fileID: 314159265358979323, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
+      propertyPath: jump
+      value: 
+      objectReference: {fileID: 1092388853012045807}
+    - target: {fileID: 314159265358979323, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
       propertyPath: chunkManager
       value: 
       objectReference: {fileID: 636936949}
     - target: {fileID: 942206545015901672, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1269611933969825367, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
+      propertyPath: tag
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 1269611933969825367, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
       propertyPath: weaponSO
@@ -1471,6 +1483,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7013742933698887600, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
   m_PrefabInstance: {fileID: 1092388853012045804}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1092388853012045807 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -191410844367820870, guid: 1c5a93d80cf55b44696cd2fb0b7d4049, type: 3}
+  m_PrefabInstance: {fileID: 1092388853012045804}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c1797da75e30d4f83024395971c343, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Jump
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
