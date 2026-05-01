@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Runtime.CompilerServices;
 
 public class Player : MonoBehaviour
 {
@@ -27,11 +28,14 @@ public class Player : MonoBehaviour
     private Coroutine _invulnerabilityRoutine;
     public bool IsDead { get; private set; }
 
-    public event Action<int, int> OnHealthChanged;
+    public event Action<float, int> OnHealthChanged;
 
-    public int CurrentHealth { get; private set; }
+    public float CurrentHealth { get; private set; }
 
     public int MaxHealth => maxHealth;
+
+    public float bleedInterval = 5f;
+    private float bleedTimer = 0f;
 
     private void Start()
     {
@@ -67,8 +71,30 @@ public class Player : MonoBehaviour
 
     public void Update()
     {
+        BleedOut();
+    }
 
-
+    public void BleedOut()
+    {
+        //Reduce current health by 1% Every 5 Seconds
+        bleedTimer += Time.deltaTime;
+        if(bleedTimer >= bleedInterval)
+        {
+            bleedTimer = 0f;
+            float bleedAmount = CurrentHealth/100;
+            if(bleedAmount <= 1)
+            {
+                bleedAmount = .1f;
+            }
+            CurrentHealth -= bleedAmount;
+            Debug.Log("Bleed, Lost" + bleedAmount);
+            if (CurrentHealth <= 0)
+            {
+                Die();
+            }
+            
+            NotifyHealthChanged();
+        }
     }
 
     public void UpdateMaxHealth(int newMaxHealth)

@@ -82,7 +82,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 730
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7125985115595100609, guid: b757e44d5e5c73e42add23b680761f2e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -165,23 +165,6 @@ PolygonCollider2D:
       - {x: 0.40018275, y: -0.04048381}
       - {x: 0.39499998, y: 0.005}
   m_UseDelaunayMesh: 1
---- !u!1 &8462147880170212185
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7549727612530849329}
-  - component: {fileID: 7388436378915759158}
-  m_Layer: 12
-  m_Name: EnemyCollider
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!114 &5071439206801123456
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -203,6 +186,23 @@ MonoBehaviour:
   renderers:
   - renderer: {fileID: 4861496404516698642}
     orderOffset: 0
+--- !u!1 &8462147880170212185
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7549727612530849329}
+  - component: {fileID: 7388436378915759158}
+  m_Layer: 12
+  m_Name: EnemyCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &7549727612530849329
 Transform:
   m_ObjectHideFlags: 0

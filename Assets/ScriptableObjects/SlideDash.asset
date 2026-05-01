@@ -20,7 +20,7 @@ MonoBehaviour:
   healthScale: 0
   defenseScale: 0
   strengthScale: 0
-  agilityScale: 1
+  agilityScale: 0.75
   dexterityScale: 0
   luckScale: 0
   hasDecay: 1

@@ -44,16 +44,20 @@ PrefabInstance:
       value: RangedEnemy
       objectReference: {fileID: 0}
     - target: {fileID: 2955802740638934769, guid: 11d95817b12e84a4082ed1ed31c29769, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2955802740638934769, guid: 11d95817b12e84a4082ed1ed31c29769, type: 3}
       propertyPath: m_Color.b
-      value: 0.7075472
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2955802740638934769, guid: 11d95817b12e84a4082ed1ed31c29769, type: 3}
       propertyPath: m_Color.g
-      value: 0.1702118
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2955802740638934769, guid: 11d95817b12e84a4082ed1ed31c29769, type: 3}
       propertyPath: m_Color.r
-      value: 0.4058129
+      value: 0.5773585
       objectReference: {fileID: 0}
     - target: {fileID: 8607304971326464833, guid: 11d95817b12e84a4082ed1ed31c29769, type: 3}
       propertyPath: m_LocalPosition.x

@@ -151,4 +151,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4fee15351462c749b8ddcac37b0ad0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::melee
-  weaponSO: {fileID: 0}
+  weaponSO: {fileID: 11400000, guid: 64469edee5a3f454aae1b5571c5215e0, type: 2}
