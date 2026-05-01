@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 609d4bb425d15b84ca377cfd01a86e69, type: 3}
   m_Name: AutoAim
   m_EditorClassIdentifier: Assembly-CSharp::WeaponSO
-  fireRate: 0.1
-  cooldown: 0.1
+  coolDown: 1
   bulletSpeed: 10
-  baseDamage: 1
+  baseDamage: 100
   bulletPrefab: {fileID: 3862674274435588204, guid: ca8cd73260e47a24388e27816b46ffe7, type: 3}

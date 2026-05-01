@@ -162,7 +162,8 @@ public class Stats : MonoBehaviour
     {
         return pirece;
     }
-
+    public Melee melee;
+    public Circle circle;
     public void ApplyLevelUpChoice(string choiceId)
     {
         switch (choiceId)
@@ -173,11 +174,13 @@ public class Stats : MonoBehaviour
                 {
                     player.UpdateMaxHealth(GetMaxHealth());
                 }
+                
                 Debug.Log($"Health selected. Max Health: {GetMaxHealth()}", this);
                 break;
             case "strength":
                 IncreasePierce(pirece);
                 IncreaseThorns(thorns);
+                melee.IncreaseDamage(1);
                 Debug.Log($"Strength selected. New pierce at: {pirece}", this);
                 Debug.Log($"Strength selected. New thorns at: {thorns}", this);
                 break;
@@ -193,6 +196,8 @@ public class Stats : MonoBehaviour
                 break;
             case "intelligence":
                 IncreaseRangedDamage(rangeDamageIncrease);
+                //need to add check to stop count at certain limit
+                circle.AddWeapon();
                 Debug.Log($"Intelligence selected. Ranged Damage Multiplier: {rangedDamageMultiplier}", this);
                 break;
             case "defense":
