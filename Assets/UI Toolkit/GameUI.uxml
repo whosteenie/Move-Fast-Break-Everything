@@ -13,12 +13,9 @@
         <ui:VisualElement name="level-up-root" class="level-up-root" style="display: none;">
             <ui:Label text="LEVEL UP" class="level-up-title"/>
             <ui:VisualElement name="VisualElement" class="level-up-card-row">
-                <ui:Button name="strength-button" text="Strength" class="level-up-card level-up-card--strength"/>
-                <ui:Button name="dexterity-button" text="Dexterity" class="level-up-card level-up-card--dexterity"/>
-                <ui:Button name="intelligence-button" text="Intelligence" class="level-up-card level-up-card--intelligence"/>
-                <ui:Button name="random-button" text="AutoFire" enabled="true" class="level-up-card level-up-card--intelligence" style="display: flex;"/>
-                <ui:Button name="Melee" text="Melee" class="level-up-card level-up-card--intelligence" style="display: none;"/>
-                <ui:Button name="Orbit" text="Orbit" language-direction="Inherit" class="level-up-card level-up-card--intelligence" style="display: none;"/>
+                <ui:Button name="random-button" text="" enabled="true" class="level-up-card level-up-card--intelligence" style="display: flex;"/>
+                <ui:Button name="random-button-2" text="" class="level-up-card level-up-card--strength"/>
+                <ui:Button name="random-button-3" text="" class="level-up-card level-up-card--dexterity"/>
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="pause-root" class="pause-root" style="display: none;">
