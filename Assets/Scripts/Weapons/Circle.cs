@@ -18,6 +18,10 @@ public class Circle : MonoBehaviour
     
 
     }
+    public void increaseRotationSpeed(float amount)
+    {
+        rotationSpeed += amount;
+    }
     void Update()
     {
         if (circlingBullets.Count == 0) return;

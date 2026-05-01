@@ -68,7 +68,6 @@ public class GameManager : MonoBehaviour
         "strength",
         "dexterity",
         "agility",
-        "intelligence",
         "defense"
     };
     private string _currentRandomChoice;
@@ -196,9 +195,6 @@ public class GameManager : MonoBehaviour
         randomButton2.clicked += () => ResolveLevelUpChoice(_choice2);
         randomButton3.clicked += () => ResolveLevelUpChoice(_choice3);
 
-        if (strengthButton != null) strengthButton.clicked += () => ResolveLevelUpChoice("strength");
-        if (dexterityButton != null) dexterityButton.clicked += () => ResolveLevelUpChoice("dexterity");
-        if (intelligenceButton != null) intelligenceButton.clicked += () => ResolveLevelUpChoice("intelligence");
         if (resumeButton != null) resumeButton.clicked += ResumeGame;
         if (pauseOptionsButton != null) pauseOptionsButton.clicked += OpenPauseOptions;
         if (pauseQuitButton != null) pauseQuitButton.clicked += QuitToMenu;

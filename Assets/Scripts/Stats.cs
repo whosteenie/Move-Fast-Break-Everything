@@ -186,6 +186,8 @@ public class Stats : MonoBehaviour
                 break;
             case "dexterity":
                 IncreaseDexterity(DexterityFireRateIncrease);
+                circle.increaseRotationSpeed(10f);
+                melee.hitSpeedIncrease(0.05f);
                 Debug.Log($"Dexterity selected. Fire Rate Multiplier: {dexterityMultiplier}", this);
                 break;
             case "agility":
@@ -193,15 +195,14 @@ public class Stats : MonoBehaviour
                 IncreaseSpeed(speedMultiplier);
                 Debug.Log($"Agility selected. Ranged Damage Multiplier: {rangedDamageMultiplier}", this);
                 Debug.Log($"Agility selected. Speed Multiplier: {speedMultiplier}", this);
-                break;
-            case "intelligence":
+                Debug.Log($"Agility selected. Ranged Damage Multiplier: {rangedDamageMultiplier}", this);
                 IncreaseRangedDamage(rangeDamageIncrease);
                 //need to add check to stop count at certain limit
-                circle.AddWeapon();
-                Debug.Log($"Intelligence selected. Ranged Damage Multiplier: {rangedDamageMultiplier}", this);
+                
                 break;
             case "defense":
                 IncreaseDefense(0.5f);
+                circle.AddWeapon();
                 Debug.Log($"Defense selected. New defense at: {defense}", this);
                 break;
             default:
