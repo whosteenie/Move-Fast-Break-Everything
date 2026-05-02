@@ -66,7 +66,10 @@ public class AutoAim : MonoBehaviour
 
     GameObject FindClosestEnemy()
     {
-        
+        if (GetComponentInParent<Player>() != null)
+        {
+            return FindClosestPlayerTarget();
+        }
 
         GameObject[] targets = GameObject.FindGameObjectsWithTag(tag);
 
@@ -86,6 +89,37 @@ public class AutoAim : MonoBehaviour
 
         return closest;
     }
+
+    GameObject FindClosestPlayerTarget()
+    {
+        GameObject closest = null;
+        float minDistance = dis;
+
+        foreach (Enemy enemy in FindObjectsByType<Enemy>())
+        {
+            float distance = Vector2.Distance(transform.position, enemy.transform.position);
+
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                closest = enemy.gameObject;
+            }
+        }
+
+        foreach (DestructibleObstacle obstacle in FindObjectsByType<DestructibleObstacle>())
+        {
+            float distance = Vector2.Distance(transform.position, obstacle.transform.position);
+
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                closest = obstacle.gameObject;
+            }
+        }
+
+        return closest;
+    }
+
     
 
     void Shoot(Vector2 direction)
