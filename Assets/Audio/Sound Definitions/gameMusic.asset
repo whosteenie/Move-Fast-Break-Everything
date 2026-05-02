@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34d4617e45eda8a4db9496c291253229, type: 3}
   m_Name: GameMusic
   m_EditorClassIdentifier: Assembly-CSharp::SoundDefinition
-  clip: {fileID: 0}
+  clip: {fileID: 8300000, guid: 95100017aee8032468a8a088514ec33e, type: 3}
   category: 1
-  baseVolume: 1
+  baseVolume: 0.1
   maxSimultaneousVoices: 1
   minReplayDelay: 0

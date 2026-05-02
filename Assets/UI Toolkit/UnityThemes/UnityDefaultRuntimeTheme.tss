@@ -1,1 +1,63 @@
 @import url("unity-theme://default");
+
+.options-menu__scrollview .unity-scroll-view__vertical-scroller {
+    width: 12px;
+    min-width: 12px;
+    max-width: 12px;
+    height: 100%;
+    margin: 0 0 4px 8px;
+    padding: 0;
+}
+
+.options-menu__scrollview .unity-scroll-view__vertical-scrollbars,
+.options-menu__scrollview .unity-scroller--vertical {
+    width: 12px;
+    min-width: 12px;
+    max-width: 12px;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.options-menu__scrollview .unity-scroller__low-button,
+.options-menu__scrollview .unity-scroller__high-button {
+    display: none;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+    min-width: 0;
+    min-height: 0;
+    max-width: 0;
+    max-height: 0;
+    border-width: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.options-menu__scrollview .unity-scroller--vertical .unity-scroller__slider {
+    width: 12px;
+    min-width: 12px;
+    max-width: 12px;
+    height: 100%;
+    margin: 0;
+    background-color: transparent;
+    -unity-background-image-tint-color: transparent;
+}
+
+.options-menu__scrollview .unity-scroller--vertical .unity-base-slider__tracker {
+    background-color: rgb(38, 16, 42);
+    border-width: 0;
+    border-radius: 2px;
+    -unity-background-image-tint-color: rgb(38, 16, 42);
+}
+
+.options-menu__scrollview .unity-scroller--vertical .unity-base-slider__dragger {
+    left: 0;
+    width: 12px;
+    min-width: 12px;
+    max-width: 12px;
+    background-color: rgb(242, 212, 89);
+    border-width: 0;
+    border-radius: 2px;
+    -unity-background-image-tint-color: rgb(242, 212, 89);
+}

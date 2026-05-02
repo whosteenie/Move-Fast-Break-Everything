@@ -9,6 +9,7 @@ public class UIButtonSoundBinder : MonoBehaviour
     [SerializeField] private SoundDefinition clickSound;
 
     private readonly HashSet<Button> _boundButtons = new();
+    private readonly HashSet<Button> _pressedButtons = new();
 
     private UIDocument _uiDocument;
 
@@ -44,7 +45,11 @@ public class UIButtonSoundBinder : MonoBehaviour
             }
 
             button.RegisterCallback<MouseEnterEvent>(_ => PlayHover(button));
-            button.RegisterCallback<ClickEvent>(_ => PlayClick(button));
+            button.RegisterCallback<MouseDownEvent>(_ => PlayClick(button), TrickleDown.TrickleDown);
+            button.RegisterCallback<PointerDownEvent>(_ => PlayClick(button), TrickleDown.TrickleDown);
+            button.RegisterCallback<ClickEvent>(_ => ReleaseClick(button));
+            button.RegisterCallback<PointerUpEvent>(_ => ReleaseClick(button));
+            button.RegisterCallback<PointerCancelEvent>(_ => ReleaseClick(button));
         }
     }
 
@@ -60,11 +65,21 @@ public class UIButtonSoundBinder : MonoBehaviour
 
     private void PlayClick(Button button)
     {
-        if (button == null || !button.enabledInHierarchy)
+        if (button == null || !_pressedButtons.Add(button))
         {
             return;
         }
 
         SoundManager.Play(clickSound);
+    }
+
+    private void ReleaseClick(Button button)
+    {
+        if (button == null)
+        {
+            return;
+        }
+
+        _pressedButtons.Remove(button);
     }
 }

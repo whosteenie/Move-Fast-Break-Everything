@@ -52,7 +52,7 @@ public class PlayerHealthBar : MonoBehaviour
         ApplyVisuals();
     }
 
-    public void Refresh(int currentHealth, int maxHealth)
+    public void Refresh(float currentHealth, int maxHealth)
     {
         EnsureRenderers();
 

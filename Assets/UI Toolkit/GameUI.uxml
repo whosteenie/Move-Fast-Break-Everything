@@ -1,7 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:Template name="OptionsMenu" src="project://database/Assets/UI%20Toolkit/OptionsMenu.uxml?fileID=9197481963319205126&amp;guid=4d26225d07f952849bab03b80b779504&amp;type=3#OptionsMenu"/>
     <Style src="project://database/Assets/UI%20Toolkit/GameStyle.uss?fileID=7433441132597879392&amp;guid=29f28c5d439c55549a18c8a1a6f60af8&amp;type=3#GameStyle"/>
     <Style src="project://database/Assets/UI%20Toolkit/OptionsMenuStyle.uss?fileID=7433441132597879392&amp;guid=84437dc6247ebaa4cbdf7219dbb16ade&amp;type=3#OptionsMenuStyle"/>
-    <ui:Template name="OptionsMenu" src="OptionsMenu.uxml"/>
     <ui:VisualElement name="game-ui-root" class="game-ui-root">
         <ui:VisualElement name="run-timer-container" class="run-timer-container">
             <ui:Label name="run-timer-label" text="00:00" class="run-timer-label"/>
@@ -12,18 +12,76 @@
         </ui:VisualElement>
         <ui:VisualElement name="level-up-root" class="level-up-root" style="display: none;">
             <ui:Label text="LEVEL UP" class="level-up-title"/>
-            <ui:VisualElement class="level-up-card-row">
+            <ui:VisualElement name="VisualElement" class="level-up-card-row">
                 <ui:Button name="strength-button" text="Strength" class="level-up-card level-up-card--strength"/>
                 <ui:Button name="dexterity-button" text="Dexterity" class="level-up-card level-up-card--dexterity"/>
                 <ui:Button name="intelligence-button" text="Intelligence" class="level-up-card level-up-card--intelligence"/>
+                <ui:Button name="random-button" text="AutoFire" enabled="true" class="level-up-card level-up-card--intelligence" style="display: flex;"/>
+                <ui:Button name="Melee" text="Melee" class="level-up-card level-up-card--intelligence" style="display: none;"/>
+                <ui:Button name="Orbit" text="Orbit" language-direction="Inherit" class="level-up-card level-up-card--intelligence" style="display: none;"/>
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="pause-root" class="pause-root" style="display: none;">
-            <ui:VisualElement class="pause-panel">
-                <ui:Label text="PAUSED" class="pause-title"/>
-                <ui:Button name="resume-button" text="Resume" class="pause-button pause-button--primary"/>
-                <ui:Button name="pause-options-button" text="Options" class="pause-button"/>
-                <ui:Button name="pause-quit-button" text="Quit" class="pause-button pause-button--danger"/>
+            <ui:VisualElement class="pause-content">
+                <ui:VisualElement name="pause-stats-card" class="pause-stats-card">
+                    <ui:Label text="STATS" class="pause-stats-title"/>
+                    <ui:VisualElement class="pause-stats-row">
+                        <ui:VisualElement class="pause-stats-icon-frame">
+                            <ui:Image name="pause-stat-health-icon" class="pause-stats-icon"/>
+                        </ui:VisualElement>
+                        <ui:Label text="Max Health" class="pause-stats-name"/>
+                        <ui:Label name="pause-stat-health-label" text="--" class="pause-stats-value"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="pause-stats-row">
+                        <ui:VisualElement class="pause-stats-icon-frame">
+                            <ui:Image name="pause-stat-damage-icon" class="pause-stats-icon"/>
+                        </ui:VisualElement>
+                        <ui:Label text="Damage" class="pause-stats-name"/>
+                        <ui:Label name="pause-stat-damage-label" text="--" class="pause-stats-value"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="pause-stats-row">
+                        <ui:VisualElement class="pause-stats-icon-frame">
+                            <ui:Image name="pause-stat-fire-rate-icon" class="pause-stats-icon"/>
+                        </ui:VisualElement>
+                        <ui:Label text="Fire Rate" class="pause-stats-name"/>
+                        <ui:Label name="pause-stat-fire-rate-label" text="--" class="pause-stats-value"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="pause-stats-row">
+                        <ui:VisualElement class="pause-stats-icon-frame">
+                            <ui:Image name="pause-stat-move-speed-icon" class="pause-stats-icon"/>
+                        </ui:VisualElement>
+                        <ui:Label text="Move Speed" class="pause-stats-name"/>
+                        <ui:Label name="pause-stat-move-speed-label" text="--" class="pause-stats-value"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="pause-stats-row">
+                        <ui:VisualElement class="pause-stats-icon-frame">
+                            <ui:Image name="pause-stat-defense-icon" class="pause-stats-icon"/>
+                        </ui:VisualElement>
+                        <ui:Label text="Defense" class="pause-stats-name"/>
+                        <ui:Label name="pause-stat-defense-label" text="--" class="pause-stats-value"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="pause-stats-row">
+                        <ui:VisualElement class="pause-stats-icon-frame">
+                            <ui:Image name="pause-stat-pierce-icon" class="pause-stats-icon"/>
+                        </ui:VisualElement>
+                        <ui:Label text="Pierce" class="pause-stats-name"/>
+                        <ui:Label name="pause-stat-pierce-label" text="--" class="pause-stats-value"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="pause-stats-row pause-stats-row--last">
+                        <ui:VisualElement class="pause-stats-icon-frame">
+                            <ui:Image name="pause-stat-thorns-icon" class="pause-stats-icon"/>
+                        </ui:VisualElement>
+                        <ui:Label text="Thorns" class="pause-stats-name"/>
+                        <ui:Label name="pause-stat-thorns-label" text="--" class="pause-stats-value"/>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement class="pause-panel">
+                    <ui:Label text="PAUSED" class="pause-title"/>
+                    <ui:Button name="resume-button" text="Resume" class="pause-button pause-button--primary"/>
+                    <ui:Button name="pause-options-button" text="Options" class="pause-button"/>
+                    <ui:Button name="pause-quit-button" text="Quit" class="pause-button pause-button--danger"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="pause-balance-spacer"/>
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:Instance template="OptionsMenu" name="options-menu-root" class="options-menu" style="display: none;"/>
