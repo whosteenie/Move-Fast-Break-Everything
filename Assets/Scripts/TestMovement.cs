@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class TestMovement : MonoBehaviour
@@ -14,9 +15,6 @@ public class TestMovement : MonoBehaviour
 
     public float moveSpeed = 5f;
 
-    float dashDurationTimer;
-    float dashCooldownTimer;
-    bool isDashing;
     public float baseMoveSpeed = 5f;
 
     private UnityEngine.Vector2 endPos;
@@ -49,23 +47,6 @@ public class TestMovement : MonoBehaviour
         return movementStateMachine.HasState(state);
     }
 
-    private void Update()
-    {
-        if (isDashing)
-        {
-            dashDurationTimer -= Time.deltaTime;
-            if (dashDurationTimer <= 0f)
-            {
-                isDashing = false;
-                dashCooldownTimer = dashCooldown;
-            }
-        }
-        else if (dashCooldownTimer > 0f)
-        {
-            dashCooldownTimer -= Time.deltaTime;
-        }
-    }
-
     private void Awake()
     {
         stats = GetComponent<Stats>();
@@ -94,15 +75,13 @@ public class TestMovement : MonoBehaviour
             MoveFail();
         }
 
-        if (isDashing || dashCooldownTimer > 0f || IsInSlideDashState)
+        if (IsDashing || IsDashDecaying || IsInSlideDashState || grappleHook.IsDashBlocked)
         {
             MoveFail();
             return;
         }
-        
 
-        isDashing = true;
-        dashDurationTimer = dashDuration;
+        movementStateMachine.AddState(dashMovementSO);
     }
 
     public void TrySlide()
@@ -127,15 +106,22 @@ public class TestMovement : MonoBehaviour
 
         movementStateMachine.AddState(chargeMovementSO);
     }
+
     //__________________________________________________________________________________________________
     void FixedUpdate()
     {
+        if (grappleHook.IsGrappleControlling)
+        {
+            rb.MovePosition(grappleHook.GetOrbitPosition());
+            return;
+        }
+
         UnityEngine.Vector2 endPos = new UnityEngine.Vector2(0,0);
         float currentMoveSpeed = (stats != null) ? stats.GetSpeed(baseMoveSpeed) : moveSpeed;
         endPos += rb.position;
         // rb.MovePosition(rb.position + (moveInput * moveSpeed) * Time.fixedDeltaTime);
         endPos += moveInput * (currentMoveSpeed * Time.fixedDeltaTime);
-        if (isDashing)
+        if (IsDashing)
         {
             // rb.MovePosition(rb.position + facing * dashSpeed * Time.fixedDeltaTime);
             endPos += Dash();
@@ -162,7 +148,14 @@ public class TestMovement : MonoBehaviour
         {
             endPos += ChargeDecay();
         }
-        // print(endPos);
+
+        // new stuff
+        if (IsGrappleWhipping)
+        {
+            endPos += grappleHook.GetWhipDiff();
+        }
+        endPos = grappleHook.ConstrainPosition(rb.position, endPos);
+
         rb.MovePosition(endPos);
     }
 
@@ -170,7 +163,7 @@ public class TestMovement : MonoBehaviour
     {
         failureParticle.startColor = Color.blue;
         failureParticle.Play();
-        return facing * (dashSpeed * (slideDashMovementSO.agilityScale*stats.speedMultiplier * Time.fixedDeltaTime));
+        return facing * (dashMovementSO.movePower * (slideDashMovementSO.agilityScale*stats.speedMultiplier * Time.fixedDeltaTime));
     }
 
     private Vector2 Slide()
@@ -224,10 +217,21 @@ public class TestMovement : MonoBehaviour
         return facing.normalized * (slideDashMovementSO.movePower * (slideDashMovementSO.agilityScale*stats.speedMultiplier) * Time.fixedDeltaTime);
     }
 
-    private void MoveFail()
+    public void MoveFail()
     {
         failureParticle.startColor = Color.black;
         failureParticle.Play();
     }
     //__________________________________________________________________________________________________
+
+    // new stuff
+    public MovementSO dashMovementSO;
+    public GrapplingHook grappleHook;
+
+    private bool IsDashing => HasMovementState(MovementStateMachine.State.dash);
+    private bool IsDashDecaying => HasMovementState(MovementStateMachine.State.dashDecay);
+    private bool IsGrappleWhipping => HasMovementState(MovementStateMachine.State.grappleWhipping);
+
+    public Vector2 GetFacing() => facing;
+    public Vector2 GetMoveInput() => moveInput;
 }
