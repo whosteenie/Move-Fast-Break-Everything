@@ -12,43 +12,49 @@ public class BossController : MonoBehaviour
     [SerializeField] private SoundDefinition hurtSound;
     private float damageCooldown = 1f;
     private float damageTimer = 0f;
-    private float _health;
-    private BossPhase _phase = BossPhase.Idle;
+    private float health;
+    private BossPhase phase = BossPhase.Idle;
 
     [Header("SlowStart")]
     public float slowStartDuration = 3f;
 
-    public CinemachineCamera virtualCamera;
-    public Transform playerTransform;
+    private CinemachineCamera virtualCamera;
+    private Transform player;
     public BossHealthBar healthBar;
 
     // Can add more phase arrays, such that we pull from different pools at different phases of boss fight
     [Header("Phases")]
     public BossAttack[] phaseOneAttacks;
 
+    private EnemySpawner spawner;
+
     private void Awake()
     {
-        _health = maxHealth;
+        health = maxHealth;
     }
 
-    private void Start()
+    public void Initialize(EnemySpawner spawner, Transform player, CinemachineCamera virtualCamera)
     {
+        this.spawner = spawner;
+        this.player = player;
+        this.virtualCamera = virtualCamera;
         Activate();
     }
 
     public void Activate()
     {
         virtualCamera.Follow = transform;
+        spawner.ClearAllEnemies();
         healthBar.Initialize(maxHealth, slowStartDuration);
         SetPhase(BossPhase.SlowStart);
     }
 
     private void SetPhase(BossPhase newPhase)
     {
-        _phase = newPhase;
+        phase = newPhase;
         StopAllCoroutines();
 
-        switch (_phase)
+        switch (phase)
         {
             case BossPhase.PhaseOne:
                 StartCoroutine(PhaseOne());
@@ -69,11 +75,11 @@ public class BossController : MonoBehaviour
             return;
         }
 
-        _health -= amount;
-        _health = Mathf.Max(_health, 0f);
+        health -= amount;
+        health = Mathf.Max(health, 0f);
         SoundManager.Play(hurtSound);
-        healthBar.Refresh(_health);
-        if (_health <= 0 && _phase != BossPhase.Dead)
+        healthBar.Refresh(health);
+        if (health <= 0 && phase != BossPhase.Dead)
             SetPhase(BossPhase.Dead);
     }
 
@@ -94,8 +100,12 @@ public class BossController : MonoBehaviour
 
     private IEnumerator DieCo()
     {
-        virtualCamera.Follow = playerTransform;
+        virtualCamera.Follow = player;
         healthBar.gameObject.SetActive(false);
+        if (spawner != null) {
+            spawner.OnBossDied();
+        }
+
         Destroy(gameObject, 1f);
         yield break;
     }
@@ -104,7 +114,7 @@ public class BossController : MonoBehaviour
     {
         if (attacks.Length == 0) yield break;
         int index = Random.Range(0, attacks.Length);
-        yield return StartCoroutine(attacks[index].Execute(this, playerTransform));
+        yield return StartCoroutine(attacks[index].Execute(this, player));
     }
 
     void OnCollisionStay2D(Collision2D collision)
