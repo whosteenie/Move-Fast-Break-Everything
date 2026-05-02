@@ -13,6 +13,8 @@ public class Stats : MonoBehaviour
     private const float PierceIncreasePerRank = 0.05f;
     private const float ThornsIncreasePerRank = 0.05f;
 
+    public const float moveSpeedIncrease = .2f;
+
     public float speedMultiplier = 0.2f;
     public float rangedDamageMultiplier = 1f;
     public float damageMultiplier => rangedDamageMultiplier;
@@ -192,7 +194,7 @@ public class Stats : MonoBehaviour
                 break;
             case "agility":
                 IncreaseRangedDamage(rangeDamageIncrease);
-                IncreaseSpeed(speedMultiplier);
+                IncreaseSpeed(moveSpeedIncrease);
                 Debug.Log($"Agility selected. Ranged Damage Multiplier: {rangedDamageMultiplier}", this);
                 Debug.Log($"Agility selected. Speed Multiplier: {speedMultiplier}", this);
                 Debug.Log($"Agility selected. Ranged Damage Multiplier: {rangedDamageMultiplier}", this);
