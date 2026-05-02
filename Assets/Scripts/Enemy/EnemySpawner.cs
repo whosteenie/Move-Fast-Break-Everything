@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Cinemachine;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -16,12 +17,27 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private float spawnDistance = 18f; // With current setup, 18f is just outside camera view
     [SerializeField] private float respawnDistance = 40f;
     [SerializeField] private SpawnPhase[] spawnPhases;
+
+    [SerializeField] private GameObject bossPrefab;
+    [SerializeField] private CinemachineCamera virtualCamera;
+    [SerializeField] private float bossSpawnTime = 120f;
+    
+    private bool bossSpawned = false;
+    private bool bossActive = false;
     
     private readonly List<GameObject> activeEnemies = new();
     private float spawnTimer;
     
     private void Update()
     {
+        if (!bossSpawned && GameManager.CurrentRunTimeSeconds >= bossSpawnTime)
+        {
+            SpawnBoss();
+            return;
+        }
+
+        if (bossActive) return;
+
         if (player == null)
         {
             return;
@@ -62,6 +78,22 @@ public class EnemySpawner : MonoBehaviour
         GameObject enemy = Instantiate(randEnemy, spawnPosition, Quaternion.identity, transform);
         activeEnemies.Add(enemy);
     }
+
+    private void SpawnBoss()
+    {
+        bossSpawned = true;
+        bossActive = true;
+
+        Vector3 spawnPos = player.position + Vector3.up * 3f;
+        GameObject bossObject = Instantiate(bossPrefab, spawnPos, Quaternion.identity);
+        BossController boss = bossObject.GetComponent<BossController>();
+        boss.Initialize(this, player, virtualCamera);
+    }
+
+    public void OnBossDied()
+    {
+        bossActive = false;
+    }
     
     // Picks random position around player at a set distance
     private Vector3 GetSpawn()
@@ -90,6 +122,16 @@ public class EnemySpawner : MonoBehaviour
                 enemyObject.transform.position = GetSpawn();
             }
         }
+    }
+
+    public void ClearAllEnemies()
+    {
+        foreach (GameObject enemy in activeEnemies)
+        {
+            if (enemy != null)
+                Destroy(enemy);
+        }
+        activeEnemies.Clear();
     }
     
     // Picks the active spawn phase based on current run time
