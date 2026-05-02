@@ -3,16 +3,16 @@ using UnityEngine;
 
 public class AutoAim : MonoBehaviour
 {
+    public WeaponSO weaponSO;
 
     [Header("Shooting")]
     public GameObject bulletPrefab;
     public Transform firePoint;
-    public float fireRate = 2f;
-    public float bulletSpeed = 10f;
+    public float fireRate;
+    public float bulletSpeed;
     [SerializeField] private SoundDefinition shootSound;
 
     [Header("Targeting")]
-    public float detectionRange = 10f;
     public float targetRefreshRate = 0.3f;
 
     private GameObject currentTarget;
@@ -20,15 +20,18 @@ public class AutoAim : MonoBehaviour
     private Stats stats;
     public int baseDamage = 1;
 
-    void Start()
-    {
-        StartCoroutine(UpdateTargetRoutine());
-        StartCoroutine(ShootRoutine());
-    }
-
     void Awake()
     {
         stats = GetComponentInParent<Stats>();
+    }
+
+    void Start()
+    {
+        bulletSpeed = weaponSO.bulletSpeed;
+        fireRate = weaponSO.coolDown;
+
+        StartCoroutine(UpdateTargetRoutine());
+        StartCoroutine(ShootRoutine());
     }
 
     IEnumerator UpdateTargetRoutine()
@@ -51,56 +54,86 @@ public class AutoAim : MonoBehaviour
                 RotateTowards(direction);
                 Shoot(direction);
             }
-            float finalFireRate = (stats != null) ? stats.GetFireRate(fireRate) : fireRate;
 
+            float finalFireRate = (stats != null) ? stats.GetFireRate(fireRate) : fireRate;
             yield return new WaitForSeconds(1f / finalFireRate);
         }
     }
-    [SerializeField]
-    float dis = 10f;
+
+
+    public string tag = "";
+    public float dis = 10f;
+
     GameObject FindClosestEnemy()
     {
+        if (GetComponentInParent<Player>() != null)
+        {
+            return FindClosestPlayerTarget();
+        }
+
+        GameObject[] targets = GameObject.FindGameObjectsWithTag(tag);
+
         GameObject closest = null;
         float minDistance = dis;
-        closest = FindClosestTargetOfType<Enemy>(closest, ref minDistance);
-        closest = FindClosestTargetOfType<DestructibleObstacle>(closest, ref minDistance);
+
+        foreach (GameObject target in targets)
+        {
+            float distance = Vector2.Distance(transform.position, target.transform.position);
+
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                closest = target;
+            }
+        }
 
         return closest;
     }
 
-    GameObject FindClosestTargetOfType<T>(GameObject currentClosest, ref float minDistance) where T : MonoBehaviour
+    GameObject FindClosestPlayerTarget()
     {
-        T[] targets = FindObjectsByType<T>();
+        GameObject closest = null;
+        float minDistance = dis;
 
-        foreach (T target in targets)
+        foreach (Enemy enemy in FindObjectsByType<Enemy>())
         {
-            float distance = Vector2.Distance(transform.position, target.transform.position);
+            float distance = Vector2.Distance(transform.position, enemy.transform.position);
 
-            if (distance < minDistance && distance <= detectionRange)
+            if (distance < minDistance)
             {
                 minDistance = distance;
-                currentClosest = target.gameObject;
+                closest = enemy.gameObject;
             }
         }
 
-        return currentClosest;
+        foreach (DestructibleObstacle obstacle in FindObjectsByType<DestructibleObstacle>())
+        {
+            float distance = Vector2.Distance(transform.position, obstacle.transform.position);
+
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                closest = obstacle.gameObject;
+            }
+        }
+
+        return closest;
     }
+
+    
 
     void Shoot(Vector2 direction)
     {
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
         SoundManager.Play(shootSound);
-
+        bullet.GetComponent<Bullet>().SetOwner(gameObject);
         Bullet bulletScript = bullet.GetComponent<Bullet>();
-        
-        // int finalDamage = Mathf.RoundToInt(baseDamage * stats.rangedDamageMultiplier);
-
-        // Debug.Log("Multiplier: " + stats.rangedDamageMultiplier + " Final Damage: " + finalDamage);
 
         if (bulletScript != null)
         {
             int finalDamage = stats != null ? stats.GetDamage(baseDamage) : baseDamage;
             float pierce = stats != null ? stats.GetPierce() : 0f;
+
             bulletScript.SetDirection(direction, bulletSpeed, finalDamage, pierce);
         }
     }

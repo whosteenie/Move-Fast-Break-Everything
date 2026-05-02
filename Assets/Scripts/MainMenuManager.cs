@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
@@ -7,6 +8,7 @@ using UnityEngine.UIElements;
 public class MainMenuManager : MonoBehaviour
 {
     [SerializeField] private string playSceneName = "SampleScene";
+    [SerializeField] private InputActionAsset playerInputActions;
     [SerializeField] private Sprite shopCoinSprite;
     [SerializeField] private ShopPowerUpDefinition[] shopPowerUps;
     [SerializeField] private SoundDefinition menuMusic;
@@ -21,7 +23,7 @@ public class MainMenuManager : MonoBehaviour
         var root = GetComponent<UIDocument>().rootVisualElement;
         SoundManager.Play(menuMusic);
         var optionsRoot = root.Q<VisualElement>(OptionsMenuView.RootName);
-        _optionsMenuView = optionsRoot != null ? new OptionsMenuView(optionsRoot) : null;
+        _optionsMenuView = optionsRoot != null ? new OptionsMenuView(optionsRoot, playerInputActions) : null;
         var shopRoot = root.Q<VisualElement>(MainMenuShopView.RootName);
         _shopView = shopRoot != null ? new MainMenuShopView(shopRoot, shopPowerUps, shopCoinSprite) : null;
 
